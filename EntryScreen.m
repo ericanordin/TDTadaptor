@@ -1,7 +1,6 @@
-classdef Recording
-    %UNTITLED4 Summary of this class goes here
+classdef EntryScreen < GUI
+    %UNTITLED2 Summary of this class goes here
     %   Detailed explanation goes here
-    %import NamingMethod.*; 
     
     properties
     end
