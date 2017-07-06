@@ -1,11 +1,14 @@
 classdef RatScreen < GUI
-    %UNTITLED5 Summary of this class goes here
-    %   Detailed explanation goes here
+    %RATSCREEN Enter the details of the rat being tested.
     
     properties
     end
     
     methods
+        function guiobj = RatScreen()
+        end
+        
+        display(guiobj)
     end
     
 end

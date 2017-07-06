@@ -1,7 +1,5 @@
 classdef Recording
-    %UNTITLED4 Summary of this class goes here
-    %   Detailed explanation goes here
-    %import NamingMethod.*; 
+    %RECORDING Creates object for the recording data and setting.
     
     properties
     end

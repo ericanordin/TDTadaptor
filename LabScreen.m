@@ -1,11 +1,14 @@
 classdef LabScreen < GUI
-    %UNTITLED4 Summary of this class goes here
-    %   Detailed explanation goes here
+    %LABSCREEN Chooses the LabName.
     
     properties
     end
     
     methods
+        function guiobj = LabScreen()
+        end
+        
+        display(guiobj)
     end
     
 end

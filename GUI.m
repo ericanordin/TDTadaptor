@@ -1,14 +1,14 @@
-classdef GUI
-    %UNTITLED3 Summary of this class goes here
-    %   Detailed explanation goes here
-    %import NamingMethod.*;
-    %import LabName.*;
-    % Can ONLY import into functions
+classdef (Abstract) GUI
+    %GUI Defines an abstract superclass for the various GUI components of the program.    
     
     properties
     end
     
-    methods
+    methods (Abstract)
+        function guiobj = GUI()
+        end
+        
+        display(guiobj)
     end
     
 end

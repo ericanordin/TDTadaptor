@@ -1,8 +1,13 @@
 function main()
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
-import GUI.*;
+%MAIN Runs the show.
+import LabName.*;
+import NamingMethod.*;
 import Recording.*;
+import GUI.*;
+import EntryScreen.*;
+import LabScreen.*;
+import RatScreen.*;
+import RecordScreen.*;
 L = import;
 
 

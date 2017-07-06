@@ -1,6 +1,5 @@
 classdef LabName
-    %UNTITLED2 Summary of this class goes here
-    %   Detailed explanation goes here
+    %NAMINGMETHOD Defines enumeration for the PI to determine file naming format.
     enumeration
         Euston, Gibb, Metz
     end

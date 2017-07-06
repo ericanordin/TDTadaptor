@@ -1,11 +1,14 @@
 classdef RecordScreen < GUI
-    %UNTITLED6 Summary of this class goes here
-    %   Detailed explanation goes here
+    %RECORDSCREEN Displays the GUI for settings and audio recording.
     
     properties
     end
     
     methods
+        function guiobj = RecordScreen()
+        end
+        
+        display(guiobj)
     end
     
 end

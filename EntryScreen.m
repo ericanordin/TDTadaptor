@@ -1,11 +1,14 @@
 classdef EntryScreen < GUI
-    %UNTITLED2 Summary of this class goes here
-    %   Detailed explanation goes here
+    %ENTRYSCREEN Offers the choice of Auto vs Manual naming.
     
     properties
     end
     
     methods
+        function guiobj = EntryScreen()
+        end
+        
+        display(guiobj)
     end
     
 end

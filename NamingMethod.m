@@ -1,6 +1,5 @@
 classdef NamingMethod
-    %UNTITLED Summary of this class goes here
-    %   Detailed explanation goes here
+    %NAMINGMETHOD Defines enumeration for Auto vs Manual file naming.
     enumeration
         Auto, Manual
     end
