@@ -4,7 +4,7 @@ classdef (Abstract) GUI
     properties
     end
     
-    methods (Abstract)
+    methods %(Abstract)
         function guiobj = GUI()
         end
         
