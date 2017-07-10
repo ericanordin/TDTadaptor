@@ -8,7 +8,7 @@ classdef (Abstract) GUI
         function guiobj = GUI()
         end
         
-        display(guiobj)
+        fig = display(guiobj)
     end
     
 end
