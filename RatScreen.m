@@ -27,15 +27,30 @@ classdef RatScreen < GUI
             uicontrol('Style', 'text', 'Position', [100 300 200 100],...
                 'String', 'Rat ID');
             ratEntry = uicontrol('Style', 'edit', 'Position',...
-                [100 200 200 100]);
+                [100 200 200 100], 'Callback', @SetRatID);
             uicontrol('Style', 'text', 'Position', [350 300 200 100],...
                 'String', 'Day ID');
             dayEntry = uicontrol('Style', 'edit', 'Position',...
-                [350 200 200 100]);
+                [350 200 200 100], 'Callback', @SetDayID);
             uicontrol('Style', 'text', 'Position', [600 300 200 100],...
                 'String', 'Cohort ID');
             cohortEntry = uicontrol('Style', 'edit', 'Position',...
-                [600 200 200 100]);
+                [600 200 200 100], 'Callback', @SetDayID);
+            
+            function SetRatID(src, ~)
+                ratID = get(ratEntry, 'String');
+                display(ratID);
+            end
+            
+            function SetDayID(src, ~)
+                dayID = get(dayEntry, 'String');
+                display(dayID);
+            end
+            
+            function SetCohortID(src, ~)
+                cohortID = get(cohortEntry, 'String');
+                display(cohortID);
+            end
             
             function Shortcuts(src, eventdata)
                 %{
