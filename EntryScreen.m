@@ -10,6 +10,7 @@ classdef EntryScreen < GUI
     
     methods
         function this = EntryScreen()
+            
             guiF = figure('Name', 'Select Naming Method', 'NumberTitle',...
                 'off', 'Position', [100 100 500 500]);
             instructions = uicontrol('Style', 'text', 'Position', ...
@@ -24,11 +25,15 @@ classdef EntryScreen < GUI
             %set(autoButton, 'callback', {@AutoName, this});
             %set(manualButton, 'callback', @ManualName);
             
-            function this = AutoName(src, ~)
-                'In AutoName'
+            function nameType = AutoName(src, ~)
+                import Enums.NamingMethod;
+                nameType = NamingMethod.Auto;
+                %nameType
             end
-            function ManualName(src, ~)
-                'In ManualName'
+            function nameType = ManualName(src, ~)
+                import Enums.NamingMethod;
+                nameType = NamingMethod.Manual;
+                %nameType
             end
         end
         
