@@ -30,16 +30,6 @@ classdef LabScreen < GUI
                 
             function Shortcuts(src, eventdata)
                 Selection(src, eventdata, eventdata.Key);
-                %{
-                switch eventdata.Key
-                    case {'e'}
-                        
-                    case {'g'}
-                        
-                    case {'m'}
-                        
-                end
-                %}
             end
             
             function chosenLab = Selection(src, eventdata, choice)
