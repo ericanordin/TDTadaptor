@@ -12,7 +12,8 @@ classdef EntryScreen < GUI
         function this = EntryScreen()
             
             guiF = figure('Name', 'Select Naming Method', 'NumberTitle',...
-                'off', 'Position', [100 100 500 500]);
+                'off', 'Position', [100 100 500 500], 'WindowKeyPressFcn', ...
+                @Shortcuts);
             instructions = uicontrol('Style', 'text', 'Position', ...
                 [10 450 400 30], 'String', ...
                 'Would you like to name your file yourself, or let me do it for you?');
@@ -22,18 +23,24 @@ classdef EntryScreen < GUI
             manualButton = uicontrol('Style', 'pushbutton', 'Position', ...
                 [260 200 200 150], 'String', 'Name Manually (m)', ...
                 'Callback', @ManualName);
-            %set(autoButton, 'callback', {@AutoName, this});
-            %set(manualButton, 'callback', @ManualName);
             
             function nameType = AutoName(src, ~)
                 import Enums.NamingMethod;
                 nameType = NamingMethod.Auto;
-                %nameType
+                nameType
             end
             function nameType = ManualName(src, ~)
                 import Enums.NamingMethod;
                 nameType = NamingMethod.Manual;
-                %nameType
+                nameType
+            end
+            function Shortcuts(src, eventdata)
+                switch eventdata.Key
+                    case {'a'}
+                        AutoName();
+                    case {'m'}
+                        ManualName();   
+                end
             end
         end
         
