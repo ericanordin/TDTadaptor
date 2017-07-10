@@ -2,22 +2,25 @@ classdef RatScreen < GUI
     %RATSCREEN Enter the details of the rat being tested.
     %Must import the lab name from LabScreen to determine the naming
     %convention.
-    %Prevent Enter from advancing if all fields haven't been entered yet.
+    %Ensure that Enter performs callback on current field before checking completeness.
     %Enable auto click on ratEntry.
     
     properties
         guiF;
         instructions;
         ratEntry; %Field for entering ratID
-        ratID = '';
+        ratID;
         dayEntry; %Field for entering dayID
-        dayID = '';
+        dayID;
         cohortEntry; %Field for entering cohortID
-        cohortID = '';
+        cohortID;
     end
     
     methods
         function this = RatScreen()
+            ratID = '';
+            dayID = '';
+            cohortID = '';
             guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
                 @Shortcuts);
@@ -35,10 +38,18 @@ classdef RatScreen < GUI
             uicontrol('Style', 'text', 'Position', [600 300 200 100],...
                 'String', 'Cohort ID');
             cohortEntry = uicontrol('Style', 'edit', 'Position',...
-                [600 200 200 100], 'Callback', @SetDayID);
+                [600 200 200 100], 'Callback', @SetCohortID);
             
             function SetRatID(src, ~)
                 ratID = get(ratEntry, 'String');
+                %{
+                if isempty(ratID)
+                    display('Evaluating empty');
+                    ratID = '';
+                else
+                    display('Not evaluating empty');
+                end
+                %}
                 display(ratID);
             end
             
@@ -53,15 +64,15 @@ classdef RatScreen < GUI
             end
             
             function Shortcuts(src, eventdata)
-                %{
+                
                 if eventdata.Key == 'return'
-                    if (ratID~='') && (dayID~='') && (cohortID~='')
+                    if ~isempty(ratID) && ~isempty(dayID) && ~isempty(cohortID)
                         Proceed();
                     else
                         display('Missing necessary data');
                     end
                 end
-                %}
+                
             end
             
             function Proceed()
