@@ -1,6 +1,7 @@
 classdef RatScreen < GUI
 %RATSCREEN Enter the details of the rat being tested.
-    %Must import the lab name from LabScreen to determine the naming
+    %To do:
+    %Link to next screen - Import c from LabScreen to determine the naming
     %convention.
     %Ensure that Enter performs callback on current field before checking completeness.
     %Enable auto click on ratEntry.
@@ -43,27 +44,33 @@ classdef RatScreen < GUI
             cohortEntry = uicontrol('Style', 'edit', 'Position',...
                 [600 200 200 100], 'Callback', @SetCohortID);
             
-            function SetRatID(src, ~)
+            function SetRatID(~, ~)
+                %Data entered in the ratEntry field is copied into the
+                %ratID variable.
                 ratID = get(ratEntry, 'String');
                 display(ratID);
                 uiresume(gcbf);
             end
             
-            function SetDayID(src, ~)
+            function SetDayID(~, ~)
+                %Data entered in the dayEntry field is copied into the
+                %dayID variable.
                 dayID = get(dayEntry, 'String');
                 display(dayID);
                 uiresume(gcbf);
             end
             
-            function SetCohortID(src, ~)
+            function SetCohortID(~, ~)
+                %Data entered in the cohortEntry field is copied into the
+                %cohortID variable.
                 cohortID = get(cohortEntry, 'String');
                 display(cohortID);
                 uiresume(gcbf);
             end
             
-            function Shortcuts(src, eventdata)
-                import StandardFunctions.TabBot;
-
+            function Shortcuts(~, eventdata)
+                %If the user presses 'return', this function checks that
+                %all field have information.
                 if strcmp(eventdata.Key, 'return')
                     uiwait(gcf);
                     display(ratID);
@@ -72,7 +79,7 @@ classdef RatScreen < GUI
                     if ~isempty(ratID) && ~isempty(dayID) && ~isempty(cohortID)
                         Proceed();
                     else
-                        display('Missing necessary data');
+                        disp('Missing necessary data');
                     end
 
                 end
@@ -80,7 +87,8 @@ classdef RatScreen < GUI
             end
             
             function Proceed()
-                display('Ready to proceed');
+                %Currently empty; will advance to recording screen.
+                disp('Ready to proceed');
             end
         end
         

@@ -1,5 +1,10 @@
 classdef (Abstract) GUI
-    %GUI Defines an abstract superclass for the various GUI components of the program.    
+    %GUI Defines an abstract superclass for the various GUI components of 
+    %the program.
+    %To do:
+    %Determine how to implement the display function (which will likely be
+    %renamed to prevent overloading). GUI class may be eliminated if
+    %display turns out to be unnecessary.
     
     properties
     end

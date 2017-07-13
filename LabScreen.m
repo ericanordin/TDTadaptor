@@ -1,5 +1,9 @@
 classdef LabScreen < GUI
     %LABSCREEN Chooses the LabName.
+    %To do:
+    %Link to next screen - Export chosenLab
+    %Enable 'go back' option
+    %Make pretty
     
     properties
         guiF;
@@ -29,10 +33,12 @@ classdef LabScreen < GUI
             
                 
             function Shortcuts(src, eventdata)
+                %Key press shortcuts go straight to Selection function
                 Selection(src, eventdata, eventdata.Key);
             end
             
-            function chosenLab = Selection(src, eventdata, choice)
+            function chosenLab = Selection(~, ~, choice)
+                %Selects lab
                 import Enums.LabName;
                 switch choice
                     case {'e'}
@@ -40,10 +46,12 @@ classdef LabScreen < GUI
                         %'Chose Euston'
                     case {'g'}
                         chosenLab = LabName.Gibb;
+                        %'Chose Gibb'
                     case {'m'}
                         chosenLab = LabName.Metz;
+                        %'Chose Metz'
                 end
-                chosenLab
+                disp(chosenLab);
             end
             
         end

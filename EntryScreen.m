@@ -1,11 +1,19 @@
 classdef EntryScreen < GUI
     %ENTRYSCREEN Offers the choice of Auto vs Manual naming.
+    %To do:
+    %Link to next screen - Export nameType.
+    %Make pretty
     
     properties
         guiF;
         instructions;
-        autoButton;
-        manualButton;
+        autoButton; %Pressing this takes the user through the LabScreen and
+        %RatScreen GUIs to enter the relevant information. When
+        %RecordScreen is opened, the file name and its storage location
+        %will already be determined.
+        manualButton; %Pressing this takes the user directly to RecordScreen.
+        %The user will have to name their file and determine its pathway
+        %themselves.
     end
     
     methods
@@ -24,17 +32,19 @@ classdef EntryScreen < GUI
                 [260 200 200 150], 'String', 'Name Manually (m)', ...
                 'Callback', @ManualName);
             
-            function nameType = AutoName(src, ~)
+            function nameType = AutoName(~, ~)
                 import Enums.NamingMethod;
                 nameType = NamingMethod.Auto;
-                nameType
+                disp(nameType);
             end
-            function nameType = ManualName(src, ~)
+            function nameType = ManualName(~, ~)
                 import Enums.NamingMethod;
                 nameType = NamingMethod.Manual;
-                nameType
+                disp(nameType);
             end
-            function Shortcuts(src, eventdata)
+            function Shortcuts(~, eventdata)
+                %Allows the user to use keyboard shortcuts to select the
+                %push buttons.
                 switch eventdata.Key
                     case {'a'}
                         AutoName();
