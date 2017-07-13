@@ -3,6 +3,7 @@ classdef RecordScreen < GUIFiles.GUI
     %To do:
     %Enable 'go back' option
     %Disable 'New Recording' button when actively recording or saving.
+    %Disable Time Remaining when continuous=1
     %Find out how scaling factor applies
     
     
@@ -44,7 +45,7 @@ classdef RecordScreen < GUIFiles.GUI
             scaling = 10;
             recordTime = 600;
             fileName = '';
-            startingPathway = 'C:';
+            startingPathway = 'C:\';
             recordStatus = 0;
             timeRemaining = recordTime;
             
@@ -109,7 +110,8 @@ classdef RecordScreen < GUIFiles.GUI
                     case 32
                         set(bitDepthSelect, 'Value', 3);
                 end
-            end             
+            end    
+         
         end
         
         function display(guiobj)
