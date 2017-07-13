@@ -1,4 +1,4 @@
-classdef EntryScreen < GUI
+classdef EntryScreen < GUIFiles.GUI
     %ENTRYSCREEN Offers the choice of Auto vs Manual naming.
     %To do:
     %Link to next screen - Export nameType.

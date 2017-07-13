@@ -1,4 +1,4 @@
-classdef RatScreen < GUI
+classdef RatScreen < GUIFiles.GUI
 %RATSCREEN Enter the details of the rat being tested.
     %To do:
     %Link to next screen - Import c from LabScreen to determine the naming

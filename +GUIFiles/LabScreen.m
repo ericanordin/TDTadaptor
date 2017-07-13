@@ -1,4 +1,4 @@
-classdef LabScreen < GUI
+classdef LabScreen < GUIFiles.GUI
     %LABSCREEN Chooses the LabName.
     %To do:
     %Link to next screen - Export chosenLab

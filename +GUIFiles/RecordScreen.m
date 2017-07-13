@@ -1,4 +1,4 @@
-classdef RecordScreen < GUI
+classdef RecordScreen < GUIFiles.GUI
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
     %Design GUI
@@ -12,7 +12,8 @@ classdef RecordScreen < GUI
         function guiobj = RecordScreen()
         end
         
-        display(guiobj)
+        function display(guiobj)
+        end
     end
     
 end
