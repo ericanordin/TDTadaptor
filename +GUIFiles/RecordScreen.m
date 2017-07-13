@@ -12,6 +12,8 @@ classdef RecordScreen < GUIFiles.GUI
         fileNameButton; %Push button that opens saving GUI
         fileNameEditable; %Edit field that displays the fileName and allows 
         %the user to edit it when clicked.
+        startingPathway; %What location to open the dialog box at when 
+        %fileNameButton is pressed.
         continuous; %Boolean expression of whether the recording is continuous.
         %recordTime is disabled when it is 1 and enabled when it is 0.
         continousToggle;
@@ -37,17 +39,20 @@ classdef RecordScreen < GUIFiles.GUI
     
     methods
         function this = RecordScreen()
+            import StandardFunctions.setNameManual;
             bitDepth = 24;
             scaling = 10;
             recordTime = 600;
             fileName = '';
+            startingPathway = 'C:';
             recordStatus = 0;
             timeRemaining = recordTime;
             
             guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none');
             fileNameButton = uicontrol('Style', 'pushbutton', 'Position',...
-                [50 900 100 80], 'String', 'File Name');
+                [50 900 100 80], 'String', 'File Name', 'Callback',...
+                {@setNameManual, startingPathway});
             fileNameEditable = uicontrol('Style', 'edit', 'Position',...
                 [170 900 780 80], 'String', fileName);
             advancedButton = uicontrol('Style', 'pushbutton', 'Position',...
@@ -104,8 +109,7 @@ classdef RecordScreen < GUIFiles.GUI
                     case 32
                         set(bitDepthSelect, 'Value', 3);
                 end
-            end
-            
+            end             
         end
         
         function display(guiobj)
