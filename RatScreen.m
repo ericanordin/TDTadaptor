@@ -1,5 +1,5 @@
 classdef RatScreen < GUI
-    %RATSCREEN Enter the details of the rat being tested.
+%RATSCREEN Enter the details of the rat being tested.
     %Must import the lab name from LabScreen to determine the naming
     %convention.
     %Ensure that Enter performs callback on current field before checking completeness.
@@ -14,6 +14,8 @@ classdef RatScreen < GUI
         dayID;
         cohortEntry; %Field for entering cohortID
         cohortID;
+        %numTabs; %The number of edit fields reflecting the number of tabs 
+        %that must be made to reset the cursor to its original position
     end
     
     methods
@@ -21,6 +23,7 @@ classdef RatScreen < GUI
             ratID = '';
             dayID = '';
             cohortID = '';
+            %numTabs = 3;
             guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
                 @Shortcuts);
@@ -42,59 +45,36 @@ classdef RatScreen < GUI
             
             function SetRatID(src, ~)
                 ratID = get(ratEntry, 'String');
-                %{
-                if isempty(ratID)
-                    display('Evaluating empty');
-                    ratID = '';
-                else
-                    display('Not evaluating empty');
-                end
-                %}
                 display(ratID);
+                uiresume(gcbf);
             end
             
             function SetDayID(src, ~)
                 dayID = get(dayEntry, 'String');
                 display(dayID);
+                uiresume(gcbf);
             end
             
             function SetCohortID(src, ~)
                 cohortID = get(cohortEntry, 'String');
                 display(cohortID);
+                uiresume(gcbf);
             end
             
             function Shortcuts(src, eventdata)
-                %Produces a Java robot to execute 3 tabs so that all fields
-                %are updated before 'return' is evaluated and the cursor
-                %returns to its original position. Without this, the latest
-                %field does not update its variable before completion is
-                %evaluated.
-                import java.awt.Robot
-                import java.awt.event.*
-                rob = Robot;
-                
-                if eventdata.Key == 'return'
-                    %{    
-                    rob.keyPress(java.awt.event.KeyEvent.VK_TAB);
-                        rob.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-                        rob.keyPress(java.awt.event.KeyEvent.VK_TAB);
-                        rob.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-                        rob.keyPress(java.awt.event.KeyEvent.VK_TAB);
-                        rob.keyRelease(java.awt.event.KeyEvent.VK_TAB);
-                    %}
-                    %Problem: callback to update data is not executing
-                    %before if statement. Must find a way to execute
-                    %robot buttons beforehand.
-                    rob.mouseMove(410, 1410);
-                    rob.mousePress(java.awt.event.InputEvent.BUTTON1_MASK);
-                        display(ratID);
-                        display(dayID);
-                        display(cohortID);
+                import StandardFunctions.TabBot;
+
+                if strcmp(eventdata.Key, 'return')
+                    uiwait(gcf);
+                    display(ratID);
+                    display(dayID);
+                    display(cohortID);
                     if ~isempty(ratID) && ~isempty(dayID) && ~isempty(cohortID)
                         Proceed();
                     else
                         display('Missing necessary data');
                     end
+
                 end
                 
             end
