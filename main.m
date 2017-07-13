@@ -12,16 +12,8 @@ function main()
     %filePath.
     %Export startingPathway to setNameManual; import filePath.
     
-
-import LabName.*;
-import NamingMethod.*;
-import Recording.*;
-import GUI.*;
-import EntryScreen.*;
-import LabScreen.*;
-import RatScreen.*;
-import RecordScreen.*;
-%L = import;
+import Enums.*
+import GUIFiles.*
 
 % The same GUI objects are used until the program is closed so that the
 % user doesn't have to constantly redo the procedure from opening the
