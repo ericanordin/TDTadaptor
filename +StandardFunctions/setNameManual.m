@@ -1,4 +1,4 @@
-function filePath = setNameManual(~,~,startingPathway)
+function [filePath, startingPathway] = setNameManual(startingPathway)
 %SETNAMEMANUAL Allows the user to enter the file name manually via dialog box. 
 %Main saves the pathway from previous rats to take the user to the deepest 
 %recent directory. 
@@ -14,6 +14,7 @@ fileType = '.wav';
 localName = '';
 
 directory = uigetdir(startingPathway);
+startingPathway = directory;
 nameFileWindow = figure('Name', 'Name Your .wav File', 'Position',...
     [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none', ...
     'WindowKeyPressFcn', @TabShortcut, 'MenuBar', 'none');
@@ -30,6 +31,7 @@ uiwait(gcf); %Pauses program until the local file name has been entered.
 nameWithDesignation = strcat(localName, fileType);
 filePath = fullfile(directory, nameWithDesignation);
 disp(filePath);
+close(nameFileWindow);
 
     function LocalName(~,~)
         %import StandardFunctions.ClearText;
