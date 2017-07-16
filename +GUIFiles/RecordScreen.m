@@ -29,6 +29,7 @@ classdef RecordScreen < GUIFiles.GUI
         recordTime;
         recordTimeEditable;
         timeRemaining;
+        timeRemainingLabel;
         timeRemainingDisplay;
         statusWindow;
         waveformDisplay; %Shows the waveform corresponding to the real-time
@@ -69,8 +70,8 @@ classdef RecordScreen < GUIFiles.GUI
                 set(startStop, 'String', 'Stop Recording', 'BackgroundColor',...
                     [0.8 0.1 0.1]);
             end
-            uicontrol('Style', 'text', 'Position', [50 600 100 80], ...
-                'String', 'Time Remaining:');
+            timeRemainingLabel = uicontrol('Style', 'text', 'Position',...
+                [50 600 100 80], 'String', 'Time Remaining:');
             timeRemainingDisplay = uicontrol('Style', 'text',...
                 'Position', [150 600 100 80], 'String', timeRemaining,...
                 'BackgroundColor', [0.85 0.85 0.85]);
@@ -94,7 +95,7 @@ classdef RecordScreen < GUIFiles.GUI
                     'String', 'Continous Record', 'HorizontalAlignment',...
                     'left');
                 continuousToggle = uicontrol('Style', 'checkbox',...
-                    'Position', [220 260 20 20]);
+                    'Position', [220 260 20 20], 'Callback', @TogContinuous);
                 uicontrol('Style', 'text', 'Position', [20 230 200 20],...
                     'String', 'Scaling Factor', 'HorizontalAlignment',...
                     'left');
@@ -112,8 +113,24 @@ classdef RecordScreen < GUIFiles.GUI
                     case 32
                         set(bitDepthSelect, 'Value', 3);
                 end
+                
+
             end    
-         
+            function TogContinuous(checkbox, ~)        
+                isCont = get(checkbox, 'Value'); %isCont corresponds to 
+                %whether or not the Continuous checkbox is checked or not.
+                %disp(isCont);
+                if isCont == 1 %Box is checked
+                    set(timeRemainingLabel, 'Visible', 'off');
+                    set(timeRemainingDisplay, 'Visible', 'off');
+                    continuous = 1;
+                else %Box is unchecked
+                    set(timeRemainingLabel, 'Visible', 'on');
+                    set(timeRemainingDisplay, 'Visible', 'on');
+                    continuous = 0;
+                end
+                %disp(continuous);
+            end
         end
         
         function display(guiobj)
