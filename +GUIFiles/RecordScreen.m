@@ -41,7 +41,7 @@ classdef RecordScreen < GUIFiles.GUI
     
     methods
         function this = RecordScreen()
-            import StandardFunctions.ClearText;
+            %import StandardFunctions.ClearText;
             bitDepth = 24;
             scaling = 10;
             recordTime = 600;
@@ -56,11 +56,10 @@ classdef RecordScreen < GUIFiles.GUI
             fileNameButton = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 900 100 80], 'String', 'File Name', 'Callback',...
                 {@ManualSetName, 'via uigetdir'});
-                %{@setNameManual, startingPathway});
             fileNameEditable = uicontrol('Style', 'edit', 'Position',...
                 [170 900 780 80], 'String', fileName, 'Callback',...
-                {@ManualSetName, 'no uigetdir'}, 'ButtonDownFcn',...
-                @ClearText, 'Enable', 'inactive');
+                {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
+                @DeselectOnEnter);
             advancedButton = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 800 200 80], 'String', 'Advanced Options', 'Callback',...
                 @AdvancedWindow);
@@ -95,8 +94,9 @@ classdef RecordScreen < GUIFiles.GUI
                     [fileName, startingPathway] = setNameManual(startingPathway);
                     set(fileNameEditable, 'String', fileName);
                 else
-                    get(fileNameEditable, 'String', filename);
+                    fileName = get(fileNameEditable, 'String');
                 end
+                disp(fileName);
             end
             
             function AdvancedWindow(~, ~)
@@ -187,6 +187,13 @@ classdef RecordScreen < GUIFiles.GUI
                         bitDepth = 32;
                 end
                 disp(bitDepth);
+            end
+            
+            function DeselectOnEnter(~, eventdata)
+               if strcmp(eventdata.Key, 'return')
+                   uicontrol(timeRemainingLabel); %Switches cursor to textbox
+                   %in order to move cursor from current location.
+               end
             end
         end
         

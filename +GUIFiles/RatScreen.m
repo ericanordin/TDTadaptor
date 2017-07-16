@@ -3,8 +3,6 @@ classdef RatScreen < GUIFiles.GUI
     %To do:
     %Link to next screen - Import c from LabScreen to determine the naming
     %convention.
-    %Ensure that Enter performs callback on current field before checking completeness.
-    %Enable auto click on ratEntry.
     
     properties
         guiF;
@@ -30,7 +28,7 @@ classdef RatScreen < GUIFiles.GUI
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none');
             instructions = uicontrol('Style', 'text', 'Position',...
                 [100 400 800 100], 'String',...
-                'Enter information then press Enter to continue. Press Tab to select different entries.');
+                'Type in information then press Enter to continue. Press Tab to select different entries.');
             uicontrol('Style', 'text', 'Position', [100 300 200 100],...
                 'String', 'Rat ID');
             ratEntry = uicontrol('Style', 'edit', 'Position',...
@@ -43,7 +41,7 @@ classdef RatScreen < GUIFiles.GUI
                 'String', 'Cohort ID');
             cohortEntry = uicontrol('Style', 'edit', 'Position',...
                 [600 200 200 100], 'Callback', @SetCohortID);
-            
+            uicontrol(ratEntry);
             function SetRatID(~, ~)
                 %Data entered in the ratEntry field is copied into the
                 %ratID variable.
