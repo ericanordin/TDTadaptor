@@ -72,7 +72,9 @@ classdef RatScreen < GUIFiles.GUI
                 %If the user presses 'return', this function checks that
                 %all field have information.
                 if strcmp(eventdata.Key, 'return')
-                    uiwait(gcf);
+                    uiwait(gcf); %Prevents if statement from executing until
+                    %the setter function has executed for the current
+                    %field with uiresume(gcbf).
                     display(ratID);
                     display(dayID);
                     display(cohortID);

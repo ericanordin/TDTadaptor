@@ -3,12 +3,10 @@ function filePath = setNameManual(~,~,startingPathway)
 %Main saves the pathway from previous rats to take the user to the deepest 
 %recent directory. 
 %To do:
-%Write basic function
 %Enable 'go back'
 %Text disappears on click
 %Enable warning if file name already exists
-%Make function pause before fullfile command until LocalName has been
-%executed.
+%File saving
 disp('In setNameManual');
 disp(startingPathway);
 fileType = '.wav';
@@ -21,11 +19,14 @@ nameFileField = uicontrol('Style', 'edit', 'String', 'Name_of_file',...
     'Position', [20 100 200 100], 'Callback', @LocalName);
 uicontrol('Style', 'text', 'Position', [220 100 80 100], 'String',...
     fileType);
-filePath = fullfile(directory, localName, fileType);
+uiwait(gcf); %Pauses program until the local file name has been entered.
+nameWithDesignation = strcat(localName, fileType);
+filePath = fullfile(directory, nameWithDesignation);
 disp(filePath);
 
     function LocalName(~,~)
         localName = get(nameFileField, 'String');
+        uiresume(gcbf);
     end
 
 end
