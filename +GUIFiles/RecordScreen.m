@@ -3,7 +3,6 @@ classdef RecordScreen < GUIFiles.GUI
     %To do:
     %Enable 'go back' option
     %Disable 'New Recording' button when actively recording or saving.
-    %Disable Time Remaining when continuous=1
     %Find out how scaling factor applies
     
     
@@ -27,6 +26,7 @@ classdef RecordScreen < GUIFiles.GUI
         %"Stop Recording" and toggles the microphone and recordStatus.
         recordStatus; %1 = recording; 0 = not recording
         recordTime;
+        recordTimeLabel;
         recordTimeEditable;
         timeRemaining;
         timeRemainingLabel;
@@ -87,6 +87,7 @@ classdef RecordScreen < GUIFiles.GUI
                 [350 350 600 200]);
             
             function AdvancedWindow(~, ~)
+                import StandardFunctions.ClearText;
                 advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
                     'off', 'Position', [80 820 300 300], 'ToolBar', 'none',...
                     'MenuBar', 'none');
@@ -96,40 +97,83 @@ classdef RecordScreen < GUIFiles.GUI
                     'left');
                 continuousToggle = uicontrol('Style', 'checkbox',...
                     'Position', [220 260 20 20], 'Callback', @TogContinuous);
-                uicontrol('Style', 'text', 'Position', [20 230 200 20],...
+                recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
+                    [20 230 200 20], 'String', 'Recording Time (s)',...
+                    'HorizontalAlignment', 'left');
+                recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
+                    [220 230 50 20], 'String', recordTime, 'Callback',...
+                    @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
+                    'inactive');                
+                uicontrol('Style', 'text', 'Position', [20 200 200 20],...
                     'String', 'Scaling Factor', 'HorizontalAlignment',...
                     'left');
                 scalingEditable = uicontrol('Style', 'edit', 'Position',...
-                    [220 230 50 20], 'String', scaling);
-                uicontrol('Style', 'text', 'Position', [20 200 200 20],...
+                    [220 200 50 20], 'String', scaling, 'Callback',...
+                    @GetScaling, 'ButtonDownFcn', @ClearText, 'Enable',...
+                    'inactive');      
+                
+                uicontrol('Style', 'text', 'Position', [20 170 200 20],...
                     'String', 'Bit Depth', 'HorizontalAlignment', 'left');
                 bitDepthSelect = uicontrol('Style', 'popupmenu', 'Position',...
-                    [220 200 50 20], 'String', {16, 24, 32}, 'Value', 2);
-                switch bitDepth
-                    case 16
-                        set(bitDepthSelect, 'Value', 1);
-                    case 24
-                        set(bitDepthSelect, 'Value', 2);
-                    case 32
-                        set(bitDepthSelect, 'Value', 3);
+                    [220 170 50 20], 'String', {16, 24, 32}, 'Value', 2,...
+                    'Callback', @GetBitDepth);
+                
+                function TogContinuous(checkbox, ~)
+                    isCont = get(checkbox, 'Value'); %isCont corresponds to
+                    %whether or not the Continuous checkbox is checked or not.
+                    %disp(isCont);
+                    if isCont == 1 %Box is checked
+                        set(timeRemainingLabel, 'Visible', 'off');
+                        set(timeRemainingDisplay, 'Visible', 'off');
+                        set(recordTimeLabel, 'Visible', 'off');
+                        set(recordTimeEditable, 'Visible', 'off');
+                        continuous = 1;
+                    else %Box is unchecked
+                        set(timeRemainingLabel, 'Visible', 'on');
+                        set(timeRemainingDisplay, 'Visible', 'on');
+                        set(recordTimeLabel, 'Visible', 'on');
+                        set(recordTimeEditable, 'Visible', 'on');
+                        continuous = 0;
+                    end
+                    %disp(continuous);
                 end
                 
 
             end    
-            function TogContinuous(checkbox, ~)        
-                isCont = get(checkbox, 'Value'); %isCont corresponds to 
-                %whether or not the Continuous checkbox is checked or not.
-                %disp(isCont);
-                if isCont == 1 %Box is checked
-                    set(timeRemainingLabel, 'Visible', 'off');
-                    set(timeRemainingDisplay, 'Visible', 'off');
-                    continuous = 1;
-                else %Box is unchecked
-                    set(timeRemainingLabel, 'Visible', 'on');
-                    set(timeRemainingDisplay, 'Visible', 'on');
-                    continuous = 0;
+            
+            
+            
+            function GetRecordTime(field, ~)
+                recordTime = get(field, 'String');
+                disp(recordTime);
+            end
+            
+            function GetScaling(field, ~)
+                scaling = get(field, 'String');
+                disp(scaling);
+            end
+            
+            function GetBitDepth(field, ~)
+                %{
+                switch bitDepth
+                    case 16
+                        set(field, 'Value', 1);
+                    case 24
+                        set(field, 'Value', 2);
+                    case 32
+                        set(field, 'Value', 3);
                 end
-                %disp(continuous);
+                %}
+                fieldValue = get(field, 'Value');
+                switch fieldValue
+                    case 1
+                        bitDepth = 16;
+                    case 2
+                        bitDepth = 24;
+                    case 3
+                        bitDepth = 32;
+                end
+                disp(bitDepth);
             end
         end
         
