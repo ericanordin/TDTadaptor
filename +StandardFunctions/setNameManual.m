@@ -4,7 +4,6 @@ function filePath = setNameManual(~,~,startingPathway)
 %recent directory. 
 %To do:
 %Enable 'go back'
-%Text disappears on click
 %Enable warning if file name already exists
 %File saving
 
@@ -17,7 +16,7 @@ localName = '';
 directory = uigetdir(startingPathway);
 nameFileWindow = figure('Name', 'Name Your .wav File', 'Position',...
     [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none', ...
-    'WindowKeyPressFcn', @TabShortcut);
+    'WindowKeyPressFcn', @TabShortcut, 'MenuBar', 'none');
 uicontrol('Style', 'text', 'String',... 
     'Click the box or press tab, type in the local file name, and press Enter to continue',...
     'Position', [20 170 260 100]);

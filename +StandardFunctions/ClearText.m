@@ -1,6 +1,6 @@
 function ClearText(field, ~)
-%UNTITLED Summary of this function goes here
-%   Detailed explanation goes here
+%CLEARTEXT Erases the text in a uicontrol edit field and selects the field
+%for data entry.
 disp('In ClearText');
 set(field, 'Enable', 'on', 'Selected', 'on', 'String', '');
 uicontrol(field);
