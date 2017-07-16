@@ -7,6 +7,8 @@ function filePath = setNameManual(~,~,startingPathway)
 %Text disappears on click
 %Enable warning if file name already exists
 %File saving
+
+import StandardFunctions.ClearText;
 disp('In setNameManual');
 disp(startingPathway);
 fileType = '.wav';
@@ -14,9 +16,15 @@ localName = '';
 
 directory = uigetdir(startingPathway);
 nameFileWindow = figure('Name', 'Name Your .wav File', 'Position',...
-    [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none');
+    [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none', ...
+    'WindowKeyPressFcn', @TabShortcut);
+uicontrol('Style', 'text', 'String',... 
+    'Click the box or press tab, type in the local file name, and press Enter to continue',...
+    'Position', [20 170 260 100]);
 nameFileField = uicontrol('Style', 'edit', 'String', 'Name_of_file',...
-    'Position', [20 100 200 100], 'Callback', @LocalName);
+    'Position', [20 100 200 100], 'Callback', @LocalName, ...
+    'ButtonDownFcn', @ClearText, 'Enable', 'inactive');
+
 uicontrol('Style', 'text', 'Position', [220 100 80 100], 'String',...
     fileType);
 uiwait(gcf); %Pauses program until the local file name has been entered.
@@ -25,9 +33,24 @@ filePath = fullfile(directory, nameWithDesignation);
 disp(filePath);
 
     function LocalName(~,~)
+        %import StandardFunctions.ClearText;
+        %ClearText(nameFileField);
+        %set(nameFileField, 'String', '');
+        
         localName = get(nameFileField, 'String');
         uiresume(gcbf);
     end
+
+    function TabShortcut(~, eventdata)
+        import StandardFunctions.ClearText;
+       if strcmp(eventdata.Key, 'tab')
+           ClearText(nameFileField);
+       end
+    end
+    %function ClearText(~,~)
+     
+    %disp('Internal ClearText'); 
+    %end
 
 end
 
