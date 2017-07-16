@@ -1,47 +1,71 @@
 classdef RatScreen < GUIFiles.GUI
 %RATSCREEN Enter the details of the rat being tested.
     %To do:
-    %Link to next screen - Import c from LabScreen to determine the naming
-    %convention.
+    %Link to next screen - Import chosenLab from LabScreen to determine 
+    %the naming convention.
+    %Write destructor
+    %Complete Proceed function
     
     properties
+        %Figures:
         guiF;
+        
+        %UIControl Objects:
         instructions;
         ratEntry; %Field for entering ratID
-        ratID;
         dayEntry; %Field for entering dayID
-        dayID;
         cohortEntry; %Field for entering cohortID
+        
+        %Variables:
+        ratID;
+        dayID;
         cohortID;
-        %numTabs; %The number of edit fields reflecting the number of tabs 
-        %that must be made to reset the cursor to its original position
     end
     
     methods
+        %Functions:
+        %RatScreen: constructor
+        %SetRatID: Copies ratEntry into ratID
+        %SetDayID: Copies dayEntry into dayID
+        %SetCohortID: Copies cohortEntry into cohortID
+        %Shortcuts: Checks information when user presses 'return'
+        %Proceed: Compiles chosenLab, ratID, dayID, and cohortID into a
+        %file name and opens RecordScreen
+        %display: may or may not be enabled
+        
         function this = RatScreen()
             ratID = '';
             dayID = '';
             cohortID = '';
-            %numTabs = 3;
+            
             guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none');
+            
             instructions = uicontrol('Style', 'text', 'Position',...
                 [100 400 800 100], 'String',...
                 'Type in information then press Enter to continue. Press Tab to select different entries.');
+            
             uicontrol('Style', 'text', 'Position', [100 300 200 100],...
                 'String', 'Rat ID');
+            
             ratEntry = uicontrol('Style', 'edit', 'Position',...
                 [100 200 200 100], 'Callback', @SetRatID);
+            
             uicontrol('Style', 'text', 'Position', [350 300 200 100],...
                 'String', 'Day ID');
+            
             dayEntry = uicontrol('Style', 'edit', 'Position',...
                 [350 200 200 100], 'Callback', @SetDayID);
+            
             uicontrol('Style', 'text', 'Position', [600 300 200 100],...
                 'String', 'Cohort ID');
+            
             cohortEntry = uicontrol('Style', 'edit', 'Position',...
                 [600 200 200 100], 'Callback', @SetCohortID);
-            uicontrol(ratEntry);
+            
+            uicontrol(ratEntry); %Puts cursor at ratEntry upon opening the figure
+            
             function SetRatID(~, ~)
                 %Data entered in the ratEntry field is copied into the
                 %ratID variable.
@@ -68,7 +92,7 @@ classdef RatScreen < GUIFiles.GUI
             
             function Shortcuts(~, eventdata)
                 %If the user presses 'return', this function checks that
-                %all field have information.
+                %all fields have information.
                 if strcmp(eventdata.Key, 'return')
                     uiwait(gcf); %Prevents if statement from executing until
                     %the setter function has executed for the current
@@ -89,6 +113,7 @@ classdef RatScreen < GUIFiles.GUI
             function Proceed()
                 %Currently empty; will advance to recording screen.
                 disp('Ready to proceed');
+                close(guiF);
             end
         end
         
