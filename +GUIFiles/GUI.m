@@ -1,4 +1,4 @@
-classdef (Abstract) GUI
+classdef (Abstract) GUI < handle & matlab.mixin.SetGetExactNames
     %GUI Defines an abstract superclass for the various GUI components of 
     %the program.
     %To do:
@@ -14,6 +14,8 @@ classdef (Abstract) GUI
         end
         
         fig = display(guiobj)
+        
+        
     end
     
 end

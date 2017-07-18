@@ -1,13 +1,13 @@
-classdef RecordScreen < GUIFiles.GUI
+classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
     %Enable 'go back' option
     %Disable 'New Recording' button when actively recording or saving.
     %Find out how scaling factor applies
     %Write destructor
+    %Check that recordTime and scaling are numeric
     
-    
-    properties
+    properties %(GetAccess = public)
         %Figures:
         guiF;
         
@@ -69,67 +69,68 @@ classdef RecordScreen < GUIFiles.GUI
         %display: may or may not be enabled
         
         function this = RecordScreen()
-            bitDepth = 24;
-            scaling = 10;
-            recordTime = 600;
-            fileName = '';
-            startingPathway = 'C:\';
-            recordStatus = 0;
-            timeRemaining = recordTime;
+            this.bitDepth = 24;
+            this.scaling = 10;
+            this.recordTime = 600;
+            this.fileName = '';
+            this.startingPathway = 'C:\';
+            this.recordStatus = 0;
+            this.timeRemaining = this.recordTime;
             
-            guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
+            this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
                 'MenuBar', 'none');
             
-            fileNameButton = uicontrol('Style', 'pushbutton', 'Position',...
+            this.fileNameButton = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 900 100 80], 'String', 'File Name', 'Callback',...
                 {@ManualSetName, 'via uigetdir'});
             
-            fileNameEditable = uicontrol('Style', 'edit', 'Position',...
-                [170 900 780 80], 'String', fileName, 'Callback',...
+            this.fileNameEditable = uicontrol('Style', 'edit', 'Position',...
+                [170 900 780 80], 'String', this.fileName, 'Callback',...
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
                 @DeselectOnEnter);
             
-            advancedButton = uicontrol('Style', 'pushbutton', 'Position',...
+            this.advancedButton = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 800 200 80], 'String', 'Advanced Options', 'Callback',...
                 @AdvancedWindow);
             
-            startStop = uicontrol('Style', 'pushbutton', 'Position', ...
-                [60 700 180 80], 'Callback', @PressStartStop);
+            this.startStop = uicontrol('Style', 'pushbutton', 'Position', ...
+                [60 700 180 80], 'String', 'Start Recording', 'BackgroundColor',...
+                [0.5 1 0.5], 'Callback', @PressStartStop);
             
-            timeRemainingLabel = uicontrol('Style', 'text', 'Position',...
+            this.timeRemainingLabel = uicontrol('Style', 'text', 'Position',...
                 [50 600 100 80], 'String', 'Time Remaining:');
             
-            timeRemainingDisplay = uicontrol('Style', 'text',...
-                'Position', [150 600 100 80], 'String', timeRemaining,...
+            this.timeRemainingDisplay = uicontrol('Style', 'text',...
+                'Position', [150 600 100 80], 'String', this.timeRemaining,...
                 'BackgroundColor', [0.85 0.85 0.85]);
             
             uicontrol('Style', 'text', 'Position', [50 150 100 80],...
                 'String', 'Status');
             
-            statusWindow = uitable('Position', [170 50 800 250]);
+            this.statusWindow = uitable('Position', [170 50 800 250]);
             
-            waveformDisplay = uicontrol('Style', 'pushbutton', 'String',...
+            this.waveformDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Waveform Display (placeholder)', 'Position', ...
                 [350 650 600 200]);
             
-            spectrogramDisplay = uicontrol('Style', 'pushbutton', 'String',...
+            this.spectrogramDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Spectrogram Display (placeholder)', 'Position', ...
                 [350 350 600 200]);
             
-            newRecord = uicontrol('Style', 'pushbutton', 'String',...
+            this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
                 'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
                 'Position', [20 20 100 100]);
             
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
                 if strcmp(throughDirectory, 'via uigetdir')
-                    [fileName, startingPathway] = setNameManual(startingPathway);
-                    set(fileNameEditable, 'String', fileName);
+                    [this.fileName, this.startingPathway] = setNameManual(this.startingPathway);
+                    set(this.fileNameEditable, 'String', this.fileName);
                 else
-                    fileName = get(fileNameEditable, 'String');
+                    this.fileName = get(this.fileNameEditable, 'String');
                 end
-                disp(fileName);
+                disp(this.fileName);
             end
             
             function AdvancedWindow(~, ~)
@@ -147,12 +148,12 @@ classdef RecordScreen < GUIFiles.GUI
                 continuousToggle = uicontrol('Style', 'checkbox',...
                     'Position', [220 260 20 20], 'Callback', @TogContinuous);
                 
-                recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
+                this.recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
                     [20 230 200 20], 'String', 'Recording Time (s)',...
                     'HorizontalAlignment', 'left');
                 
-                recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
-                    [220 230 50 20], 'String', recordTime, 'Callback',...
+                this.recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
+                    [220 230 50 20], 'String', this.recordTime, 'Callback',...
                     @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
                     'inactive');
                 
@@ -160,15 +161,15 @@ classdef RecordScreen < GUIFiles.GUI
                     'String', 'Scaling Factor', 'HorizontalAlignment',...
                     'left');
                 
-                scalingEditable = uicontrol('Style', 'edit', 'Position',...
-                    [220 200 50 20], 'String', scaling, 'Callback',...
+                this.scalingEditable = uicontrol('Style', 'edit', 'Position',...
+                    [220 200 50 20], 'String', this.scaling, 'Callback',...
                     @GetScaling, 'ButtonDownFcn', @ClearText, 'Enable',...
                     'inactive');
                 
                 uicontrol('Style', 'text', 'Position', [20 170 200 20],...
                     'String', 'Bit Depth', 'HorizontalAlignment', 'left');
                 
-                bitDepthSelect = uicontrol('Style', 'popupmenu', 'Position',...
+                this.bitDepthSelect = uicontrol('Style', 'popupmenu', 'Position',...
                     [220 170 50 20], 'String', {16, 24, 32}, 'Value', 2,...
                     'Callback', @GetBitDepth);
                 
@@ -180,18 +181,18 @@ classdef RecordScreen < GUIFiles.GUI
                     %disp(isCont);
                     if isCont == 1 %Box is checked
                         %recordTime fields are made invisible
-                        set(timeRemainingLabel, 'Visible', 'off');
-                        set(timeRemainingDisplay, 'Visible', 'off');
-                        set(recordTimeLabel, 'Visible', 'off');
-                        set(recordTimeEditable, 'Visible', 'off');
-                        continuous = 1;
+                        set(this.timeRemainingLabel, 'Visible', 'off');
+                        set(this.timeRemainingDisplay, 'Visible', 'off');
+                        set(this.recordTimeLabel, 'Visible', 'off');
+                        set(this.recordTimeEditable, 'Visible', 'off');
+                        this.continuous = 1;
                     else %Box is unchecked
                         %recordTime fields are made visible
-                        set(timeRemainingLabel, 'Visible', 'on');
-                        set(timeRemainingDisplay, 'Visible', 'on');
-                        set(recordTimeLabel, 'Visible', 'on');
-                        set(recordTimeEditable, 'Visible', 'on');
-                        continuous = 0;
+                        set(this.timeRemainingLabel, 'Visible', 'on');
+                        set(this.timeRemainingDisplay, 'Visible', 'on');
+                        set(this.recordTimeLabel, 'Visible', 'on');
+                        set(this.recordTimeEditable, 'Visible', 'on');
+                        this.continuous = 0;
                     end
                     %disp(continuous);
                 end
@@ -201,14 +202,14 @@ classdef RecordScreen < GUIFiles.GUI
             
             function GetRecordTime(field, ~)
                 %Sets recordTime to the contents of recordTimeEditable
-                recordTime = get(field, 'String');
-                disp(recordTime);
+                this.recordTime = get(field, 'String');
+                disp(this.recordTime);
             end
             
             function GetScaling(field, ~)
                 %Sets scaling to the contents of scalingEditable
-                scaling = get(field, 'String');
-                disp(scaling);
+                this.scaling = get(field, 'String');
+                disp(this.scaling);
             end
             
             function GetBitDepth(field, ~)
@@ -227,29 +228,29 @@ classdef RecordScreen < GUIFiles.GUI
                 fieldValue = get(field, 'Value');
                 switch fieldValue
                     case 1
-                        bitDepth = 16;
+                        this.bitDepth = 16;
                     case 2
-                        bitDepth = 24;
+                        this.bitDepth = 24;
                     case 3
-                        bitDepth = 32;
+                        this.bitDepth = 32;
                 end
-                disp(bitDepth);
+                disp(this.bitDepth);
             end
             
             function DeselectOnEnter(~, eventdata)
                 if strcmp(eventdata.Key, 'return')
-                    uicontrol(timeRemainingLabel); %Switches cursor to textbox
+                    uicontrol(this.timeRemainingLabel); %Switches cursor to textbox
                     %in order to move cursor from current location.
                 end
             end
             
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
-                if recordStatus == 0
-                    set(startStop, 'String', 'Start Recording', 'BackgroundColor',...
+                if this.recordStatus == 0
+                    set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
                         [0.5 1 0.5]);
                 else
-                    set(startStop, 'String', 'Stop Recording', 'BackgroundColor',...
+                    set(this.startStop, 'String', 'Stop Recording', 'BackgroundColor',...
                         [0.8 0.1 0.1]);
                 end
             end
@@ -257,6 +258,10 @@ classdef RecordScreen < GUIFiles.GUI
         
         function display(guiobj)
         end
+        
+       % function path = get.startingPathway(obj)
+        %    path = obj.startingPathway;
+        %end
     end
     
 end

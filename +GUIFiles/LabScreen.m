@@ -1,4 +1,4 @@
-classdef LabScreen < GUIFiles.GUI
+classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %LABSCREEN Chooses the LabName.
     %To do:
     %Link to next screen - Export chosenLab
@@ -28,26 +28,33 @@ classdef LabScreen < GUIFiles.GUI
         %display: may or may not be enabled
         
         function this = LabScreen()
-            guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
+            this.guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
                 'Position', [100 100 500 500], 'WindowKeyPressFcn', ...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none');
             
-            instructions = uicontrol('Style', 'text', 'Position', ...
+            this.instructions = uicontrol('Style', 'text', 'Position', ...
                 [10 450 400 30], 'String', ...
                 'Which lab is running this experiment?');
             
-            eustonButton = uicontrol('Style', 'pushbutton', 'Position', ...
+            this.eustonButton = uicontrol('Style', 'pushbutton', 'Position', ...
                 [20 350 400 50], 'String', 'Euston (e)', ...
                 'Callback', {@Selection, 'e'});
             
-            gibbButton = uicontrol('Style', 'pushbutton', 'Position', ...
+            this.gibbButton = uicontrol('Style', 'pushbutton', 'Position', ...
                 [20 250 400 50], 'String', 'Gibb (g)', ...
                 'Callback', {@Selection, 'g'});
             
-            metzButton = uicontrol('Style', 'pushbutton', 'Position', ...
+            this.metzButton = uicontrol('Style', 'pushbutton', 'Position', ...
                 [20 150 400 50], 'String', 'Metz (m)', ...
                 'Callback', {@Selection, 'm'});
-            
+            %{
+            set(guiF, 'visible', 'off');
+            ready = input('Type 1 if ready');
+            if ready == 1
+                disp('Got in ready');
+                set(guiF, 'visible', 'on');
+            end
+                %}
             function Shortcuts(src, eventdata)
                 %Key press shortcuts go straight to Selection function
                 Selection(src, eventdata, eventdata.Key);
@@ -58,23 +65,27 @@ classdef LabScreen < GUIFiles.GUI
                 import Enums.LabName;
                 switch choice
                     case {'e'}
-                        chosenLab = LabName.Euston;
+                        this.chosenLab = LabName.Euston;
                         %'Chose Euston'
                     case {'g'}
-                        chosenLab = LabName.Gibb;
+                        this.chosenLab = LabName.Gibb;
                         %'Chose Gibb'
                     case {'m'}
-                        chosenLab = LabName.Metz;
+                        this.chosenLab = LabName.Metz;
                         %'Chose Metz'
                 end
-                disp(chosenLab);
-                close(guiF);
+                disp(this.chosenLab);
+                set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             
         end
         
         function fig = display(guiobj)
         end
+        
+       % function fig = get.guiF(figObj)
+        %    fig = figObj.guiF;
+        %end
     end
     
 end

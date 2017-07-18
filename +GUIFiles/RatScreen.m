@@ -1,4 +1,4 @@
-classdef RatScreen < GUIFiles.GUI
+classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
 %RATSCREEN Enter the details of the rat being tested.
     %To do:
     %Link to next screen - Import chosenLab from LabScreen to determine 
@@ -34,59 +34,59 @@ classdef RatScreen < GUIFiles.GUI
         %display: may or may not be enabled
         
         function this = RatScreen()
-            ratID = '';
-            dayID = '';
-            cohortID = '';
+            this.ratID = '';
+            this.dayID = '';
+            this.cohortID = '';
             
-            guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
+            this.guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none');
             
-            instructions = uicontrol('Style', 'text', 'Position',...
+            this.instructions = uicontrol('Style', 'text', 'Position',...
                 [100 400 800 100], 'String',...
                 'Type in information then press Enter to continue. Press Tab to select different entries.');
             
             uicontrol('Style', 'text', 'Position', [100 300 200 100],...
                 'String', 'Rat ID');
             
-            ratEntry = uicontrol('Style', 'edit', 'Position',...
+            this.ratEntry = uicontrol('Style', 'edit', 'Position',...
                 [100 200 200 100], 'Callback', @SetRatID);
             
             uicontrol('Style', 'text', 'Position', [350 300 200 100],...
                 'String', 'Day ID');
             
-            dayEntry = uicontrol('Style', 'edit', 'Position',...
+            this.dayEntry = uicontrol('Style', 'edit', 'Position',...
                 [350 200 200 100], 'Callback', @SetDayID);
             
             uicontrol('Style', 'text', 'Position', [600 300 200 100],...
                 'String', 'Cohort ID');
             
-            cohortEntry = uicontrol('Style', 'edit', 'Position',...
+            this.cohortEntry = uicontrol('Style', 'edit', 'Position',...
                 [600 200 200 100], 'Callback', @SetCohortID);
             
-            uicontrol(ratEntry); %Puts cursor at ratEntry upon opening the figure
+            uicontrol(this.ratEntry); %Puts cursor at ratEntry upon opening the figure
             
             function SetRatID(~, ~)
                 %Data entered in the ratEntry field is copied into the
                 %ratID variable.
-                ratID = get(ratEntry, 'String');
-                display(ratID);
+                this.ratID = get(this.ratEntry, 'String');
+                display(this.ratID);
                 uiresume(gcbf);
             end
             
             function SetDayID(~, ~)
                 %Data entered in the dayEntry field is copied into the
                 %dayID variable.
-                dayID = get(dayEntry, 'String');
-                display(dayID);
+                this.dayID = get(this.dayEntry, 'String');
+                display(this.dayID);
                 uiresume(gcbf);
             end
             
             function SetCohortID(~, ~)
                 %Data entered in the cohortEntry field is copied into the
                 %cohortID variable.
-                cohortID = get(cohortEntry, 'String');
-                display(cohortID);
+                this.cohortID = get(this.cohortEntry, 'String');
+                display(this.cohortID);
                 uiresume(gcbf);
             end
             
@@ -97,10 +97,11 @@ classdef RatScreen < GUIFiles.GUI
                     uiwait(gcf); %Prevents if statement from executing until
                     %the setter function has executed for the current
                     %field with uiresume(gcbf).
-                    display(ratID);
-                    display(dayID);
-                    display(cohortID);
-                    if ~isempty(ratID) && ~isempty(dayID) && ~isempty(cohortID)
+                    display(this.ratID);
+                    display(this.dayID);
+                    display(this.cohortID);
+                    if ~isempty(this.ratID) && ~isempty(this.dayID) && ...
+                            ~isempty(this.cohortID)
                         Proceed();
                     else
                         disp('Missing necessary data');
@@ -113,7 +114,7 @@ classdef RatScreen < GUIFiles.GUI
             function Proceed()
                 %Currently empty; will advance to recording screen.
                 disp('Ready to proceed');
-                close(guiF);
+                set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
         end
         
