@@ -77,6 +77,12 @@ classdef EntryScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             end
         end
         
+        function returnedName = getNameType(obj)
+           waitfor(obj, 'nameType'); %Function waits to elapse until
+           %nameType has been changed.
+           returnedName = obj.nameType;
+        end
+        
         function fig = display(guiobj)
         
         end
