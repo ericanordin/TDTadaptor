@@ -14,57 +14,33 @@ import StandardFunctions.*
 % program.
 
 running = 1;
-firstRun = 1;
-entryScr = EntryScreen();
+%firstRun = 1;
+%entryScr = EntryScreen();
 
 %Names for screens not initially created are initialized to
 %an empty string so that isobject returns 0 instead of crashing the
 %program. The exist function doesn't work on objects.
-labScr = '';
-ratScr = '';
+%labScr = '';
+%ratScr = '';
 
 recordScr = RecordScreen();
-set(recordScr.guiF, 'visible', 'off');
+%set(recordScr.guiF, 'visible', 'off');
 
-nameType = getNameType(entryScr);
+%nameType = getNameType(entryScr);
 
 while (running == 1)
-if nameType == NamingMethod.Auto
-    if firstRun == 1
-    checkExistence = isobject(labScr);
-    if checkExistence == 0
-        labScr = LabScreen();
-    else
-        set(labScr.guiF, 'visible', 'on');
-    end
-    labName = getLabName(labScr);
-    
-    %Location of next two lines may change based on directory requests.
-    labDirectory = makeLabDirectory(labName);
-    set(recordScr, 'startingPathway', labDirectory);
-    
-    end
-    
-    checkExistence = isobject(ratScr);
-    if checkExistence == 0
-        ratScr = RatScreen();
-    else
-        set(ratScr.guiF, 'visible', 'on');
-    end
-    [rat, day, cohort] = getRatData(ratScr);
-    autoName = setNameAuto(labDirectory, labName, rat, day, cohort);
-    set(recordScr, 'fileName', autoName);
-    set(recordScr.fileNameEditable, 'String', autoName);
-else
+%if nameType == NamingMethod.Auto
+
+%else
     set(recordScr, 'fileName', recordScr.startingPathway);
     set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
-end
+%end
 
-set(recordScr.guiF, 'visible', 'on');
+%set(recordScr.guiF, 'visible', 'on');
 
 waitForNew(recordScr);
-firstRun = 0;
-set(recordScr.guiF, 'visible', 'off');
+%firstRun = 0;
+%set(recordScr.guiF, 'visible', 'off');
 end
 
 delete(findall(0, 'Type', 'figure'));

@@ -6,13 +6,18 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %Find out how scaling factor applies
     %Write destructor
     %Check that recordTime and scaling are numeric
+    %Enable Auto/Manual button toggle
+    %Modify Auto/Manual buttons visually with textwrap
+    %Work out kinks from going back and forth between Auto and Manual
     
     properties
         %Figures:
         guiF;
         
         %UIControl objects:
-        fileNameButton; %Push button that opens saving GUI
+        fileNameAuto; %Push button that takes the user through LabScreen
+        %(on first iteration only) and RatScreen (on every iteration).
+        fileNameManual; %Push button that opens saving GUI
         fileNameEditable; %Edit field that displays the fileName and allows
         %the user to edit it when clicked.
         continousToggle; %Checkbox that indicates whether the recording
@@ -37,7 +42,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Variables:
         fileName; %The name of the recording
         startingPathway; %What location to open the dialog box at when
-        %fileNameButton is pressed.
+        %fileNameManual is pressed.
         continuous; %Boolean expression of whether the recording is continuous.
         %recordTime is disabled when it is 1 and enabled when it is 0.
         bitDepth;
@@ -46,6 +51,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         recordTime;
         timeRemaining;
         initiateNewTest;
+        labScr; %Holds the LabScreen object
+        ratScr; %Holds the RatScreen object
+        firstAuto; %1 = first auto save iteration; 0 = not first
+        labName; %The name of the lab under which the experiment is being run
         
     end
     
@@ -53,6 +62,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Functions:
         %RecordScreen: constructor
         %ManualSetName: Executes steps to assign the file name manually.
+        %AutoSetName: Executes steps to assign the file name automatically.
         %AdvancedWindow: Opens window for advanced options.
         %TogContinuous: Interfaces between the continuous variable and the
         %continuousToggle checkbox.
@@ -81,17 +91,24 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             this.recordStatus = 0;
             this.timeRemaining = this.recordTime;
             this.initiateNewTest = 0;
+            this.labScr = '';
+            this.ratScr = '';
+            this.firstAuto = 1;
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'DeleteFcn', @CloseProgram, 'Resize', 'off');
             
-            this.fileNameButton = uicontrol('Style', 'pushbutton', 'Position',...
-                [50 900 100 80], 'String', 'File Name', 'Callback',...
+            this.fileNameAuto = uicontrol('Style', 'pushbutton', 'Position',...
+                [50 900 90 80], 'String', 'Name File Automatically', 'Callback',...
+                @AutoSetName);
+            
+            this.fileNameManual = uicontrol('Style', 'pushbutton', 'Position',...
+                [160 900 90 80], 'String', 'Name File Manually', 'Callback',...
                 {@ManualSetName, 'via uigetdir'});
             
             this.fileNameEditable = uicontrol('Style', 'edit', 'Position',...
-                [170 900 780 80], 'String', this.fileName, 'Callback',...
+                [270 900 680 80], 'String', this.fileName, 'Callback',...
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
                 @DeselectOnEnter);
             
@@ -140,6 +157,39 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 disp(this.fileName);
             end
             
+            function AutoSetName(~,~)
+                import GUIFiles.LabScreen;
+                import GUIFiles.RatScreen;
+                import StandardFunctions.makeLabDirectory;
+                import StandardFunctions.setNameAuto;
+                
+                if this.firstAuto == 1
+                    checkExistence = isobject(this.labScr);
+                    if checkExistence == 0
+                        this.labScr = LabScreen();
+                    else
+                        set(this.labScr.guiF, 'visible', 'on');
+                    end
+                    this.labName = getLabName(this.labScr);
+                    
+                    %Location of next two lines may change based on directory requests.
+                    labDirectory = makeLabDirectory(this.labName);
+                    this.startingPathway = labDirectory;
+                    this.firstAuto = 0;
+                end
+
+                checkExistence = isobject(this.ratScr);
+                if checkExistence == 0
+                    this.ratScr = RatScreen();
+                else
+                    set(this.ratScr.guiF, 'visible', 'on');
+                end
+                [rat, day, cohort] = getRatData(this.ratScr);
+                fileName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
+                set(this.fileNameEditable, 'String', fileName);
+                
+            end
+        
             function AdvancedWindow(~, ~)
                 import StandardFunctions.ClearText;
                 
