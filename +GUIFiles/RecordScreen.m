@@ -69,6 +69,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %recordStatus.
         %PressNewTest: Triggers the while loop in main to restart by
         %interfacing with waitForNew.
+        %CloseProgram: Exits the program
         %display: may or may not be enabled
         
         function this = RecordScreen()
@@ -83,7 +84,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
-                'MenuBar', 'none');
+                'MenuBar', 'none', 'DeleteFcn', @CloseProgram, 'Resize', 'off');
             
             this.fileNameButton = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 900 100 80], 'String', 'File Name', 'Callback',...
@@ -144,7 +145,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 
                 advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
                     'off', 'Position', [80 820 300 300], 'ToolBar', 'none',...
-                    'MenuBar', 'none');
+                    'MenuBar', 'none', 'Resize', 'off');
                 %Advanced options figure
                 
                 uicontrol('Style', 'text', 'Position', [20 260 200 20],...
@@ -255,14 +256,22 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 if this.recordStatus == 0
                     set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
                         [0.5 1 0.5]);
+                    set(this.guiF, 'CloseRequestFcn', '');
                 else
                     set(this.startStop, 'String', 'Stop Recording', 'BackgroundColor',...
                         [0.8 0.1 0.1]);
+                    %set(this.guiF, 'CloseRequestFcn', closereq);
+                    %Only enable closing once saving has completed
                 end
             end
             
             function PressNewTest(~,~)
                 this.initiateNewTest = 1;
+            end
+            
+            function CloseProgram(~,~)
+                disp('In CloseProgram');
+                %exit;
             end
         end
         

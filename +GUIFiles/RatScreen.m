@@ -1,10 +1,7 @@
 classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
 %RATSCREEN Enter the details of the rat being tested.
     %To do:
-    %Link to next screen - Import chosenLab from LabScreen to determine 
-    %the naming convention.
     %Write destructor
-    %Complete Proceed function
     
     properties
         %Figures:
@@ -33,6 +30,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Proceed: Compiles chosenLab, ratID, dayID, and cohortID into a
         %file name and opens RecordScreen
         %getRatData: Returns ratID, dayID, cohortID
+        %CloseProgram: Exits the program
         %display: may or may not be enabled
         
         function this = RatScreen()
@@ -43,7 +41,8 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             this.guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
-                @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none');
+                @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none', 'Resize',...
+                'off', 'DeleteFcn', @CloseProgram);
             
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [100 400 800 100], 'String',...
@@ -115,11 +114,14 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             end
             
             function Proceed()
-                %Currently empty; will advance to recording screen.
                 this.dataComplete = 1; %Triggers getRatData
                 disp('Ready to proceed');
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
-                
+            end
+            
+            function CloseProgram(~,~)
+                disp('In CloseProgram');
+                %exit;
             end
         end
         

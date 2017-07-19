@@ -1,7 +1,6 @@
 classdef EntryScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %ENTRYSCREEN Offers the choice of Auto vs Manual naming.
     %To do:
-    %Link to next screen - Export nameType.
     %Make pretty
     %Write destructor
     
@@ -31,12 +30,14 @@ classdef EntryScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %ManualName: sets nameType to Manual
         %Shortcuts: Enables keyboard choices
         %getNameType: Returns the chosen naming method
+        %CloseProgram: Exits the program
         %display: may or may not be enabled
         
         function this = EntryScreen()         
             this.guiF = figure('Name', 'Select Naming Method', 'NumberTitle',...
                 'off', 'Position', [100 100 500 500], 'WindowKeyPressFcn', ...
-                @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none');
+                @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none',...
+                'Resize', 'off', 'DeleteFcn', @CloseProgram);
             
             this.instructions = uicontrol('Style', 'text', 'Position', ...
                 [10 450 400 30], 'String', ...
@@ -75,6 +76,11 @@ classdef EntryScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     case {'m'}
                         ManualName();   
                 end
+            end
+            
+            function CloseProgram(~,~)
+                disp('In CloseProgram');
+                %exit;
             end
         end
         

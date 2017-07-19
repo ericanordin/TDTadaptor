@@ -1,7 +1,6 @@
 classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %LABSCREEN Chooses the LabName.
     %To do:
-    %Link to next screen - Export chosenLab
     %Enable 'go back' option
     %Make pretty
     %Write destructor
@@ -25,12 +24,14 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %LabScreen: constructor
         %Shortcuts: enables keyboard shortcuts
         %Selection: assigns appropriate enumeration to chosenLab
+        %CloseProgram: Exits the program
         %display: may or may not be enabled
         
         function this = LabScreen()
             this.guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
                 'Position', [100 100 500 500], 'WindowKeyPressFcn', ...
-                @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none');
+                @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none',...
+                'Resize', 'off', 'DeleteFcn', @CloseProgram);
             
             this.instructions = uicontrol('Style', 'text', 'Position', ...
                 [10 450 400 30], 'String', ...
@@ -78,6 +79,10 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             
+            function CloseProgram(~,~)
+                disp('In CloseProgram');
+                %exit;
+            end            
         end
         
         function labName = getLabName(obj)
