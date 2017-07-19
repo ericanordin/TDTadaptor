@@ -11,9 +11,14 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         
         %UIControl Objects:
         instructions;
-        eustonButton; %Push button that selects Euston naming format
-        gibbButton; %Push button that selects Gibb naming format
-        metzButton; %Push button that selects Metz naming format
+        eustonButton; %Push button that selects Euston directory and 
+        %naming format
+        gibbButton; %Push button that selects Gibb directory and 
+        %naming format
+        metzButton; %Push button that selects Metz directory and 
+        %naming format
+        otherButton; %Push button that selects the default directory and 
+        %uses the Euston naming format
         
         %Variables:
         chosenLab; %Selected lab
@@ -48,6 +53,10 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             this.metzButton = uicontrol('Style', 'pushbutton', 'Position', ...
                 [20 150 400 50], 'String', 'Metz (m)', ...
                 'Callback', {@Selection, 'm'});
+            
+            this.otherButton = uicontrol('Style', 'pushbutton', 'Position', ...
+                [20 50 400 50], 'String', 'Other (o)', ...
+                'Callback', {@Selection, 'o'});
             %{
             set(guiF, 'visible', 'off');
             ready = input('Type 1 if ready');
@@ -74,6 +83,9 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     case {'m'}
                         this.chosenLab = LabName.Metz;
                         %'Chose Metz'
+                    case {'o'}
+                        this.chosenLab = LabName.Other;
+                        %'Chose Other'
                 end
                 disp(this.chosenLab);
                 set(this.guiF, 'visible', 'off'); %Makes window invisible

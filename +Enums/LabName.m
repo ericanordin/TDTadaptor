@@ -1,7 +1,7 @@
 classdef LabName
     %NAMINGMETHOD Defines enumeration for the PI to determine file naming format.
     enumeration
-        Euston, Gibb, Metz
+        Euston, Gibb, Metz, Other
     end
     
     properties
