@@ -45,6 +45,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         recordStatus; %1 = recording; 0 = not recording
         recordTime;
         timeRemaining;
+        initiateNewTest;
         
     end
     
@@ -66,6 +67,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %currently selected edit field.
         %PressStartStop: Executes start/stop process based on the value of
         %recordStatus.
+        %PressNewTest: Triggers the while loop in main to restart by
+        %interfacing with waitForNew.
         %display: may or may not be enabled
         
         function this = RecordScreen()
@@ -76,6 +79,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             this.startingPathway = 'C:\';
             this.recordStatus = 0;
             this.timeRemaining = this.recordTime;
+            this.initiateNewTest = 0;
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
@@ -120,14 +124,16 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
                 'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
-                'Position', [20 20 100 100]);
+                'Position', [20 20 100 100], 'Callback', @PressNewTest);
             
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
                 if strcmp(throughDirectory, 'via uigetdir')
+                    disp('via uigetdir');
                     [this.fileName, this.startingPathway] = setNameManual(this.startingPathway);
                     set(this.fileNameEditable, 'String', this.fileName);
                 else
+                    disp('no uigetdir');
                     this.fileName = get(this.fileNameEditable, 'String');
                 end
                 disp(this.fileName);
@@ -254,6 +260,16 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                         [0.8 0.1 0.1]);
                 end
             end
+            
+            function PressNewTest(~,~)
+                this.initiateNewTest = 1;
+            end
+        end
+        
+        function waitForNew(obj)
+            waitfor(obj, 'initiateNewTest', 1);
+            obj.initiateNewTest = 0;
+            %set(obj.guiF, 'visible', 'off');
         end
         
         function display(guiobj)

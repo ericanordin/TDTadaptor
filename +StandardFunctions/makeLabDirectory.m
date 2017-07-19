@@ -4,8 +4,8 @@ function labDirectory = makeLabDirectory( labName )
 %This may need to change to take cohortID or other information to divide
 %into subfolders.
 
-labDirectory = strcat('C:/', char(labName));
-labDirectory = strcat(labDirectory, '/');
+labDirectory = strcat('C:\', char(labName));
+labDirectory = strcat(labDirectory, '\');
 
 
 end

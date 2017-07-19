@@ -119,8 +119,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 this.dataComplete = 1; %Triggers getRatData
                 disp('Ready to proceed');
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
-                this.dataComplete = 0; %Resets value for next time the window
-                %is used.
+                
             end
         end
         
@@ -129,6 +128,8 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             rat = obj.ratID;
             day = obj.dayID;
             cohort = obj.cohortID;
+            obj.dataComplete = 0; %Resets value for next time the window
+            %is used.
         end
         
         function fig = display(guiobj)
