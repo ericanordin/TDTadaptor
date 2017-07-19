@@ -80,6 +80,12 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
         end
         
+        function labName = getLabName(obj)
+            waitfor(obj, 'chosenLab'); %Function waits to elapse until
+           %nameType has been changed.
+           labName = obj.chosenLab;
+        end
+        
         function fig = display(guiobj)
         end
         

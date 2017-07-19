@@ -30,6 +30,7 @@ classdef EntryScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %AutoName: sets nameType to Auto
         %ManualName: sets nameType to Manual
         %Shortcuts: Enables keyboard choices
+        %getNameType: Returns the chosen naming method
         %display: may or may not be enabled
         
         function this = EntryScreen()         
@@ -81,6 +82,7 @@ classdef EntryScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
            waitfor(obj, 'nameType'); %Function waits to elapse until
            %nameType has been changed.
            returnedName = obj.nameType;
+           %set(obj.guiF, 'visible', 'off'); %Makes window invisible
         end
         
         function fig = display(guiobj)

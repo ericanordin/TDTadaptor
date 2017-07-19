@@ -11,6 +11,7 @@ function main()
     %Export chosenLab, ratID, dayID, cohortID to setNameAuto; import
     %filePath.
     %Export startingPathway to setNameManual; import filePath.
+    %Determine file save locations for various labs
     
 import Enums.*
 import GUIFiles.*
@@ -20,6 +21,7 @@ import GUIFiles.*
 % program.
 
 running = 1;
+firstRun = 1;
 entryScr = EntryScreen();
 
 %Names for screens not initially created are initialized to
@@ -27,37 +29,53 @@ entryScr = EntryScreen();
 %program. The exist function doesn't work on objects.
 labScr = '';
 ratScr = '';
-recordScr = ''; 
+%recordScr = ''; 
 
 %labScr = LabScreen();
 %ratScr = RatScreen();
-%recordScr = RecordScreen();
-disp('Past constructors');
+recordScr = RecordScreen();
+set(recordScr.guiF, 'visible', 'off');
+%disp('Past constructors');
 
-getNameType(entryScr);
+nameType = getNameType(entryScr);
 
 %while (running == 1)
-
-if entryScr.nameType == NamingMethod.Auto
-    disp('In Auto-if');
+if firstRun ~= 1
+    set(entryScr.guiF, 'visible', 'on');
+end
+if nameType == NamingMethod.Auto
+    %disp('In Auto-if');
     checkExistence = isobject(labScr);
     if checkExistence == 0
         labScr = LabScreen();
+    else
+        set(labScr.guiF, 'visible', 'on');
     end
+    labName = getLabName(labScr);
+    labDirectory = makeLabDirectory(labName);
+    set(recordScr, 'startingPathway', labDirectory);
+    
+    %disp(recordScr.startingPathway);
+    
     checkExistence = isobject(ratScr);
     if checkExistence == 0
         ratScr = RatScreen();
+    else
+        set(ratScr,guiF, 'visible', 'on');
     end
-   %Go through labScr and ratScr steps 
-else
-    disp('Skipped Auto-if');
+    [rat, day, cohort] = getRatData(ratScr);
+    autoName = setNameAuto(labDirectory, labName, rat, day, cohort);
+    set(recordScr, 'fileName', autoName);
+%else
+    %disp('Skipped Auto-if');
 end
 
-checkExistence = isobject(recordScr);
-if checkExistence == 0
-    recordScr = RecordScreen();
-end
+set(recordScr.guiF, 'visible', 'on');
 
+%waitfor New Recording button to trigger appropriate function
+
+firstRun = 0;
+set(recordScr.guiF, 'visible', 'off');
 %end
 
 %To prevent resources from being used unnecessarily, use the exist function

@@ -20,6 +20,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         ratID;
         dayID;
         cohortID;
+        dataComplete; %1 = data entry done; 0 = not done
     end
     
     methods
@@ -31,12 +32,14 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Shortcuts: Checks information when user presses 'return'
         %Proceed: Compiles chosenLab, ratID, dayID, and cohortID into a
         %file name and opens RecordScreen
+        %getRatData: Returns ratID, dayID, cohortID
         %display: may or may not be enabled
         
         function this = RatScreen()
             this.ratID = '';
             this.dayID = '';
             this.cohortID = '';
+            this.dataComplete = 0;
             
             this.guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
@@ -113,11 +116,20 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             function Proceed()
                 %Currently empty; will advance to recording screen.
+                this.dataComplete = 1; %Triggers getRatData
                 disp('Ready to proceed');
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
+                this.dataComplete = 0; %Resets value for next time the window
+                %is used.
             end
         end
         
+        function [rat, day, cohort] = getRatData(obj)
+            waitfor(obj, 'dataComplete', 1);
+            rat = obj.ratID;
+            day = obj.dayID;
+            cohort = obj.cohortID;
+        end
         
         function fig = display(guiobj)
         end

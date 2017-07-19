@@ -7,7 +7,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %Write destructor
     %Check that recordTime and scaling are numeric
     
-    properties %(GetAccess = public)
+    properties
         %Figures:
         guiF;
         
