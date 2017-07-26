@@ -30,7 +30,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Proceed: Compiles chosenLab, ratID, dayID, and cohortID into a
         %file name and opens RecordScreen
         %getRatData: Returns ratID, dayID, cohortID
-        %CloseProgram: Exits the program
+        %HideWindow: Makes the window invisible
         %display: may or may not be enabled
         
         function this = RatScreen()
@@ -42,7 +42,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             this.guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none', 'Resize',...
-                'off', 'DeleteFcn', @CloseProgram);
+                'off', 'DeleteFcn', @HideWindow);
             
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [100 400 800 100], 'String',...
@@ -72,7 +72,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 %Data entered in the ratEntry field is copied into the
                 %ratID variable.
                 this.ratID = get(this.ratEntry, 'String');
-                display(this.ratID);
+                %display(this.ratID);
                 uiresume(gcbf);
             end
             
@@ -80,7 +80,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 %Data entered in the dayEntry field is copied into the
                 %dayID variable.
                 this.dayID = get(this.dayEntry, 'String');
-                display(this.dayID);
+                %display(this.dayID);
                 uiresume(gcbf);
             end
             
@@ -88,7 +88,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 %Data entered in the cohortEntry field is copied into the
                 %cohortID variable.
                 this.cohortID = get(this.cohortEntry, 'String');
-                display(this.cohortID);
+                %display(this.cohortID);
                 uiresume(gcbf);
             end
             
@@ -99,9 +99,9 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     uiwait(gcf); %Prevents if statement from executing until
                     %the setter function has executed for the current
                     %field with uiresume(gcbf).
-                    display(this.ratID);
-                    display(this.dayID);
-                    display(this.cohortID);
+                    %display(this.ratID);
+                    %display(this.dayID);
+                    %display(this.cohortID);
                     if ~isempty(this.ratID) && ~isempty(this.dayID) && ...
                             ~isempty(this.cohortID)
                         Proceed();
@@ -119,8 +119,9 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             
-            function CloseProgram(~,~)
-                disp('In CloseProgram');
+            function HideWindow(~,~)
+                disp('In HideWindow');
+                set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
             end
         end

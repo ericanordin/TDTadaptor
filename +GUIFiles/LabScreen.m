@@ -29,14 +29,14 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %LabScreen: constructor
         %Shortcuts: enables keyboard shortcuts
         %Selection: assigns appropriate enumeration to chosenLab
-        %CloseProgram: Exits the program
+        %HideWindow: Makes the window invisible
         %display: may or may not be enabled
         
         function this = LabScreen()
             this.guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
                 'Position', [100 100 500 500], 'WindowKeyPressFcn', ...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none',...
-                'Resize', 'off', 'DeleteFcn', @CloseProgram);
+                'Resize', 'off', 'DeleteFcn', @HideWindow);
             
             this.instructions = uicontrol('Style', 'text', 'Position', ...
                 [10 450 400 30], 'String', ...
@@ -91,8 +91,9 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             
-            function CloseProgram(~,~)
-                disp('In CloseProgram');
+            function HideWindow(~,~)
+                disp('In HideWindow');
+                set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
             end            
         end
