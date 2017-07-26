@@ -54,6 +54,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         firstAuto; %1 = first auto save iteration; 0 = not first
         labName; %The name of the lab under which the experiment is being run
         errorColor; %The color which fields are changed to when their contents are invalid
+        advCanClose; %1 = advanced settings window is permitted to close; 0 = not permitted
         
     end
     
@@ -94,10 +95,11 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             this.ratScr = '';
             this.firstAuto = 1;
             this.errorColor = [1 0.1 0.1];
+            this.advCanClose = 1;
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
-                'MenuBar', 'none', 'DeleteFcn', @CloseProgram, 'Resize', 'off');
+                'MenuBar', 'none', 'CloseRequestFcn', @CloseProgram, 'Resize', 'off');
             
             this.fileNameAuto = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 950 200 40], 'String', 'Name File Automatically',...
@@ -203,7 +205,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 
                 advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
                     'off', 'Position', [80 820 300 300], 'ToolBar', 'none',...
-                    'MenuBar', 'none', 'Resize', 'off');
+                    'MenuBar', 'none', 'Resize', 'off', 'CloseRequestFcn', @HideWindow);
                 %Advanced options figure
                 
                 uicontrol('Style', 'text', 'Position', [20 260 200 20],...
@@ -266,6 +268,17 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     end
                     %disp(continuous);
                 end
+                
+                function HideWindow(~,~)
+                    disp('In HideWindow');
+                    if this.advCanClose == 1
+                        disp('Allowed to hide');
+                        set(advF, 'visible', 'off'); %Makes window invisible
+                    else
+                        disp('Shouldnt be closing');
+                    end
+                    %exit;
+                end
             end
             
             
@@ -273,17 +286,23 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             function GetRecordTime(field, ~)
                 %Sets recordTime to the contents of recordTimeEditable
                 import StandardFunctions.checkInteger;
-                numericContents = checkInteger(field, errorColor);
+                this.advCanClose = 0; %Prevents the window from closing until 
+                %given a valid entry.
+                numericContents = checkInteger(field, this.errorColor);
                 this.recordTime = numericContents;
-                disp(this.recordTime);
+                this.advCanClose = 1; %Window can close
+                %disp(this.recordTime);
             end
             
             function GetScaling(field, ~)
                 %Sets scaling to the contents of scalingEditable
                 import StandardFunctions.checkInteger;
-                numericContents = checkInteger(field, errorColor);
+                this.advCanClose = 0; %Prevents the window from closing until 
+                %given a valid entry.
+                numericContents = checkInteger(field, this.errorColor);
                 this.scaling = numericContents;
-                disp(this.scaling);
+                this.advCanClose = 1; %Window can close
+                %disp(this.scaling);
             end
             
             function GetBitDepth(field, ~)
@@ -327,8 +346,18 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     %check for whether or not the name will overwrite an
                     %existing file.
                     
+                    recordTimeColor = get(this.recordTimeEditable, 'BackgroundColor');
+                    invalidRecordTime = isequal(recordTimeColor, this.errorColor);
+                    %Uses the background color of recordTimeEditable as a
+                    %check for whether or not the recordTime is valid.
                     
-                    if overwriteFile == 1
+                    scalingColor = get(this.scalingEditable, 'BackgroundColor');
+                    invalidScaling = isequal(scalingColor, this.errorColor);
+                    %Uses the background color of scalingEditable as a
+                    %check for whether or not the scaling is valid.
+                    
+                    if overwriteFile == 1 || invalidScaling == 1 ||...
+                            (continuous == 0 && invalidRecordTime == 1)
                         disp('Cannot record with overwrite');
                         
                     else
@@ -338,6 +367,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                         this.recordStatus = 1;
                         set(this.newRecord, 'Enable', 'off');
                     end
+                    
+                    
                 else
                     set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
                         [0.5 1 0.5]);
@@ -360,6 +391,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     disp('Cannot exit while recording');
                 end
             end
+            
+            
         end
         
         function waitForNew(obj)
@@ -367,6 +400,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             obj.initiateNewTest = 0;
             %set(obj.guiF, 'visible', 'off');
         end
+        
         
         function display(guiobj)
         end
