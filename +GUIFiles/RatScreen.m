@@ -1,5 +1,5 @@
 classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
-%RATSCREEN Enter the details of the rat being tested.
+    %RATSCREEN Enter the details of the rat being tested.
     %To do:
     %Add button to select new lab
     %Button to increase rat number by 1.
@@ -98,22 +98,28 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             function Shortcuts(~, eventdata)
                 %If the user presses 'return', this function checks that
                 %all fields have information.
-                if strcmp(eventdata.Key, 'return')
-                    uiwait(gcf); %Prevents if statement from executing until
-                    %the setter function has executed for the current
-                    %field with uiresume(gcbf).
-                    %display(this.ratID);
-                    %display(this.dayID);
-                    %display(this.cohortID);
-                    if ~isempty(this.ratID) && ~isempty(this.dayID) && ...
-                            ~isempty(this.cohortID)
-                        Proceed();
-                    else
-                        disp('Missing necessary data');
-                    end
-
+                switch eventdata.Key
+                    case 'return'
+                        uiwait(gcf); %Prevents if statement from executing until
+                        %the setter function has executed for the current
+                        %field with uiresume(gcbf).
+                        CheckIfMissing(); %No increment
+                    case 'insert'
+                        CheckIfMissing(1); %Increment by 1
                 end
                 
+            end
+            
+            function CheckIfMissing(varargin)
+                if ~isempty(this.ratID) && ~isempty(this.dayID) && ...
+                        ~isempty(this.cohortID)
+                    if ~isempty(varargin)
+                        this.ratID = this.ratID + varargin{1};
+                    end
+                    Proceed();
+                else
+                    disp('Missing necessary data');
+                end
             end
             
             function Proceed()
