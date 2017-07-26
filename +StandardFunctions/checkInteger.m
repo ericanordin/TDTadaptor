@@ -1,4 +1,4 @@
-function numericContents = checkInteger(entryField)
+function numericContents = checkInteger(entryField, errorColor)
 %checkInteger Confirms that the string in entryField is an integer.
 %   Checks that the contents of entryField are a non-decimal integer and
 %   converts the contents into an integer that is returned as
@@ -12,13 +12,13 @@ while validNum == 0
         %array if the converted string is non-numeric.
         %disp('Not a number');
         set(entryField, 'BackgroundColor',...
-            [1 0.1 0.1]);
+            errorColor);
         waitfor(entryField, 'String');
     else
         if floor(numericContents) ~= numericContents
             %disp('Not an integer');
             set(entryField, 'BackgroundColor',...
-                [1 0.1 0.1]);
+                errorColor);
             waitfor(entryField, 'String');
         else
             validNum = 1;

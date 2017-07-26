@@ -53,6 +53,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         ratScr; %Holds the RatScreen object
         firstAuto; %1 = first auto save iteration; 0 = not first
         labName; %The name of the lab under which the experiment is being run
+        errorColor; %The color which fields are changed to when their contents are invalid
         
     end
     
@@ -92,6 +93,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             this.labScr = '';
             this.ratScr = '';
             this.firstAuto = 1;
+            this.errorColor = [1 0.1 0.1];
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
@@ -144,15 +146,17 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
+                import StandardFunctions.checkOverwrite;
                 if strcmp(throughDirectory, 'via uigetdir')
-                    disp('via uigetdir');
+                    %disp('via uigetdir');
                     [this.fileName, this.startingPathway] = setNameManual(this.startingPathway);
                     set(this.fileNameEditable, 'String', this.fileName);
                 else
-                    disp('no uigetdir');
+                    %disp('no uigetdir');
                     this.fileName = get(this.fileNameEditable, 'String');
                 end
-                disp(this.fileName);
+                %disp(this.fileName);
+                checkOverwrite(this.fileName, this.fileNameEditable, this.errorColor);
             end
             
             function AutoSetName(~,~)
@@ -160,6 +164,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 import GUIFiles.RatScreen;
                 import StandardFunctions.makeLabDirectory;
                 import StandardFunctions.setNameAuto;
+                import StandardFunctions.checkOverwrite;
                 
                 if this.firstAuto == 1
                     checkExistence = isobject(this.labScr);
@@ -187,8 +192,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     newLabDirectory = makeLabDirectory(newLab);
                     this.startingPathway = newLabDirectory;
                 end
-                fileName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
-                set(this.fileNameEditable, 'String', fileName);
+                this.fileName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
+                set(this.fileNameEditable, 'String', this.fileName);
+                checkOverwrite(this.fileName, this.fileNameEditable, this.errorColor);
                 
             end
             
@@ -267,7 +273,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             function GetRecordTime(field, ~)
                 %Sets recordTime to the contents of recordTimeEditable
                 import StandardFunctions.checkInteger;
-                numericContents = checkInteger(field);
+                numericContents = checkInteger(field, errorColor);
                 this.recordTime = numericContents;
                 disp(this.recordTime);
             end
@@ -275,7 +281,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             function GetScaling(field, ~)
                 %Sets scaling to the contents of scalingEditable
                 import StandardFunctions.checkInteger;
-                numericContents = checkInteger(field);
+                numericContents = checkInteger(field, errorColor);
                 this.scaling = numericContents;
                 disp(this.scaling);
             end
@@ -315,11 +321,23 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
                 if this.recordStatus == 0
-                    set(this.startStop, 'String', 'Stop Recording', 'BackgroundColor',...
-                        [0.8 0.1 0.1]);
-                    set(this.guiF, 'CloseRequestFcn', '');
-                    this.recordStatus = 1;
-                    set(this.newRecord, 'Enable', 'off');
+                    fileColor = get(this.fileNameEditable, 'BackgroundColor');
+                    overwriteFile = isequal(fileColor, this.errorColor);
+                    %Uses the background color of fileNameEditable as a
+                    %check for whether or not the name will overwrite an
+                    %existing file.
+                    
+                    
+                    if overwriteFile == 1
+                        disp('Cannot record with overwrite');
+                        
+                    else
+                        set(this.startStop, 'String', 'Stop Recording',...
+                            'BackgroundColor', [0.8 0.1 0.1]);
+                        set(this.guiF, 'CloseRequestFcn', '');
+                        this.recordStatus = 1;
+                        set(this.newRecord, 'Enable', 'off');
+                    end
                 else
                     set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
                         [0.5 1 0.5]);
