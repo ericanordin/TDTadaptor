@@ -2,6 +2,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
 %RATSCREEN Enter the details of the rat being tested.
     %To do:
     %Add button to select new lab
+    %Button to increase rat number by 1.
     %Write destructor
     %Make pretty
     
@@ -48,7 +49,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [100 400 800 100], 'String',...
-                'Type in information then press Enter to continue. Press Tab to select different entries.');
+                'Type in information then press Enter to continue. Press Tab to select different entries. Press Insert to increment the current rat number by one.');
             
             uicontrol('Style', 'text', 'Position', [100 300 200 100],...
                 'String', 'Rat ID');

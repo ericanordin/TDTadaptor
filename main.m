@@ -4,6 +4,7 @@ function main()
 %MAIN Runs the show.
     %To do:
     %Determine file save locations for various labs
+    %Offer option to save advanced settings
     
 import Enums.*
 import GUIFiles.*

@@ -1,7 +1,7 @@
 classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
-    %Disable 'New Recording' button when actively recording or saving.
+    %Enable 'New Recording' button and exit figure when saving is complete.
     %Find out how scaling factor applies
     %Write destructor
     %Enable Auto/Manual button toggle
@@ -34,7 +34,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %recording.
         spectrogramDisplay; %Shows the spectrogram corresponding to the
         %real-time recording.
-        newRecord; %Brings user back to EntryScreen.
+        newRecord; %Resets to directory with no file name.
         
         
         %Variables:
@@ -357,12 +357,13 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                         [0.8 0.1 0.1]);
                     set(this.guiF, 'CloseRequestFcn', '');
                     this.recordStatus = 1;
+                    set(this.newRecord, 'Enable', 'off');
                 else
                     set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
                         [0.5 1 0.5]);
                     this.recordStatus = 0;
                     %set(this.guiF, 'CloseRequestFcn', closereq);
-                    %Only enable closing once saving has completed
+                    %Only enable closing and new record once saving has completed
                 end
             end
             
@@ -372,7 +373,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             function CloseProgram(~,~)
                 disp('In CloseProgram');
-                %exit;
+                if this.recordStatus == 0
+                    disp('Exit - enable before compilation');
+                    %exit;
+                else
+                    disp('Cannot exit while recording');
+                end
             end
         end
         
