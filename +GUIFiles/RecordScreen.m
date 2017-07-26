@@ -10,7 +10,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     
     properties
         %Figures:
-        guiF;
+        guiF; %Main figure
+        advF; %Advanced options figure
         
         %UIControl objects:
         fileNameAuto; %Push button that takes the user through LabScreen
@@ -91,11 +92,13 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             this.recordStatus = 0;
             this.timeRemaining = this.recordTime;
             this.initiateNewTest = 0;
-            this.labScr = '';
-            this.ratScr = '';
+            this.labScr = ''; %isobject returns false
+            this.ratScr = ''; %isobject returns false
+            this.advF = ''; %isobject returns false
             this.firstAuto = 1;
             this.errorColor = [1 0.1 0.1];
             this.advCanClose = 1;
+            this.continuous = 0;
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
@@ -203,7 +206,11 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             function AdvancedWindow(~, ~)
                 import StandardFunctions.ClearText;
                 
-                advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
+                checkExistence = isobject(this.advF);
+                if checkExistence == 0
+
+                
+                this.advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
                     'off', 'Position', [80 820 300 300], 'ToolBar', 'none',...
                     'MenuBar', 'none', 'Resize', 'off', 'CloseRequestFcn', @HideWindow);
                 %Advanced options figure
@@ -244,6 +251,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     'String',...
                     'A red box indicates an invalid entry. See the manual if you are unsure what is permissible.',...
                     'FontWeight', 'bold');
+                end
                 
                 function TogContinuous(checkbox, ~)
                     %Makes appropriate changes based on the status of the
@@ -350,8 +358,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     invalidRecordTime = isequal(recordTimeColor, this.errorColor);
                     %Uses the background color of recordTimeEditable as a
                     %check for whether or not the recordTime is valid.
+
                     invalidRecordNonContinuous =...
-                        (this.continuous == 0 & invalidRecordTime == 1)
+                        (this.continuous == 0 & invalidRecordTime == 1);
                     %invalidRecordNonContinuous is giving an empty logical
                     %array
                     
