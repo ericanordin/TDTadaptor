@@ -350,6 +350,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     invalidRecordTime = isequal(recordTimeColor, this.errorColor);
                     %Uses the background color of recordTimeEditable as a
                     %check for whether or not the recordTime is valid.
+                    invalidRecordNonContinuous =...
+                        (this.continuous == 0 & invalidRecordTime == 1)
+                    %invalidRecordNonContinuous is giving an empty logical
+                    %array
                     
                     scalingColor = get(this.scalingEditable, 'BackgroundColor');
                     invalidScaling = isequal(scalingColor, this.errorColor);
@@ -357,8 +361,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     %check for whether or not the scaling is valid.
                     
                     if overwriteFile == 1 || invalidScaling == 1 ||...
-                            (continuous == 0 && invalidRecordTime == 1)
-                        disp('Cannot record with overwrite');
+                            invalidRecordNonContinuous == 1
+                            %(this.continuous == 0 && invalidRecordTime == 1)
+                        disp('Invalid field prevents record');
                         
                     else
                         set(this.startStop, 'String', 'Stop Recording',...
