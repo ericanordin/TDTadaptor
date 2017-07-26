@@ -33,13 +33,15 @@ while (running == 1)
 %if nameType == NamingMethod.Auto
 
 %else
-    set(recordScr, 'fileName', recordScr.startingPathway);
-    set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
+ 
+   set(recordScr, 'fileName', recordScr.startingPathway);
+   set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
 %end
 
 %set(recordScr.guiF, 'visible', 'on');
 
 waitForNew(recordScr);
+%disp('New while loop rendition');
 %firstRun = 0;
 %set(recordScr.guiF, 'visible', 'off');
 end

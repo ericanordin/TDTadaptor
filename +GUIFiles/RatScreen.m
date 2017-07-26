@@ -2,7 +2,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %RATSCREEN Enter the details of the rat being tested.
     %To do:
     %Add button to select new lab
-    %Button to increase rat number by 1.
     %Write destructor
     %Make pretty
     
@@ -21,6 +20,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         dayID;
         cohortID;
         dataComplete; %1 = data entry done; 0 = not done
+        newLab; %Set when the lab is changed from this screen
     end
     
     methods
@@ -36,7 +36,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %HideWindow: Makes the window invisible
         %display: may or may not be enabled
         
-        function this = RatScreen()
+        function this = RatScreen(recordScreen)
             this.ratID = '';
             this.dayID = '';
             this.cohortID = '';
@@ -49,7 +49,10 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [100 400 800 100], 'String',...
-                'Type in information then press Enter to continue. Press Tab to select different entries. Press Insert to increment the current rat number by one.');
+                {'Type in information then press Enter to continue.',...
+                'Press Tab to select different entries.',...
+                'Press Insert to increment the current rat number by one.',...
+                'Press Home to select a different lab.'});
             
             uicontrol('Style', 'text', 'Position', [100 300 200 100],...
                 'String', 'Rat ID');
@@ -96,6 +99,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             end
             
             function Shortcuts(~, eventdata)
+                import GUIFiles.LabScreen;
                 %If the user presses 'return', this function checks that
                 %all fields have information.
                 switch eventdata.Key
@@ -106,6 +110,14 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                         CheckIfMissing(); %No increment
                     case 'insert'
                         CheckIfMissing(1); %Increment by 1
+                    case 'home'
+                        checkExistence = isobject(recordScreen.labScr);
+                        if checkExistence == 0
+                            recordScreen.labScr = LabScreen();
+                        else
+                            set(recordScreen.labScr.guiF, 'visible', 'on');
+                        end
+                        this.newLab = getLabName(recordScreen.labScr);
                 end
                 
             end
@@ -135,11 +147,17 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             end
         end
         
-        function [rat, day, cohort] = getRatData(obj)
+        function [rat, day, cohort, modifiedLab] = getRatData(obj)
             waitfor(obj, 'dataComplete', 1);
             rat = obj.ratID;
             day = obj.dayID;
             cohort = obj.cohortID;
+            if ~isempty(obj.newLab)
+                modifiedLab = obj.newLab;
+                obj.newLab = '';
+            else
+                modifiedLab = '';
+            end
             obj.dataComplete = 0; %Resets value for next time the window
             %is used.
         end

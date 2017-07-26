@@ -178,11 +178,15 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
 
                 checkExistence = isobject(this.ratScr);
                 if checkExistence == 0
-                    this.ratScr = RatScreen();
+                    this.ratScr = RatScreen(this);
                 else
                     set(this.ratScr.guiF, 'visible', 'on');
                 end
-                [rat, day, cohort] = getRatData(this.ratScr);
+                [rat, day, cohort, newLab] = getRatData(this.ratScr);
+                if ~isempty(newLab)
+                    newLabDirectory = makeLabDirectory(newLab);
+                    this.startingPathway = newLabDirectory;
+                end
                 fileName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
                 set(this.fileNameEditable, 'String', fileName);
                 
