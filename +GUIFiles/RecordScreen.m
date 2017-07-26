@@ -175,7 +175,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     this.startingPathway = labDirectory;
                     this.firstAuto = 0;
                 end
-
+                
                 checkExistence = isobject(this.ratScr);
                 if checkExistence == 0
                     this.ratScr = RatScreen(this);
@@ -191,7 +191,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 set(this.fileNameEditable, 'String', fileName);
                 
             end
-        
+            
             function AdvancedWindow(~, ~)
                 import StandardFunctions.ClearText;
                 
@@ -266,58 +266,16 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             function GetRecordTime(field, ~)
                 %Sets recordTime to the contents of recordTimeEditable
-                validNum = 0;
-                while validNum == 0
-                    fieldContents = get(field, 'String');
-                    numericContents = str2num(fieldContents);
-                    if isempty(numericContents) %str2num returns an empty 
-                        %array if the converted string is non-numeric.
-                        %disp('Not a number');
-                        set(this.recordTimeEditable, 'BackgroundColor',...
-                            [1 0.1 0.1]);
-                        waitfor(this.recordTimeEditable, 'String');
-                    else
-                        if floor(numericContents) ~= numericContents
-                            %disp('Not an integer');
-                            set(this.recordTimeEditable, 'BackgroundColor',...
-                            [1 0.1 0.1]);
-                            waitfor(this.recordTimeEditable, 'String');
-                        else
-                            validNum = 1;
-                            set(this.recordTimeEditable, 'BackgroundColor',...
-                            'white');
-                        end
-                    end
-                end
+                import StandardFunctions.checkInteger;
+                numericContents = checkInteger(field);
                 this.recordTime = numericContents;
                 disp(this.recordTime);
             end
             
             function GetScaling(field, ~)
                 %Sets scaling to the contents of scalingEditable
-                validNum = 0;
-                while validNum == 0
-                    fieldContents = get(field, 'String');
-                    numericContents = str2num(fieldContents);
-                    if isempty(numericContents) %str2num returns an empty 
-                        %array if the converted string is non-numeric.
-                        %disp('Not a number');
-                        set(this.scalingEditable, 'BackgroundColor',...
-                            [1 0.1 0.1]);                        
-                        waitfor(this.scalingEditable, 'String');
-                    else
-                        if floor(numericContents) ~= numericContents
-                            %disp('Not an integer');
-                            set(this.scalingEditable, 'BackgroundColor',...
-                            [1 0.1 0.1]);
-                            waitfor(this.scalingEditable, 'String');
-                        else
-                            validNum = 1;
-                            set(this.scalingEditable, 'BackgroundColor',...
-                            'white');
-                        end
-                    end
-                end
+                import StandardFunctions.checkInteger;
+                numericContents = checkInteger(field);
                 this.scaling = numericContents;
                 disp(this.scaling);
             end
@@ -395,7 +353,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         function display(guiobj)
         end
         
-       % function path = get.startingPathway(obj)
+        % function path = get.startingPathway(obj)
         %    path = obj.startingPathway;
         %end
     end

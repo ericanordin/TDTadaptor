@@ -1,7 +1,6 @@
 classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %RATSCREEN Enter the details of the rat being tested.
     %To do:
-    %Add button to select new lab
     %Write destructor
     %Make pretty
     
