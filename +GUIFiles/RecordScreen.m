@@ -7,7 +7,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %Write destructor
     %Check that recordTime and scaling are numeric
     %Enable Auto/Manual button toggle
-    %Modify Auto/Manual buttons visually with textwrap
     %Work out kinks from going back and forth between Auto and Manual
     
     properties
@@ -230,6 +229,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     [220 170 50 20], 'String', {16, 24, 32}, 'Value', 2,...
                     'Callback', @GetBitDepth);
                 
+                uicontrol('Style', 'text', 'Position', [40 100 220 50],...
+                    'String', 'A red box indicates an invalid entry');
+                
                 function TogContinuous(checkbox, ~)
                     %Makes appropriate changes based on the status of the
                     %checkbox.
@@ -259,7 +261,38 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             function GetRecordTime(field, ~)
                 %Sets recordTime to the contents of recordTimeEditable
-                this.recordTime = get(field, 'String');
+                validNum = 0;
+                while validNum == 0
+                    fieldContents = get(field, 'String');
+                    numericContents = str2num(fieldContents);
+                    if isempty(numericContents) %str2num returns an empty 
+                        %array if the converted string is non-numeric.
+                        disp('Not a number');
+                        set(this.recordTimeEditable, 'BackgroundColor',...
+                            [1 0.1 0.1]);
+                        %errorMessage = figure('Name', 'Data Entry Error',...
+                         %   'NumberTitle', 'off', 'ToolBar', 'none',...
+                          %  'MenuBar', 'none', 'Position', [200 800 300 200],...
+                          %  'Color', [1 0.1 0.1]);
+                        %errorText = 
+                        
+                        waitfor(this.recordTimeEditable, 'String');
+                        %Display error message
+                    else
+                        if floor(numericContents) ~= numericContents
+                            disp('Not an integer');
+                            set(this.recordTimeEditable, 'BackgroundColor',...
+                            [1 0.1 0.1]);
+                            waitfor(this.recordTimeEditable, 'String');
+                            %Display error message
+                        else
+                            validNum = 1;
+                            set(this.recordTimeEditable, 'BackgroundColor',...
+                            'white');
+                        end
+                    end
+                end
+                this.recordTime = numericContents;
                 disp(this.recordTime);
             end
             
@@ -304,12 +337,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
                 if this.recordStatus == 0
-                    set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
-                        [0.5 1 0.5]);
-                    set(this.guiF, 'CloseRequestFcn', '');
-                else
                     set(this.startStop, 'String', 'Stop Recording', 'BackgroundColor',...
                         [0.8 0.1 0.1]);
+                    set(this.guiF, 'CloseRequestFcn', '');
+                    this.recordStatus = 1;
+                else
+                    set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
+                        [0.5 1 0.5]);
+                    this.recordStatus = 0;
                     %set(this.guiF, 'CloseRequestFcn', closereq);
                     %Only enable closing once saving has completed
                 end
