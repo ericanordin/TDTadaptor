@@ -1,7 +1,6 @@
 classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %LABSCREEN Chooses the LabName.
     %To do:
-    %Enable 'go back' option
     %Make pretty
     %Write destructor
     

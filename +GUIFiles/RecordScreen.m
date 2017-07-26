@@ -1,13 +1,12 @@
 classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
-    %Enable 'go back' option
     %Disable 'New Recording' button when actively recording or saving.
     %Find out how scaling factor applies
     %Write destructor
-    %Check that recordTime and scaling are numeric
     %Enable Auto/Manual button toggle
     %Work out kinks from going back and forth between Auto and Manual
+    %Make pretty
     
     properties
         %Figures:
@@ -230,7 +229,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     'Callback', @GetBitDepth);
                 
                 uicontrol('Style', 'text', 'Position', [40 100 220 50],...
-                    'String', 'A red box indicates an invalid entry');
+                    'String',...
+                    'A red box indicates an invalid entry. See the manual if you are unsure what is permissible.',...
+                    'FontWeight', 'bold');
                 
                 function TogContinuous(checkbox, ~)
                     %Makes appropriate changes based on the status of the
@@ -267,24 +268,16 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     numericContents = str2num(fieldContents);
                     if isempty(numericContents) %str2num returns an empty 
                         %array if the converted string is non-numeric.
-                        disp('Not a number');
+                        %disp('Not a number');
                         set(this.recordTimeEditable, 'BackgroundColor',...
                             [1 0.1 0.1]);
-                        %errorMessage = figure('Name', 'Data Entry Error',...
-                         %   'NumberTitle', 'off', 'ToolBar', 'none',...
-                          %  'MenuBar', 'none', 'Position', [200 800 300 200],...
-                          %  'Color', [1 0.1 0.1]);
-                        %errorText = 
-                        
                         waitfor(this.recordTimeEditable, 'String');
-                        %Display error message
                     else
                         if floor(numericContents) ~= numericContents
-                            disp('Not an integer');
+                            %disp('Not an integer');
                             set(this.recordTimeEditable, 'BackgroundColor',...
                             [1 0.1 0.1]);
                             waitfor(this.recordTimeEditable, 'String');
-                            %Display error message
                         else
                             validNum = 1;
                             set(this.recordTimeEditable, 'BackgroundColor',...
@@ -298,7 +291,30 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             
             function GetScaling(field, ~)
                 %Sets scaling to the contents of scalingEditable
-                this.scaling = get(field, 'String');
+                validNum = 0;
+                while validNum == 0
+                    fieldContents = get(field, 'String');
+                    numericContents = str2num(fieldContents);
+                    if isempty(numericContents) %str2num returns an empty 
+                        %array if the converted string is non-numeric.
+                        %disp('Not a number');
+                        set(this.scalingEditable, 'BackgroundColor',...
+                            [1 0.1 0.1]);                        
+                        waitfor(this.scalingEditable, 'String');
+                    else
+                        if floor(numericContents) ~= numericContents
+                            %disp('Not an integer');
+                            set(this.scalingEditable, 'BackgroundColor',...
+                            [1 0.1 0.1]);
+                            waitfor(this.scalingEditable, 'String');
+                        else
+                            validNum = 1;
+                            set(this.scalingEditable, 'BackgroundColor',...
+                            'white');
+                        end
+                    end
+                end
+                this.scaling = numericContents;
                 disp(this.scaling);
             end
             
