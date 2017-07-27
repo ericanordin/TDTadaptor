@@ -29,6 +29,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Shortcuts: enables keyboard shortcuts
         %Selection: assigns appropriate enumeration to chosenLab
         %HideWindow: Makes the window invisible
+        %getLabName: returns chosenLab
         %display: may or may not be enabled
         
         function this = LabScreen()

@@ -3,6 +3,7 @@ function filePath = setNameAuto( labDirectory, labName, ratID, dayID, cohortID )
 %To do:
 %Write basic function for Metz
 %Enable warning if file name already exists
+%Refactor: Move in call to makeLabDirectory
 
 import Enums.LabName
 
