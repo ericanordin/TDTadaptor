@@ -6,6 +6,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %Write destructor
     %Enable Auto/Manual button toggle
     %Work out kinks from going back and forth between Auto and Manual
+    %Offer option to save advanced settings
     %Make pretty
     
     properties
