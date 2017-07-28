@@ -5,6 +5,7 @@ function main()
     %To do:
     %Determine file save locations for various labs
     %Offer option to save advanced settings
+    %Attempt to make standard HideWindow function
     
 import Enums.*
 import GUIFiles.*

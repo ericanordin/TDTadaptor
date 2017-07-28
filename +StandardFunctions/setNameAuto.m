@@ -2,6 +2,11 @@ function filePath = setNameAuto( labDirectory, labName, ratID, dayID, cohortID )
 %SETNAMEAUTO Imports information to determine the save location for the recording.
 %To do:
 %Write basic function for Metz
+<<<<<<< HEAD
+=======
+%Enable warning if file name already exists
+%Refactor: Move in call to makeLabDirectory
+>>>>>>> 172275cbc54d7a77051960a05d1ef5fa591679f3
 
 import Enums.LabName
 

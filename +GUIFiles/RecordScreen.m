@@ -49,7 +49,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         recordStatus; %1 = recording; 0 = not recording
         recordTime;
         timeRemaining;
-        initiateNewTest;
+        initiateNewTest; %0 = don't reset screen; 1 = reset screen
         labScr; %Holds the LabScreen object
         ratScr; %Holds the RatScreen object
         firstAuto; %1 = first auto save iteration; 0 = not first
@@ -67,6 +67,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %AdvancedWindow: Opens window for advanced options.
         %TogContinuous: Interfaces between the continuous variable and the
         %continuousToggle checkbox.
+        %HideWindow: Makes window invisible
         %GetRecordTime: Interfaces between the recordTime variable and the
         %recordTimeEditable field.
         %GetScaling: Interfaces between the scaling variable and the
@@ -281,7 +282,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     disp('In HideWindow');
                     if this.advCanClose == 1
                         disp('Allowed to hide');
-                        set(advF, 'visible', 'off'); %Makes window invisible
+                        set(this.advF, 'visible', 'off'); %Makes window invisible
                     else
                         disp('Shouldnt be closing');
                     end

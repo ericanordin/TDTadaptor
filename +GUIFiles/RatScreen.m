@@ -29,10 +29,11 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %SetDayID: Copies dayEntry into dayID
         %SetCohortID: Copies cohortEntry into cohortID
         %Shortcuts: Checks information when user presses 'return'
+        %CheckIfMissing: Ensures that no data is missing and calls Proceed
         %Proceed: Compiles chosenLab, ratID, dayID, and cohortID into a
         %file name and opens RecordScreen
+        %HideWindow: Makes window invisible
         %getRatData: Returns ratID, dayID, cohortID
-        %HideWindow: Makes the window invisible
         %display: may or may not be enabled
         
         function this = RatScreen(recordScreen)
@@ -125,7 +126,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 if ~isempty(this.ratID) && ~isempty(this.dayID) && ...
                         ~isempty(this.cohortID)
                     if ~isempty(varargin)
-                        this.ratID = this.ratID + varargin{1};
+                        this.ratID = this.ratID + varargin{1}; %Increments ratID
                     end
                     Proceed();
                 else
