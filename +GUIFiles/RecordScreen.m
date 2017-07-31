@@ -4,7 +4,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %Enable 'New Recording' button and exit figure when saving is complete.
     %Find out how scaling factor applies
     %Write destructor
-    %Enable Auto/Manual button toggle
     %Work out kinks from going back and forth between Auto and Manual
     %Offer option to save advanced settings
     %Move recordStatus out to prevent circular dependency issue with
@@ -168,6 +167,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 end
                 %disp(this.fileName);
                 checkOverwrite(this.fileName, this.fileNameEditable, this.errorColor);
+                set(this.fileNameManual, 'FontWeight', 'bold'); 
+                set(this.fileNameAuto, 'FontWeight', 'normal');
+
             end
             
             function AutoSetName(~,~)
@@ -207,6 +209,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 set(this.fileNameEditable, 'String', this.fileName);
                 checkOverwrite(this.fileName, this.fileNameEditable, this.errorColor);
                 
+                set(this.fileNameAuto, 'FontWeight', 'bold');
+
+                set(this.fileNameManual, 'FontWeight', 'normal');
+
             end
             
             function AdvancedWindow(~, ~)
