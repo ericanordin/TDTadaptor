@@ -7,6 +7,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
     %Enable Auto/Manual button toggle
     %Work out kinks from going back and forth between Auto and Manual
     %Offer option to save advanced settings
+    %Move recordStatus out to prevent circular dependency issue with
+    %Continuous_Acquire
+    %Remove bit depth options. Should be 32 bit floating point (if
+    %there is no buffer issue).
     %Make pretty
     
     properties

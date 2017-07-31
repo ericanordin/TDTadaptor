@@ -3,6 +3,7 @@ function main()
 
 %MAIN Runs the show.
     %To do:
+    %Change filepaths in Continuous_Acquire
     
 import Enums.*
 import GUIFiles.*
