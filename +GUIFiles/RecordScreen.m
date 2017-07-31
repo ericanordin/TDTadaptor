@@ -293,7 +293,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                     disp('In HideWindow');
                     if this.advCanClose == 1
                         disp('Allowed to hide');
-                        set(this.advF, 'visible', 'off'); %Makes window invisible
+                        import StandardFunctions.generalHideWindow;
+                        generalHideWindow(this.advF);
+                        %set(this.advF, 'visible', 'off'); %Makes window invisible
                     else
                         disp('Shouldnt be closing');
                     end

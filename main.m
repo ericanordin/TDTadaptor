@@ -4,6 +4,7 @@ function main()
 %MAIN Runs the show.
     %To do:
     %Change filepaths in Continuous_Acquire
+    %Sort out uiwait problems for HideWindow
     
 import Enums.*
 import GUIFiles.*

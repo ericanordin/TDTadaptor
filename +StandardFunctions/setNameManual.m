@@ -14,7 +14,11 @@ fileType = '.wav';
 localName = '';
 
 directory = uigetdir(startingPathway);
-startingPathway = directory; %Maintains pathway for future use.
+if directory == 0
+    disp('Successfully skipped');
+else
+    startingPathway = directory; %Maintains pathway for future use.
+end
 
 nameFileWindow = figure('Name', 'Name Your .wav File', 'Position',...
     [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none', ...
@@ -35,7 +39,7 @@ uicontrol(nameFileField); %Places cursor on nameFileField
 uiwait(gcf); %Pauses program until the local file name has been entered.
 
 nameWithDesignation = strcat(localName, fileType);
-filePath = fullfile(directory, nameWithDesignation);
+filePath = fullfile(startingPathway, nameWithDesignation);
 disp(filePath);
 close(nameFileWindow); %Closes the window
 
@@ -51,8 +55,10 @@ close(nameFileWindow); %Closes the window
     end
 
     function HideWindow(~,~)
-        disp('In HideWindow');
-        set(nameFileWindow, 'visible', 'off'); %Makes window invisible
+        import StandardFunctions.generalHideWindow;
+        generalHideWindow(nameFileWindow);
+        %disp('In HideWindow');
+        %set(nameFileWindow, 'visible', 'off'); %Makes window invisible
         %exit;
     end
 %{

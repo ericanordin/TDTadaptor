@@ -141,8 +141,10 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             end
             
             function HideWindow(~,~)
-                disp('In HideWindow');
-                set(this.guiF, 'visible', 'off'); %Makes window invisible
+                import StandardFunctions.generalHideWindow;
+                generalHideWindow(this.guiF);
+                %disp('In HideWindow');
+                %set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
             end
         end
