@@ -1,7 +1,7 @@
 function [filePath, startingPathway] = setNameManual(startingPathway)
-%SETNAMEMANUAL Allows the user to enter the file name manually via dialog box. 
-%Main saves the pathway from previous rats to take the user to the deepest 
-%recent directory. 
+%SETNAMEMANUAL Allows the user to enter the file name manually via dialog box.
+%Main saves the pathway from previous rats to take the user to the deepest
+%recent directory.
 %To do:
 %Enable 'go back'
 %Enable warning if file name already exists
@@ -18,13 +18,13 @@ startingPathway = directory; %Maintains pathway for future use.
 
 nameFileWindow = figure('Name', 'Name Your .wav File', 'Position',...
     [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none', ...
-    'MenuBar', 'none');
+    'MenuBar', 'none', 'CloseRequestFcn', @HideWindow);
 
-uicontrol('Style', 'text', 'String',... 
+uicontrol('Style', 'text', 'String',...
     'Type in the local file name and press Enter to continue',...
     'Position', [20 170 260 100]);
 
-nameFileField = uicontrol('Style', 'edit',... 
+nameFileField = uicontrol('Style', 'edit',...
     'Position', [20 100 200 100], 'Callback', @LocalName);
 
 uicontrol('Style', 'text', 'Position', [220 100 80 100], 'String',...
@@ -49,8 +49,14 @@ close(nameFileWindow); %Closes the window
         localName = get(nameFileField, 'String');
         uiresume(gcbf);
     end
+
+    function HideWindow(~,~)
+        disp('In HideWindow');
+        set(nameFileWindow, 'visible', 'off'); %Makes window invisible
+        %exit;
+    end
 %{
-    function TabShortcut(~, eventdata)
+function TabShortcut(~, eventdata)
         
         import StandardFunctions.ClearText;
        if strcmp(eventdata.Key, 'tab')
@@ -58,10 +64,10 @@ close(nameFileWindow); %Closes the window
        end
     end
 %}
-    %function ClearText(~,~)
-     
-    %disp('Internal ClearText'); 
-    %end
+%function ClearText(~,~)
+
+%disp('Internal ClearText');
+%end
 
 end
 
