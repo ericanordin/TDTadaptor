@@ -1,4 +1,4 @@
-classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
+classdef LabScreen < handle & matlab.mixin.SetGetExactNames
     %LABSCREEN Chooses the LabName.
     %To do:
     %Make pretty
@@ -30,7 +30,6 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Selection: assigns appropriate enumeration to chosenLab
         %HideWindow: Makes the window invisible
         %getLabName: returns chosenLab
-        %display: may or may not be enabled
         
         function this = LabScreen()
             this.guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
@@ -105,13 +104,6 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
            %nameType has been changed.
            labName = obj.chosenLab;
         end
-        
-        function fig = display(guiobj)
-        end
-        
-       % function fig = get.guiF(figObj)
-        %    fig = figObj.guiF;
-        %end
     end
     
 end

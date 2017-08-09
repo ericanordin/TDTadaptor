@@ -1,4 +1,4 @@
-classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
+classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
     %Enable 'New Recording' button and exit figure when saving is complete.
@@ -86,7 +86,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %PressNewTest: Triggers the while loop in main to restart by
         %interfacing with waitForNew.
         %CloseProgram: Exits the program
-        %display: may or may not be enabled
         
         function this = RecordScreen()
             this.bitDepth = 24;
@@ -428,14 +427,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             obj.initiateNewTest = 0;
             %set(obj.guiF, 'visible', 'off');
         end
-        
-        
-        function display(guiobj)
-        end
-        
-        % function path = get.startingPathway(obj)
-        %    path = obj.startingPathway;
-        %end
     end
     
 end

@@ -1,4 +1,4 @@
-classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
+classdef RatScreen < handle & matlab.mixin.SetGetExactNames
     %RATSCREEN Enter the details of the rat being tested.
     %To do:
     %Write destructor
@@ -38,8 +38,9 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %Proceed: Compiles chosenLab, ratID, dayID, and cohortID into a
         %file name and opens RecordScreen
         %HideWindow: Makes window invisible
+        %SetLabels: Assigns text to the Label UIControl objects based on
+        %lab.
         %getRatData: Returns ratID, dayID, cohortID
-        %display: may or may not be enabled
         
         function this = RatScreen(recordScreen, lab)
             this.ratID = '';
@@ -188,9 +189,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
             end
             obj.dataComplete = 0; %Resets value for next time the window
             %is used.
-        end
-        
-        function fig = display(guiobj)
         end
     end
     
