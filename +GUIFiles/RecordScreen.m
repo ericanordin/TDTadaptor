@@ -196,7 +196,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 
                 checkExistence = isobject(this.ratScr);
                 if checkExistence == 0
-                    this.ratScr = RatScreen(this);
+                    this.ratScr = RatScreen(this, this.labName);
                 else
                     set(this.ratScr.guiF, 'visible', 'on');
                 end

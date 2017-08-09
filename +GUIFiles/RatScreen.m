@@ -13,13 +13,18 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         ratEntry; %Field for entering ratID
         dayEntry; %Field for entering dayID
         cohortEntry; %Field for entering cohortID
+        ratLabel; %Label above the ratEntry field
+        dayLabel; %Label above the dayEntry field
+        cohortLabel; %Label above the cohortEntry field
         
         %Variables:
-        ratID;
-        dayID;
-        cohortID;
+        ratID; %The rat's identification or litter number
+        dayID; %The day of the experiment or rat's postnatal day
+        cohortID; %The rat's cohort or experiment number
         dataComplete; %1 = data entry done; 0 = not done
         newLab; %Set when the lab is changed from this screen
+        recordScreen; %RecordScreen object
+        labName; %The lab corresponding to the rat
     end
     
     methods
@@ -36,11 +41,12 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
         %getRatData: Returns ratID, dayID, cohortID
         %display: may or may not be enabled
         
-        function this = RatScreen(recordScreen)
+        function this = RatScreen(recordScreen, lab)
             this.ratID = '';
             this.dayID = '';
             this.cohortID = '';
             this.dataComplete = 0;
+            this.labName = lab;
             
             this.guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 100 1000 500], 'WindowKeyPressFcn',...
@@ -54,20 +60,22 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 'Press Insert to increment the current rat number by one.',...
                 'Press Home to select a different lab.'});
             
-            uicontrol('Style', 'text', 'Position', [100 300 200 100],...
-                'String', 'Rat ID');
+            this.ratLabel = uicontrol('Style', 'text', 'Position',...
+                [100 300 200 100]);
+            
+            this.dayLabel = uicontrol('Style', 'text', 'Position',...
+                [350 300 200 100]);
+            
+            this.cohortLabel = uicontrol('Style', 'text', 'Position',...
+                [600 300 200 100]);
+            
+            SetLabels(this.labName);
             
             this.ratEntry = uicontrol('Style', 'edit', 'Position',...
                 [100 200 200 100], 'Callback', @SetRatID);
             
-            uicontrol('Style', 'text', 'Position', [350 300 200 100],...
-                'String', 'Day ID');
-            
             this.dayEntry = uicontrol('Style', 'edit', 'Position',...
                 [350 200 200 100], 'Callback', @SetDayID);
-            
-            uicontrol('Style', 'text', 'Position', [600 300 200 100],...
-                'String', 'Cohort ID');
             
             this.cohortEntry = uicontrol('Style', 'edit', 'Position',...
                 [600 200 200 100], 'Callback', @SetCohortID);
@@ -118,6 +126,8 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                             set(recordScreen.labScr.guiF, 'visible', 'on');
                         end
                         this.newLab = getLabName(recordScreen.labScr);
+                        disp(this.newLab);
+                        SetLabels(this.newLab);
                 end
                 
             end
@@ -146,6 +156,22 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                 %disp('In HideWindow');
                 %set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
+            end
+            
+            function SetLabels(lab)
+                if strcmp(lab, 'Gibb')
+                    set(this.ratLabel, 'String', 'Rat ID or Litter Number');
+                    
+                    set(this.dayLabel, 'String', 'Postnatal Day');
+                    
+                    set(this.cohortLabel, 'String', 'Experiment');
+                else
+                    set(this.ratLabel, 'String', 'Rat ID');
+                    
+                    set(this.dayLabel,'String', 'Day ID');
+                    
+                    set(this.cohortLabel, 'String', 'Cohort ID');
+                end
             end
         end
         

@@ -87,7 +87,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames & GUIFiles.GUI
                         this.chosenLab = LabName.Other;
                         %'Chose Other'
                 end
-                disp(this.chosenLab);
+                %disp(this.chosenLab);
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             
