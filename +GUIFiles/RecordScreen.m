@@ -2,7 +2,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
     %Enable 'New Recording' button and exit figure when saving is complete.
-    %Find out how scaling factor applies
     %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
     %Offer option to save advanced settings
@@ -26,7 +25,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         continousToggle; %Checkbox that indicates whether the recording
         %will have a time limit
         bitDepthSelect; %Options 16, 24, and 32 bits
-        scalingEditable; %Edit field corresponding to scaling variable.
         advancedButton; %Displays advanced options
         startStop; %Pushbutton that changes between "Start Recording" and
         %"Stop Recording" and toggles the microphone and recordStatus.
@@ -49,7 +47,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         continuous; %Boolean expression of whether the recording is continuous.
         %recordTime is disabled when it is 1 and enabled when it is 0.
         bitDepth;
-        scaling;
         recordStatus; %1 = recording; 0 = not recording
         recordTime;
         timeRemaining;
@@ -74,8 +71,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %HideWindow: Makes window invisible
         %GetRecordTime: Interfaces between the recordTime variable and the
         %recordTimeEditable field.
-        %GetScaling: Interfaces between the scaling variable and the
-        %scalingEditable field.
         %GetBitDepth: Interfaces between the bitDepth variable and the
         %bitDepthSelect pop up menu.
         
@@ -89,7 +84,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         
         function this = RecordScreen()
             this.bitDepth = 24;
-            this.scaling = 10;
             this.recordTime = 600;
             this.fileName = '';
             this.startingPathway = 'C:\';
@@ -242,15 +236,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
                     'inactive');
                 
-                uicontrol('Style', 'text', 'Position', [20 200 200 20],...
-                    'String', 'Scaling Factor', 'HorizontalAlignment',...
-                    'left');
-                
-                this.scalingEditable = uicontrol('Style', 'edit', 'Position',...
-                    [220 200 50 20], 'String', this.scaling, 'Callback',...
-                    @GetScaling, 'ButtonDownFcn', @ClearText, 'Enable',...
-                    'inactive');
-                
                 uicontrol('Style', 'text', 'Position', [20 170 200 20],...
                     'String', 'Bit Depth', 'HorizontalAlignment', 'left');
                 
@@ -260,7 +245,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 
                 uicontrol('Style', 'text', 'Position', [40 100 220 50],...
                     'String',...
-                    'A red box indicates an invalid entry. See the manual if you are unsure what is permissible.',...
+                    'A red box indicates an invalid entry. Check the manual if you are unsure what is permissible.',...
                     'FontWeight', 'bold');
                 end
                 
@@ -315,17 +300,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 %disp(this.recordTime);
             end
             
-            function GetScaling(field, ~)
-                %Sets scaling to the contents of scalingEditable
-                import StandardFunctions.checkInteger;
-                this.advCanClose = 0; %Prevents the window from closing until 
-                %given a valid entry.
-                numericContents = checkInteger(field, this.errorColor);
-                this.scaling = numericContents;
-                this.advCanClose = 1; %Window can close
-                %disp(this.scaling);
-            end
-            
             function GetBitDepth(field, ~)
                 %Sets bitDepth to the contents of bitDepthSelect
                 
@@ -377,16 +351,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     %invalidRecordNonContinuous is giving an empty logical
                     %array
                     
-                    scalingColor = get(this.scalingEditable, 'BackgroundColor');
-                    invalidScaling = isequal(scalingColor, this.errorColor);
-                    %Uses the background color of scalingEditable as a
-                    %check for whether or not the scaling is valid.
-                    
-                    if overwriteFile == 1 || invalidScaling == 1 ||...
-                            invalidRecordNonContinuous == 1
-                            %(this.continuous == 0 && invalidRecordTime == 1)
-                        disp('Invalid field prevents record');
-                        
+                    if overwriteFile == 1 || invalidRecordNonContinuous == 1
+                        disp('Invalid field prevents record');                     
                     else
                         set(this.startStop, 'String', 'Stop Recording',...
                             'BackgroundColor', [0.8 0.1 0.1]);

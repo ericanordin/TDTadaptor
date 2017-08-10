@@ -6,6 +6,7 @@ function main()
     %Enable exit in CloseProgram for each GUI before compiling.
     %Remove display function from GUIs and GUI superclass
     %Update UML
+    %Make commentary display in Status
     
 import Enums.*
 import GUIFiles.*
