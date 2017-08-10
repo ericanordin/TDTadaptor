@@ -74,6 +74,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %PressNewTest: Triggers the while loop in main to restart by
         %interfacing with waitForNew.
         %CloseProgram: Exits the program
+        %setFileName: Allows main to access recordObj.wavName
+        %waitForNew: Resets RecordScreen GUI when New Recording is pressed.
         
         function this = RecordScreen()
             import RPvdsExLink.Recording;
@@ -367,6 +369,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             end
             
             
+        end
+        
+        function setFileName(screenObj, newName)
+            screenObj.recordObj.wavName = newName;
         end
         
         function waitForNew(obj)

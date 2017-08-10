@@ -38,11 +38,8 @@ while (running == 1)
 %if nameType == NamingMethod.Auto
 
 %else
-v = get(recordScr)
-
-    %rec = get(recordScr, recordObj);
-    %set(rec, 'wavName', recordScr.startingPathway);
-   set(recordScr, 'recordObj.wavName', recordScr.startingPathway);
+%Resets the wav file name to the directory of the most recent rat.
+   setFileName(recordScr, recordScr.startingPathway); 
    set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
 %end
 
