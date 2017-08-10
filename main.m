@@ -1,12 +1,14 @@
 function main()
 %MAIN Runs the show.
     %To do:
-    %Change filepaths in Continuous_Acquire
     %Sort out uiwait problems for HideWindow
-    %Enable exit in CloseProgram for each GUI before compiling.
-    %Remove display function from GUIs and GUI superclass
     %Update UML
     %Make commentary display in Status
+    %Waveform and spectrogram
+    
+    %Before compiling:
+    %Change filepaths in Continuous_Acquire
+    %Enable exit in CloseProgram for each GUI
     
 import Enums.*
 import GUIFiles.*

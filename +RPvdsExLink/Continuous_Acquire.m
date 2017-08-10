@@ -26,6 +26,8 @@ fs = RP.GetSFreq(); %Returns sampling frequency
 bufpts = npts/2; 
 t=(1:bufpts)/fs;
 
+%Wait here for recordStatus to change so that the proper settings are used.
+
 filePath = strcat(filePath, 'fnoise.F32'); %Change this for .wav
 fnoise = fopen(filePath,'w');
     
