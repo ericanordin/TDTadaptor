@@ -42,6 +42,9 @@ while (running == 1)
 
 %set(recordScr.guiF, 'visible', 'on');
 
+%Might put Continuous_Acquire here; dependent upon recordStatus and
+%filePath
+
 waitForNew(recordScr);
 %disp('New while loop rendition');
 %firstRun = 0;
