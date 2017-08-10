@@ -185,11 +185,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     else
                         set(this.labScr.guiF, 'visible', 'on');
                     end
-                    this.labName = getLabName(this.labScr);
-                    
-                    %Location of next two lines may change based on directory requests.
-                    labDirectory = makeLabDirectory(this.labName);
-                    this.startingPathway = labDirectory;
+                    this.labName = getLabName(this.labScr);           
                     this.firstAuto = 0;
                 end
                 
@@ -201,9 +197,13 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 end
                 [rat, day, cohort, newLab] = getRatData(this.ratScr);
                 if ~isempty(newLab)
-                    newLabDirectory = makeLabDirectory(newLab);
-                    this.startingPathway = newLabDirectory;
+                    this.labName = newLab;
                 end
+                
+                labDirectory = makeLabDirectory(this.labName, cohort);
+                this.startingPathway = labDirectory;
+                
+                
                 this.fileName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
                 set(this.fileNameEditable, 'String', this.fileName);
                 checkOverwrite(this.fileName, this.fileNameEditable, this.errorColor);

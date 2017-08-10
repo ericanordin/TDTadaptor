@@ -5,7 +5,7 @@ function filePath = setNameAuto( labDirectory, labName, ratID, dayID, cohortID )
 %Determine subfolders
 
 import Enums.LabName
-import StandardFunctions.makeLabDirectory;
+%import StandardFunctions.makeLabDirectory;
 
 if strcmp(labName, 'Metz')
     %Use Metz naming convention

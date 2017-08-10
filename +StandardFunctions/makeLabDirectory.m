@@ -1,10 +1,28 @@
-function labDirectory = makeLabDirectory( labName )
+function labDirectory = makeLabDirectory(labName, expNum)
 %MAKELABDIRECTORY Takes the lab name and sets the location where the .wav
 %file will be saved accordingly.
-%This may need to change to take cohortID or other information to divide
-%into subfolders.
 
-labDirectory = strcat('C:\Data\', char(labName));
-labDirectory = strcat(labDirectory, '\');
+import GUIFiles.ExpOrContScreen
+
+baseDirectory = 'C:\Data\';
+
+combinedDirectory = strcat(baseDirectory, char(labName));
+combinedDirectory = strcat(combinedDirectory, '\');
+
+subfolder = '';
+if strcmp(labName, 'Metz')
+    subfolderGUI = ExpOrContScreen();
+    subfolder = getExpOrCont(subfolderGUI);
+    subfolder = strcat(subfolder, '\');
+else
+    if strcmp(labName, 'Gibb')
+        subfolder = 'Experiment';
+        subfolder = strcat(subfolder, expNum);
+        subfolder = strcat(subfolder, '\');
+    end
+end
+
+labDirectory = strcat(combinedDirectory, subfolder);
+%labDirectory = strcat(labDirectory, '\');
 
 end
