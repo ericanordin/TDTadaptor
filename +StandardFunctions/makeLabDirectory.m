@@ -23,6 +23,5 @@ else
 end
 
 labDirectory = strcat(combinedDirectory, subfolder);
-%labDirectory = strcat(labDirectory, '\');
 
 end

@@ -9,8 +9,8 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
         
         %UIControl Objects:
         instructions;
-        experimentalButton;
-        controlButton;        
+        experimentalButton; %Push button that selects the Experimental subfolder
+        controlButton; %Push button that selects the Control subfolder       
         
         %Variables:
         subfolderName; %The selection of experimental or control
@@ -19,8 +19,9 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
     methods
         %Functions:
         %ExpOrContScreen: constructor
-        %Shortcuts: enables keyboardd shortcuts
+        %Shortcuts: enables keyboard shortcuts
         %Selection: assigns appropriate string to choice
+        %getExpOrCont: returns subfolderName
         
         function this = ExpOrContScreen()
             this.guiF = figure('Name', 'Subfolder', 'NumberTitle', 'off',...
@@ -29,13 +30,14 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                 @Shortcuts);
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [30 190 440 70], 'String',...
-                'Is this an experimental or a control rat?');
+                'Is this an experimental or a control rat?',...
+                'FontSize', 14);
             this.experimentalButton = uicontrol('Style', 'pushbutton',...
                 'Position', [50 100 150 100], 'String', 'Experimental (e)',...
-                'Callback', {@Selection, 'e'});
+                'Callback', {@Selection, 'e'}, 'FontSize', 13);
             this.controlButton = uicontrol('Style', 'pushbutton',...
                 'Position', [300 100 150 100], 'String', 'Control (c)',...
-                'Callback', {@Selection, 'c'});
+                'Callback', {@Selection, 'c'}, 'FontSize', 13);
             
             function Shortcuts(src, eventdata)
                 %Key press shortcuts go straight to Selection function
@@ -48,23 +50,15 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                         this.subfolderName = 'Experimental';
                     case {'c'}
                         this.subfolderName = 'Control';
-                end
-                
+                end                
             end
         end
         
         function subfolder = getExpOrCont(obj)
-            %class(obj)
-            %waitfor is not recognizing obj as valid
             waitfor(obj, 'subfolderName');
-            %waitfor(obj);
             subfolder = obj.subfolderName;
             close(obj.guiF);
         end
-        
-    
     end
-
-
 end
 

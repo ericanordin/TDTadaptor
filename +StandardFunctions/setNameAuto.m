@@ -1,8 +1,5 @@
 function filePath = setNameAuto( labDirectory, labName, ratID, dayID, cohortID )
 %SETNAMEAUTO Imports information to determine the save location for the recording.
-%To do:
-%Differentiate for labs
-%Determine subfolders
 
 import Enums.LabName
 %import StandardFunctions.makeLabDirectory;
