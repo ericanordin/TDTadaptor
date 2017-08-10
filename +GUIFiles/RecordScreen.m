@@ -5,8 +5,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
     %Offer option to save advanced settings
-    %Move recordStatus out to prevent circular dependency issue with
-    %Continuous_Acquire
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
     %Make pretty
@@ -20,16 +18,16 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         fileNameAuto; %Push button that takes the user through LabScreen
         %(on first iteration only) and RatScreen (on every iteration).
         fileNameManual; %Push button that opens saving GUI
-        fileNameEditable; %Edit field that displays the fileName and allows
+        fileNameEditable; %Edit field that displays the recordObj.wavName and allows
         %the user to edit it when clicked.
         continousToggle; %Checkbox that indicates whether the recording
         %will have a time limit
         bitDepthSelect; %Options 16, 24, and 32 bits
         advancedButton; %Displays advanced options
         startStop; %Pushbutton that changes between "Start Recording" and
-        %"Stop Recording" and toggles the microphone and recordStatus.
+        %"Stop Recording" and toggles the microphone and recordObj.recordStatus.
         recordTimeLabel; %Text that identifies recordTimeEditable
-        recordTimeEditable; %Edit field corresponding to recordTime variable
+        recordTimeEditable; %Edit field corresponding to recordObj.recordTime variable
         timeRemainingLabel; %Text that identifies timeRemainingDisplay
         timeRemainingDisplay; %Edit field corresponding to timeRemaining variable
         statusWindow; %Displays text describing the background processes
@@ -41,14 +39,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         
         
         %Variables:
-        fileName; %The name of the recording
+        recordObj; %The Recording class object
         startingPathway; %What location to open the dialog box at when
         %fileNameManual is pressed.
-        continuous; %Boolean expression of whether the recording is continuous.
-        %recordTime is disabled when it is 1 and enabled when it is 0.
-        bitDepth;
-        recordStatus; %1 = recording; 0 = not recording
-        recordTime;
         timeRemaining;
         initiateNewTest; %0 = don't reset screen; 1 = reset screen
         labScr; %Holds the LabScreen object
@@ -66,29 +59,28 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %ManualSetName: Executes steps to assign the file name manually.
         %AutoSetName: Executes steps to assign the file name automatically.
         %AdvancedWindow: Opens window for advanced options.
-        %TogContinuous: Interfaces between the continuous variable and the
+        %TogContinuous: Interfaces between the recordObj.continuous variable and the
         %continuousToggle checkbox.
         %HideWindow: Makes window invisible
-        %GetRecordTime: Interfaces between the recordTime variable and the
+        %GetRecordTime: Interfaces between the recordObj.recordTime variable and the
         %recordTimeEditable field.
-        %GetBitDepth: Interfaces between the bitDepth variable and the
-        %bitDepthSelect pop up menu.
+        %GetBitDepth: Interfaces between the recObj.bitDepth variable and 
+        %the bitDepthSelect pop up menu.
         
         %DeselectOnEnter: Changes location of the cursor away from the
         %currently selected edit field.
         %PressStartStop: Executes start/stop process based on the value of
-        %recordStatus.
+        %recordObj.recordStatus.
         %PressNewTest: Triggers the while loop in main to restart by
         %interfacing with waitForNew.
         %CloseProgram: Exits the program
         
         function this = RecordScreen()
-            this.bitDepth = 24;
-            this.recordTime = 600;
-            this.fileName = '';
+            import RPvdsExLink.Recording;
+            this.recordObj = Recording();
+
             this.startingPathway = 'C:\';
-            this.recordStatus = 0;
-            this.timeRemaining = this.recordTime;
+            this.timeRemaining = this.recordObj.recordTime;
             this.initiateNewTest = 0;
             this.labScr = ''; %isobject returns false
             this.ratScr = ''; %isobject returns false
@@ -96,7 +88,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.firstAuto = 1;
             this.errorColor = [1 0.1 0.1];
             this.advCanClose = 1;
-            this.continuous = 0;
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
@@ -111,7 +102,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 {@ManualSetName, 'via uigetdir'});
             
             this.fileNameEditable = uicontrol('Style', 'edit', 'Position',...
-                [270 900 680 90], 'String', this.fileName, 'Callback',...
+                [270 900 680 90], 'String', this.recordObj.wavName, 'Callback',...
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
                 @DeselectOnEnter);
             
@@ -152,14 +143,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.checkOverwrite;
                 if strcmp(throughDirectory, 'via uigetdir')
                     %disp('via uigetdir');
-                    [this.fileName, this.startingPathway] = setNameManual(this.startingPathway);
-                    set(this.fileNameEditable, 'String', this.fileName);
+                    [this.recordObj.wavName, this.startingPathway] = setNameManual(this.startingPathway);
+                    set(this.fileNameEditable, 'String', this.recordObj.wavName);
                 else
                     %disp('no uigetdir');
-                    this.fileName = get(this.fileNameEditable, 'String');
+                    this.recordObj.wavName = get(this.fileNameEditable, 'String');
                 end
-                %disp(this.fileName);
-                checkOverwrite(this.fileName, this.fileNameEditable, this.errorColor);
+                %disp(this.recordObj.wavName);
+                checkOverwrite(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
                 set(this.fileNameManual, 'FontWeight', 'bold'); 
                 set(this.fileNameAuto, 'FontWeight', 'normal');
 
@@ -198,9 +189,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 this.startingPathway = labDirectory;
                 
                 
-                this.fileName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
-                set(this.fileNameEditable, 'String', this.fileName);
-                checkOverwrite(this.fileName, this.fileNameEditable, this.errorColor);
+                this.recordObj.wavName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
+                set(this.fileNameEditable, 'String', this.recordObj.wavName);
+                checkOverwrite(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
                 
                 set(this.fileNameAuto, 'FontWeight', 'bold');
 
@@ -232,7 +223,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     'HorizontalAlignment', 'left');
                 
                 this.recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
-                    [220 230 50 20], 'String', this.recordTime, 'Callback',...
+                    [220 230 50 20], 'String', this.recordObj.recordTime, 'Callback',...
                     @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
                     'inactive');
                 
@@ -256,21 +247,21 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     %whether or not the Continuous checkbox is checked or not.
                     %disp(isCont);
                     if isCont == 1 %Box is checked
-                        %recordTime fields are made invisible
+                        %recordObj.recordTime fields are made invisible
                         set(this.timeRemainingLabel, 'Visible', 'off');
                         set(this.timeRemainingDisplay, 'Visible', 'off');
                         set(this.recordTimeLabel, 'Visible', 'off');
                         set(this.recordTimeEditable, 'Visible', 'off');
-                        this.continuous = 1;
+                        this.recordObj.continuous = 1;
                     else %Box is unchecked
-                        %recordTime fields are made visible
+                        %recordObj.recordTime fields are made visible
                         set(this.timeRemainingLabel, 'Visible', 'on');
                         set(this.timeRemainingDisplay, 'Visible', 'on');
                         set(this.recordTimeLabel, 'Visible', 'on');
                         set(this.recordTimeEditable, 'Visible', 'on');
-                        this.continuous = 0;
+                        this.recordObj.continuous = 0;
                     end
-                    %disp(continuous);
+                    %disp(recordObj.continuous);
                 end
                 
                 function HideWindow(~,~)
@@ -290,39 +281,29 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             
             function GetRecordTime(field, ~)
-                %Sets recordTime to the contents of recordTimeEditable
+                %Sets recordObj.recordTime to the contents of recordTimeEditable
                 import StandardFunctions.checkInteger;
                 this.advCanClose = 0; %Prevents the window from closing until 
                 %given a valid entry.
                 numericContents = checkInteger(field, this.errorColor);
-                this.recordTime = numericContents;
+                this.recordObj.recordTime = numericContents;
                 this.advCanClose = 1; %Window can close
-                %disp(this.recordTime);
+                %disp(this.recordObj.recordTime);
             end
             
             function GetBitDepth(field, ~)
-                %Sets bitDepth to the contents of bitDepthSelect
-                
-                %{
-                switch bitDepth
-                    case 16
-                        set(field, 'Value', 1);
-                    case 24
-                        set(field, 'Value', 2);
-                    case 32
-                        set(field, 'Value', 3);
-                end
-                %}
+                %Sets recordObj.bitDepth to the contents of bitDepthSelect
+
                 fieldValue = get(field, 'Value');
                 switch fieldValue
                     case 1
-                        this.bitDepth = 16;
+                        this.recordObj.bitDepth = 16;
                     case 2
-                        this.bitDepth = 24;
+                        this.recordObj.bitDepth = 24;
                     case 3
-                        this.bitDepth = 32;
+                        this.recordObj.bitDepth = 32;
                 end
-                disp(this.bitDepth);
+                disp(this.recordObj.bitDepth);
             end
             
             function DeselectOnEnter(~, eventdata)
@@ -334,7 +315,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
-                if this.recordStatus == 0
+                if this.recordObj.recordStatus == 0
                     fileColor = get(this.fileNameEditable, 'BackgroundColor');
                     overwriteFile = isequal(fileColor, this.errorColor);
                     %Uses the background color of fileNameEditable as a
@@ -344,10 +325,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     recordTimeColor = get(this.recordTimeEditable, 'BackgroundColor');
                     invalidRecordTime = isequal(recordTimeColor, this.errorColor);
                     %Uses the background color of recordTimeEditable as a
-                    %check for whether or not the recordTime is valid.
+                    %check for whether or not the recordObj.recordTime is valid.
 
                     invalidRecordNonContinuous =...
-                        (this.continuous == 0 & invalidRecordTime == 1);
+                        (this.recordObj.continuous == 0 & invalidRecordTime == 1);
                     %invalidRecordNonContinuous is giving an empty logical
                     %array
                     
@@ -357,7 +338,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         set(this.startStop, 'String', 'Stop Recording',...
                             'BackgroundColor', [0.8 0.1 0.1]);
                         set(this.guiF, 'CloseRequestFcn', '');
-                        this.recordStatus = 1;
+                        this.recordObj.recordStatus = 1;
                         set(this.newRecord, 'Enable', 'off');
                     end
                     
@@ -365,7 +346,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 else
                     set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
                         [0.5 1 0.5]);
-                    this.recordStatus = 0;
+                    this.recordObj.recordStatus = 0;
                     %set(this.guiF, 'CloseRequestFcn', closereq);
                     %Only enable closing and new record once saving has completed
                 end
@@ -377,7 +358,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             function CloseProgram(~,~)
                 disp('In CloseProgram');
-                if this.recordStatus == 0
+                if this.recordObj.recordStatus == 0
                     disp('Exit - enable before compilation');
                     %exit;
                 else

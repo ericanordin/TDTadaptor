@@ -13,6 +13,7 @@ function main()
 import Enums.*
 import GUIFiles.*
 import StandardFunctions.*
+import RPvdsExLink.*
 
 % The same GUI objects are used until the program is closed so that the
 % user doesn't have to constantly redo the procedure from opening the
@@ -37,8 +38,11 @@ while (running == 1)
 %if nameType == NamingMethod.Auto
 
 %else
- 
-   set(recordScr, 'fileName', recordScr.startingPathway);
+v = get(recordScr)
+
+    %rec = get(recordScr, recordObj);
+    %set(rec, 'wavName', recordScr.startingPathway);
+   set(recordScr, 'recordObj.wavName', recordScr.startingPathway);
    set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
 %end
 

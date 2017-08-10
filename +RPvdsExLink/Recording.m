@@ -4,11 +4,12 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
     %   Detailed explanation goes here
     
     properties
-        recordStatus;
+        recordStatus; %1 = recording; 0 = not recording
         wavName;
         recordTime;
         bitDepth;
-        continuous;
+        continuous; %Boolean expression of whether the recording is continuous.
+        %recordObj.recordTime is disabled when it is 1 and enabled when it is 0.
         
     end
     
@@ -16,7 +17,7 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
         function this = Recording()
             this.recordStatus = 0;
             this.wavName = '';
-            this.recordTime = 0;
+            this.recordTime = 600;
             this.continuous = 0;
             this.bitDepth = 32;
         end
