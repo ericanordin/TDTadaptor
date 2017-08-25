@@ -91,6 +91,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.errorColor = [1 0.1 0.1];
             this.advCanClose = 1;
             
+            
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [100 100 1000 1000], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'CloseRequestFcn', @CloseProgram, 'Resize', 'off');
@@ -337,6 +338,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     if overwriteFile == 1 || invalidRecordNonContinuous == 1
                         disp('Invalid field prevents record');                     
                     else
+                        record(this.recordObj.webcam);
                         set(this.startStop, 'String', 'Stop Recording',...
                             'BackgroundColor', [0.8 0.1 0.1]);
                         set(this.guiF, 'CloseRequestFcn', '');
@@ -349,6 +351,11 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
                         [0.5 1 0.5]);
                     this.recordObj.recordStatus = 0;
+                    stop(this.recordObj.webcam);
+                    disp('Done recording');
+                    disp(this.recordObj.webcam);
+                    play(this.recordObj.webcam);
+                    disp('Done playing');
                     %set(this.guiF, 'CloseRequestFcn', closereq);
                     %Only enable closing and new record once saving has completed
                 end
