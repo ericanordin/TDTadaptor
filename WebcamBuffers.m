@@ -1,6 +1,9 @@
 function WebcamBuffers()%screen)
 % Creates a dummy webcam analogue of the buffer system in Continuous_Acquire.
 % For testing of Waveform and Spectrogram plotting.
+% Build 30s or so buffer and then plot. Work on getting a rolling buffer
+% later by moving start bits out and end bits in.
+% Modify YData property instead of re-plotting to save time.
 
 %import GUIFiles.RecordScreen
 
@@ -43,6 +46,7 @@ for i = 1:5
     
     samples1 = getaudiodata(rec1);
     PlotLoop(samples1);
+    play(rec1);
     disp('Copying 1');
     
     while(curindex > bufpts)
@@ -53,6 +57,8 @@ for i = 1:5
     disp('Stopping 2');
     
     samples2 = getaudiodata(rec2);
+    PlotLoop(samples2);
+    play(rec2);
     disp('Copying 2');
     
 end
