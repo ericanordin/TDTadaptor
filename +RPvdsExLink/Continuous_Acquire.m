@@ -5,6 +5,9 @@ function Continuous_Acquire(screen)
 % This program writes to the buffer once it has cyled halfway through
 % (double-buffering)
 
+%screen is RecordScreen object. Function uses get to receive Recording
+%object.
+
 import GUIFiles.RecordScreen
 import RPvdsExLink.*
 

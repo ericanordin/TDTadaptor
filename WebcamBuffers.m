@@ -11,7 +11,8 @@ function WebcamBuffers()%screen)
 
 % size of the entire serial buffer
 npts = 200000;%48000; %sampling frequency
-builtBuffer = zeros(1, npts*5); %5s buffer
+buffLength = 5;
+builtBuffer = zeros(1, npts*buffLength); %5s buffer
 
 % serial buffer will be divided into two buffers A & B (to prevent the risk
 % of data in the buffer being overwritten)
@@ -31,7 +32,7 @@ disp(['Current buffer index: ' num2str(curindex)]);
 %record(rec1);
 
 % main looping section
-for i = 0:4
+for i = 0:(buffLength-1)
     record(rec1);
     disp('Recording 1');
 
@@ -74,4 +75,6 @@ for i = 0:4
     disp('Copying 2');
     
 end
-plot(builtBuffer);
+%plot(builtBuffer);
+spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
+colormap('gray');
