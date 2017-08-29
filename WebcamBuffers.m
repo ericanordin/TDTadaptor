@@ -10,13 +10,13 @@ function WebcamBuffers()%screen)
 %clear all; clc;
 
 % size of the entire serial buffer
-npts = 48000;
+npts = 200000;%48000; %sampling frequency
+builtBuffer = zeros(1, npts*5); %5s buffer
 
 % serial buffer will be divided into two buffers A & B (to prevent the risk
 % of data in the buffer being overwritten)
-fs = npts; %Returns sampling frequency
 bufpts = npts/2;
-t=(1:bufpts)/fs;
+t=(1:bufpts)/npts;
 
 rec1 = audiorecorder(npts, 16, 1);
 rec2 = audiorecorder(npts, 16, 1);
@@ -31,7 +31,7 @@ disp(['Current buffer index: ' num2str(curindex)]);
 %record(rec1);
 
 % main looping section
-for i = 1:5
+for i = 0:4
     record(rec1);
     disp('Recording 1');
 
@@ -41,11 +41,13 @@ for i = 1:5
     stop(rec1);
     disp('Stopping 1');
     
+    
     record(rec2);
     disp('Recording 2');
     
-    samples1 = getaudiodata(rec1);
-    PlotLoop(samples1);
+    samples1 = getaudiodata(rec1)';
+    builtBuffer(1, (1 + i*npts):(npts/2 + npts*i)) = samples1;
+    %PlotLoop(samples1);
     play(rec1);
     disp('Copying 1');
     
@@ -56,9 +58,11 @@ for i = 1:5
     stop(rec2);
     disp('Stopping 2');
     
-    samples2 = getaudiodata(rec2);
-    PlotLoop(samples2);
+    samples2 = getaudiodata(rec2)';
+    builtBuffer(1, (1 + i*npts + npts/2):(npts*(i+1))) = samples2;
+    %PlotLoop(samples2);
     play(rec2);
     disp('Copying 2');
     
 end
+plot(builtBuffer);
