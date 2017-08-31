@@ -10,11 +10,11 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Make pretty
     
     properties
-        %Figures:
+        %% Figures:
         guiF; %Main figure
         advF; %Advanced options figure
         
-        %UIControl objects:
+        %% UIControl objects:
         fileNameAuto; %Push button that takes the user through LabScreen
         %(on first iteration only) and RatScreen (on every iteration).
         fileNameManual; %Push button that opens saving GUI
@@ -36,9 +36,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         spectrogramDisplay; %Shows the spectrogram corresponding to the
         %real-time recording.
         newRecord; %Resets to directory with no file name.
-        
-        
-        %Variables:
+ 
+        %% Variables:
         recordObj; %The Recording class object
         startingPathway; %What location to open the dialog box at when
         %fileNameManual is pressed.
@@ -54,7 +53,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     end
     
     methods
-        %Functions:
+        %% Function Descriptions:
         %RecordScreen: constructor
         %ManualSetName: Executes steps to assign the file name manually.
         %AutoSetName: Executes steps to assign the file name automatically.
@@ -77,7 +76,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %setFileName: Allows main to access recordObj.wavName
         %waitForNew: Resets RecordScreen GUI when New Recording is pressed.
         
+        %% Function Code
         function this = RecordScreen()
+            %% GUI Set Up
             import RPvdsExLink.Recording;
             this.recordObj = Recording();
 
@@ -141,6 +142,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
                 'Position', [20 20 100 100], 'Callback', @PressNewTest);
             
+            %% Sub-constructor Functions
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
                 import StandardFunctions.checkOverwrite;
@@ -281,8 +283,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 end
             end
             
-            
-            
             function GetRecordTime(field, ~)
                 %Sets recordObj.recordTime to the contents of recordTimeEditable
                 import StandardFunctions.checkInteger;
@@ -374,8 +374,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     disp('Cannot exit while recording');
                 end
             end
-            
-            
+                      
         end
         
         function setFileName(screenObj, newName)
@@ -387,6 +386,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             obj.initiateNewTest = 0;
             %set(obj.guiF, 'visible', 'off');
         end
+        
     end
     
 end

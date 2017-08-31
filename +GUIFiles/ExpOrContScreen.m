@@ -4,26 +4,29 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
 %   This function is only relevant for the Metz lab.
 
     properties
-        %Figures:
+        %% Figures:
         guiF;
         
-        %UIControl Objects:
+        %% UIControl Objects:
         instructions;
         experimentalButton; %Push button that selects the Experimental subfolder
         controlButton; %Push button that selects the Control subfolder       
         
-        %Variables:
+        %% Variables:
         subfolderName; %The selection of experimental or control
+        
     end
     
     methods
-        %Functions:
+        %% Function Descriptions:
         %ExpOrContScreen: constructor
         %Shortcuts: enables keyboard shortcuts
         %Selection: assigns appropriate string to choice
         %getExpOrCont: returns subfolderName
         
+        %% Function Code:        
         function this = ExpOrContScreen()
+            %% GUI Set Up
             this.guiF = figure('Name', 'Subfolder', 'NumberTitle', 'off',...
                 'Position', [150 620 500 300], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'Resize', 'off', 'WindowKeyPressFcn',...
@@ -39,6 +42,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                 'Position', [300 100 150 100], 'String', 'Control (c)',...
                 'Callback', {@Selection, 'c'}, 'FontSize', 13);
             
+            %% Sub-constructor Functions
             function Shortcuts(src, eventdata)
                 %Key press shortcuts go straight to Selection function
                 Selection(src, eventdata, eventdata.Key);
@@ -52,6 +56,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                         this.subfolderName = 'Control';
                 end                
             end
+            
         end
         
         function subfolder = getExpOrCont(obj)
@@ -59,6 +64,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
             subfolder = obj.subfolderName;
             close(obj.guiF);
         end
+        
     end
 end
 

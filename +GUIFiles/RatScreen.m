@@ -5,10 +5,9 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
     %Make pretty
     
     properties
-        %Figures:
+        %% Figures:
         guiF;
-        
-        %UIControl Objects:
+        %% UIControl Objects:
         instructions;
         ratEntry; %Field for entering ratID
         dayEntry; %Field for entering dayID
@@ -17,7 +16,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         dayLabel; %Label above the dayEntry field
         cohortLabel; %Label above the cohortEntry field
         
-        %Variables:
+        %% Variables:
         ratID; %The rat's identification or litter number
         dayID; %The day of the experiment or rat's postnatal day
         cohortID; %The rat's cohort or experiment number
@@ -28,7 +27,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
     end
     
     methods
-        %Functions:
+        %% Function Descriptions:
         %RatScreen: constructor
         %SetRatID: Copies ratEntry into ratID
         %SetDayID: Copies dayEntry into dayID
@@ -42,7 +41,10 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         %lab.
         %getRatData: Returns ratID, dayID, cohortID
         
+        %% Function Code:
+        
         function this = RatScreen(recordScreen, lab)
+            %% GUI Set Up
             this.ratID = '';
             this.dayID = '';
             this.cohortID = '';
@@ -87,6 +89,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             
             uicontrol(this.ratEntry); %Puts cursor at ratEntry upon opening the figure
             
+            %% Sub-constructor Functions
             function SetRatID(~, ~)
                 %Data entered in the ratEntry field is copied into the
                 %ratID variable.

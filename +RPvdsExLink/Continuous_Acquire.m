@@ -8,6 +8,7 @@ function Continuous_Acquire(screen)
 %screen is RecordScreen object. Function uses get to receive Recording
 %object.
 
+%% Set Up
 import GUIFiles.RecordScreen
 import RPvdsExLink.*
 
@@ -44,6 +45,8 @@ filePath = recordObj.wavName;
 filePath = strcat(filePath, 'fnoise.F32'); %Change this for .wav
 fnoise = fopen(filePath,'w');
 
+%% Acquisition
+
 % begin acquiring
 RP.SoftTrg(1); %Software trigger 1 allows buffer to intake info from AdcIn
 curindex = RP.GetTagVal('index');
@@ -62,6 +65,7 @@ end
 
 fclose(fnoise);
 
+%% Post-Acquisition
 % stop acquiring
 RP.SoftTrg(2);
 RP.Halt; %Stops processing chain
@@ -69,3 +73,4 @@ RP.Halt; %Stops processing chain
 % plots the last npts data points
 plot(t,noise);
 axis tight;
+

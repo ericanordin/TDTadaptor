@@ -5,10 +5,10 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
     %Write destructor
     
     properties
-        %Figures:
+        %% Figures:
         guiF;
         
-        %UIControl Objects:
+        %% UIControl Objects:
         instructions;
         eustonButton; %Push button that selects Euston directory and 
         %naming format
@@ -19,19 +19,23 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         otherButton; %Push button that selects the default directory and 
         %uses the Euston naming format
         
-        %Variables:
+        %% Variables:
         chosenLab; %Selected lab
+        
     end
     
     methods
-        %Functions:
+        %% Function Descriptions:
         %LabScreen: constructor
         %Shortcuts: enables keyboard shortcuts
         %Selection: assigns appropriate enumeration to chosenLab
         %HideWindow: Makes the window invisible
         %getLabName: returns chosenLab
         
+        %% Function Code:
+        
         function this = LabScreen()
+            %% GUI Set Up
             this.guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
                 'Position', [100 300 500 500], 'WindowKeyPressFcn', ...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none',...
@@ -56,6 +60,8 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
             this.otherButton = uicontrol('Style', 'pushbutton', 'Position', ...
                 [50 50 400 50], 'String', 'Other (o)', 'FontSize', 13,...
                 'Callback', {@Selection, 'o'});
+            
+            %% 
             %{
             set(guiF, 'visible', 'off');
             ready = input('Type 1 if ready');
@@ -64,6 +70,8 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 set(guiF, 'visible', 'on');
             end
                 %}
+            %% Sub-constructor Functions:
+            
             function Shortcuts(src, eventdata)
                 %Key press shortcuts go straight to Selection function
                 Selection(src, eventdata, eventdata.Key);
@@ -97,6 +105,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 %set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
             end            
+            
         end
         
         function labName = getLabName(obj)
