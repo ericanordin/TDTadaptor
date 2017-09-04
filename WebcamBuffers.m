@@ -4,8 +4,7 @@ function WebcamBuffers()%screen)
 % Build 30s or so buffer and then plot. Work on getting a rolling buffer
 % later by moving start bits out and end bits in.
 % Modify YData property instead of re-plotting to save time.
-% Must fix spectrogram axis problem (contents of spectrogram are
-% disappearing).
+% Calibrate y in waveform to correspond to the gain limits of TDT hardware
 
 %import GUIFiles.RecordScreen
 
@@ -34,8 +33,9 @@ disp(['Current buffer index: ' num2str(curindex)]);
 %record(rec1);
 waveFig = figure(1);
 set(waveFig, 'Name', 'Waveform');
+%set(waveFig, 'Name', 'Spectrogram (Straight Plotted)');
 specFig = figure(2);
-set(specFig, 'Name', 'Spectrogram');
+set(specFig, 'Name', 'Spectrogram (Modified)');
 
 % main looping section
 tic;
@@ -87,13 +87,28 @@ end
 toc;
 
 %Raw:
-%{
+
 figure(1);
-wavePlot = plot(builtBuffer);
-figure(2);
+clf;
+hold on;
+x = [1:npts*buffLength];
+wavePlot = plot(x,builtBuffer);
+waveAxes = waveFig.CurrentAxes;
+xScale = get(waveAxes, 'XTick');
+xScale = xScale./npts;
+set(waveAxes,'XTickLabel', xScale);
+
+title('Waveform');
+xlabel('Seconds');
+ylabel('Intensity');
+%axis([0 buffLength 0 80000]);
+%colormap('gray');
+hold off;
+
+%{figure(2);
 
 
-specPlot = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
+%specPlot = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
 %}
 
 
@@ -105,19 +120,29 @@ specPlot = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
 
 %Somewhat normalized:
 %dB are represented somewhat higher than they are originally.
-[s, f, t] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
-figure(1);
-hold on;
-axis([0 buffLength 0 80000]);
-spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
+[~, f, t, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
+%figure(1);
+%hold on;
+%axis([0 buffLength 0 80000]);
+%spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
 
-hold off;
+%hold off;
 figure(2);
+clf;
 hold on;
-imagesc(t, f, log10(abs(s)));
-set(gca, 'Ydir', 'Normal');
+specPlot = imagesc(t, f, 10*log10(p+eps));%log10(abs(s)));
 axis([0 buffLength 0 80000]);
-colorbar;
+specAxes = specFig.CurrentAxes;
+yScale = get(specAxes, 'YTick');
+yScale = yScale./1000;
+set(specAxes, 'Ydir', 'Normal', 'YTickLabel', yScale);
+
+title('Spectrogram');
+xlabel('Seconds');
+ylabel('Frequency (kHz)');
+specDB = colorbar;
+ylabel(specDB, 'dB');
+colormap('gray');
 hold off;
 end
 
