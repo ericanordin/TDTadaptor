@@ -1,10 +1,6 @@
-function WebcamBuffers()%screen)
-% Creates a dummy webcam analogue of the buffer system in Continuous_Acquire.
-% For testing of Waveform and Spectrogram plotting.
-% Build 30s or so buffer and then plot. Work on getting a rolling buffer
-% later by moving start bits out and end bits in.
-% Modify YData property instead of re-plotting to save time.
-% Calibrate y in waveform to correspond to the gain limits of TDT hardware
+function WebcamBuffersRegReset()%screen)
+% For attempting the version in which the graphs reset with a new
+% buffer after a specified amount of repetitions.
 
 %import GUIFiles.RecordScreen
 
@@ -91,7 +87,7 @@ toc;
 figure(1);
 clf;
 hold on;
-x = [1:npts*buffLength];
+x = 1:npts*buffLength;
 wavePlot = plot(x,builtBuffer);
 waveAxes = waveFig.CurrentAxes;
 xScale = get(waveAxes, 'XTick');
