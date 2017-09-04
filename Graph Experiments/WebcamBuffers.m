@@ -103,6 +103,7 @@ xlabel('Seconds');
 ylabel('Intensity');
 %axis([0 buffLength 0 80000]);
 %colormap('gray');
+disp(isobject(wavePlot));
 hold off;
 
 %{figure(2);
@@ -143,6 +144,7 @@ ylabel('Frequency (kHz)');
 specDB = colorbar;
 ylabel(specDB, 'dB');
 colormap('gray');
+disp(isobject(specPlot));
 hold off;
 end
 
