@@ -10,7 +10,7 @@ function WebcamBuffersRegReset()%screen)
 delete(findall(0, 'Type', 'figure'));
 
 % size of the entire serial buffer
-npts = 200000;%48000; %sampling frequency
+npts = 200000; %sampling frequency
 buffLength = 2; %2s buffer
 totalLength = 6; %6s recording
 builtBuffer = zeros(1, npts*buffLength);
@@ -34,10 +34,6 @@ set(waveFig, 'Name', 'Waveform');
 specFig = figure(2);
 set(specFig, 'Name', 'Spectrogram (Modified)');
 
-wavePlot = '';
-specPlot = '';
-%isobject returns false
-
 x = 1:npts*buffLength;
 
 % main looping section
@@ -59,7 +55,7 @@ for totalReps = 0:(totalLength/buffLength-1)
         stop(rec1);
         
         curindex = 0;
-
+        
         %record captures extra samples before it has time to stop
         %Won't be a problem using TDT buffer
         samples1 = getaudiodata(rec1)';
@@ -73,11 +69,10 @@ for totalReps = 0:(totalLength/buffLength-1)
         
         curindex = 0;
         samples2 = getaudiodata(rec2)';
-        builtBuffer(1, (1 + chunkSecond*npts + npts/2):(npts*(chunkSecond+1))) = samples2(1:npts/2); 
+        builtBuffer(1, (1 + chunkSecond*npts + npts/2):(npts*(chunkSecond+1))) = samples2(1:npts/2);
     end
     
-    
-    if ~isobject(wavePlot)
+    if totalReps == 0
         figure(1);
         wavePlot = plot(x,builtBuffer);
         
@@ -88,6 +83,12 @@ for totalReps = 0:(totalLength/buffLength-1)
         figure(2);
         [~, f, t, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
         specPlot = imagesc(t, f, 10*log10(p+eps));%log10(abs(s)));
+        
+        ylim([0 80000]);
+        specAxes = specFig.CurrentAxes;
+        yScale = get(specAxes, 'YTick');
+        yScale = yScale./1000;
+        set(specAxes, 'Ydir', 'Normal', 'YTickLabel', yScale);
         
         title('Spectrogram');
         xlabel('Seconds');
@@ -117,13 +118,9 @@ for totalReps = 0:(totalLength/buffLength-1)
     set(waveAxes,'XTickLabel', xScale);
     
     figure(2);
-    axis([totalReps*buffLength (totalReps+1)*buffLength 0 80000]);
-    specAxes = specFig.CurrentAxes;
-    yScale = get(specAxes, 'YTick');
-    yScale = yScale./1000;
-    set(specAxes, 'Ydir', 'Normal', 'YTickLabel', yScale);
+    xlim([totalReps*buffLength (totalReps+1)*buffLength]);% 0 80000]);
     
-    pause(0.01);
+    pause(0.001);
 end
 toc;
 end

@@ -1,4 +1,5 @@
 *.asv
+*.wav
 +GUIFiles/EntryScreen.m
 +GUIFiles/GUI.m
 +StandardFunctions/TabBot.m
