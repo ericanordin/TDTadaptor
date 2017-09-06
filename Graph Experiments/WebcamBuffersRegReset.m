@@ -1,7 +1,7 @@
 function WebcamBuffersRegReset()%screen)
 % For attempting the version in which the graphs reset with a new
 % buffer after a specified amount of repetitions.
-% Pause is necessary for plot to appear on each iteration.
+% Use profile to determine performance
 
 %import GUIFiles.RecordScreen
 
@@ -12,15 +12,15 @@ delete(findall(0, 'Type', 'figure'));
 % size of the entire serial buffer
 npts = 200000; %sampling frequency
 buffLength = 2; %2s buffer
-totalLength = 6; %6s recording
+buffReps = 3; %3*2 = 6s recording
 builtBuffer = zeros(1, npts*buffLength);
 
 % serial buffer will be divided into two buffers A & B (to prevent the risk
 % of data in the buffer being overwritten)
 bufpts = npts/2;
 
-rec1 = audiorecorder(npts, 16, 1);
-rec2 = audiorecorder(npts, 16, 1);
+rec1 = audiorecorder(npts, 24, 1);
+rec2 = audiorecorder(npts, 24, 1);
 
 %recordObj = get(screen, 'recordObj');
 %waitfor(recordObj, recordStatus, 1);
@@ -38,7 +38,7 @@ x = 1:npts*buffLength;
 
 % main looping section
 tic;
-for totalReps = 0:(totalLength/buffLength-1)
+for totalReps = 0:(buffReps-1)
     disp('New rep');
     for chunkSecond = 0:(buffLength-1)
         
@@ -78,7 +78,7 @@ for totalReps = 0:(totalLength/buffLength-1)
         
         title('Waveform');
         xlabel('Seconds');
-        ylabel('Intensity');
+        ylabel('Scaled Amplitude (+/-1 is Max)');
         
         figure(2);
         [~, f, t, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
@@ -120,7 +120,7 @@ for totalReps = 0:(totalLength/buffLength-1)
     figure(2);
     xlim([totalReps*buffLength (totalReps+1)*buffLength]);% 0 80000]);
     
-    pause(0.001);
+    pause(0.001); %Necessary for plot to appear on each iteration
 end
 toc;
 end
