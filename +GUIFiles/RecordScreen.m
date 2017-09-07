@@ -321,6 +321,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
+                %import RPvdsExLink.Continuous_Acquire;
+                import RPvdsExLink.WebcamAnalogue;
+                
                 if this.recordObj.recordStatus == 0
                     fileColor = get(this.fileNameEditable, 'BackgroundColor');
                     overwriteFile = isequal(fileColor, this.errorColor);
