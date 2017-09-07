@@ -1,13 +1,12 @@
-function WebcamBuffersRegReset()%screen)
+function WebcamBuffersRegReset(screen)
 % For attempting the version in which the graphs reset with a new
 % buffer after a specified amount of repetitions.
-% Use profile to determine performance
 
 %import GUIFiles.RecordScreen
 
 %clear all; clc;
 
-delete(findall(0, 'Type', 'figure'));
+%delete(findall(0, 'Type', 'figure'));
 
 % size of the entire serial buffer
 npts = 200000; %sampling frequency

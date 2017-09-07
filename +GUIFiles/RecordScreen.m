@@ -7,6 +7,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer option to save advanced settings
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
+    %Integrate plots
+    %Show dialogue in Status window
+    %Check that wavName ends in .wav before starting recording
     %Make pretty
     
     properties
@@ -108,7 +111,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.fileNameEditable = uicontrol('Style', 'edit', 'Position',...
                 [270 900 680 90], 'String', this.recordObj.wavName, 'Callback',...
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
-                @DeselectOnEnter);
+                @DeselectOnEnter, 'BackgroundColor', this.errorColor);
             
             this.advancedButton = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 800 200 80], 'String', 'Advanced Options', 'Callback',...

@@ -3,9 +3,6 @@ function main()
     %To do:
     %Sort out uiwait problems for HideWindow
     %Update UML
-    %Make commentary display in Status
-    %Waveform and spectrogram
-    %Section out code
     
     %Before compiling:
     %Change filepaths in Continuous_Acquire
