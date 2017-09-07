@@ -288,10 +288,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             function GetRecordTime(field, ~)
                 %Sets recordObj.recordTime to the contents of recordTimeEditable
-                import StandardFunctions.checkInteger;
+                import StandardFunctions.checkNaturalNum;
                 this.advCanClose = 0; %Prevents the window from closing until 
                 %given a valid entry.
-                numericContents = checkInteger(field, this.errorColor);
+                numericContents = checkNaturalNum(field, this.errorColor);
                 this.recordObj.recordTime = numericContents;
                 this.advCanClose = 1; %Window can close
                 %disp(this.recordObj.recordTime);
@@ -331,8 +331,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     %check for whether or not the name will overwrite an
                     %existing file.
                     
-                    recordTimeColor = get(this.recordTimeEditable, 'BackgroundColor');
-                    invalidRecordTime = isequal(recordTimeColor, this.errorColor);
+                    if this.recordObj.continuous == 1
+                        invalidRecordTime = 0;
+                    else
+                        recordTimeColor = get(this.recordTimeEditable, 'BackgroundColor');
+                        invalidRecordTime = isequal(recordTimeColor, this.errorColor);
+                    end
                     %Uses the background color of recordTimeEditable as a
                     %check for whether or not the recordObj.recordTime is valid.
 
