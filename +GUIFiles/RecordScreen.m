@@ -148,7 +148,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %% Sub-constructor Functions
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
-                import StandardFunctions.checkOverwrite;
+                import StandardFunctions.checkValidName;
                 if strcmp(throughDirectory, 'via uigetdir')
                     %disp('via uigetdir');
                     [this.recordObj.wavName, this.startingPathway] = setNameManual(this.startingPathway);
@@ -158,7 +158,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     this.recordObj.wavName = get(this.fileNameEditable, 'String');
                 end
                 %disp(this.recordObj.wavName);
-                checkOverwrite(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
+                checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
                 set(this.fileNameManual, 'FontWeight', 'bold'); 
                 set(this.fileNameAuto, 'FontWeight', 'normal');
 
@@ -169,7 +169,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import GUIFiles.RatScreen;
                 import StandardFunctions.makeLabDirectory;
                 import StandardFunctions.setNameAuto;
-                import StandardFunctions.checkOverwrite;
+                import StandardFunctions.checkValidName;
                 
                 if this.firstAuto == 1
                     checkExistence = isobject(this.labScr);
@@ -199,7 +199,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 
                 this.recordObj.wavName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
                 set(this.fileNameEditable, 'String', this.recordObj.wavName);
-                checkOverwrite(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
+                checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
                 
                 set(this.fileNameAuto, 'FontWeight', 'bold');
 

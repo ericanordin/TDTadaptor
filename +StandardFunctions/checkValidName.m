@@ -1,4 +1,4 @@
-function checkOverwrite(filePath, displayField, errorColor)
+function checkValidName(filePath, displayField, errorColor)
 %checkOverwrite checks whether a file with the same name and location
 %exists.
 %   The displayField is coloured red if recording will overwrite an
