@@ -10,7 +10,7 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
         bitDepth;
         continuous; %Boolean expression of whether the recording is continuous.
         %recordObj.recordTime is disabled when it is 1 and enabled when it is 0.
-        webcam; %Dummy audio recorder
+        %webcam; %Dummy audio recorder
         
     end
     
@@ -21,7 +21,7 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
             this.recordTime = 600;
             this.continuous = 0;
             this.bitDepth = 32;
-            this.webcam = audiorecorder(48000, 16, 1); %Webcam dummy audio source
+            %this.webcam = audiorecorder(48000, 16, 1); %Webcam dummy audio source
             %Actual microphone will be 80000 Hz.
         end
         

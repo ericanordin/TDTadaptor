@@ -9,7 +9,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %there is no buffer issue).
     %Integrate plots
     %Show dialogue in Status window
-    %Check that wavName ends in .wav before starting recording
     %Make pretty
     
     properties
@@ -34,9 +33,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         timeRemainingLabel; %Text that identifies timeRemainingDisplay
         timeRemainingDisplay; %Edit field corresponding to timeRemaining variable
         statusWindow; %Displays text describing the background processes
-        waveformDisplay; %Shows the waveform corresponding to the real-time
+        waveformAxes; %Shows the waveform corresponding to the real-time
         %recording.
-        spectrogramDisplay; %Shows the spectrogram corresponding to the
+        spectrogramAxes; %Shows the spectrogram corresponding to the
         %real-time recording.
         newRecord; %Resets to directory with no file name.
  
@@ -83,6 +82,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         function this = RecordScreen()
             %% GUI Set Up
             import RPvdsExLink.Recording;
+            %import RPvdsExLink.Continuous_Acquire;
+            %import RPvdsExLink.WebcamAnalogue;
             this.recordObj = Recording();
 
             this.startingPathway = 'C:\';
@@ -133,6 +134,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             this.statusWindow = uitable('Position', [170 50 800 250]);
             
+            this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
+                [350 650 600 200]);
+            
+            this.spectrogramAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
+                [350 350 600 200]);
+            %{
             this.waveformDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Waveform Display (placeholder)', 'Position', ...
                 [350 650 600 200]);
@@ -140,10 +147,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.spectrogramDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Spectrogram Display (placeholder)', 'Position', ...
                 [350 350 600 200]);
-            
+            %}
             this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
                 'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
                 'Position', [20 20 100 100], 'Callback', @PressNewTest);
+            
+            %WebcamAnalogue(this);
             
             %% Sub-constructor Functions
             function ManualSetName(~,~, throughDirectory)
@@ -348,24 +357,26 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     if overwriteFile == 1 || invalidRecordNonContinuous == 1
                         disp('Invalid field prevents record');                     
                     else
-                        record(this.recordObj.webcam);
+                        %record(this.recordObj.webcam);
                         set(this.startStop, 'String', 'Stop Recording',...
                             'BackgroundColor', [0.8 0.1 0.1]);
                         set(this.guiF, 'CloseRequestFcn', '');
                         this.recordObj.recordStatus = 1;
                         set(this.newRecord, 'Enable', 'off');
+                        pause(0.001);
+                        WebcamAnalogue(this);
                     end
                     
                     
                 else
-                    set(this.startStop, 'String', 'Start Recording', 'BackgroundColor',...
-                        [0.5 1 0.5]);
+                    set(this.startStop, 'String', 'Start Recording',...
+                        'BackgroundColor', [0.5 1 0.5]);
                     this.recordObj.recordStatus = 0;
-                    stop(this.recordObj.webcam);
-                    disp('Done recording');
-                    disp(this.recordObj.webcam);
-                    play(this.recordObj.webcam);
-                    disp('Done playing');
+                    %stop(this.recordObj.webcam);
+                    %disp('Done recording');
+                    %disp(this.recordObj.webcam);
+                    %play(this.recordObj.webcam);
+                    %disp('Done playing');
                     %set(this.guiF, 'CloseRequestFcn', closereq);
                     %Only enable closing and new record once saving has completed
                 end

@@ -2,16 +2,25 @@ function WebcamAnalogue(screen)
 % For attempting the version in which the graphs reset with a new
 % buffer after a specified amount of repetitions.
 
+%Set up to plot to screen axes
+
 %import GUIFiles.RecordScreen
 
 %clear all; clc;
 
 %delete(findall(0, 'Type', 'figure'));
 
+recordObj = get(screen, 'recordObj');
+%get(recordObj); %Variables are appearing correctly, but the program doesn't
+%accept the following calls:
+%waitfor(recordObj, recordObj.recordStatus, 1);
+%waitfor(recordObj, recordStatus, 1);
+
 % size of the entire serial buffer
 npts = 200000; %sampling frequency
 buffLength = 2; %2s buffer
-buffReps = 3; %3*2 = 6s recording
+buffReps = ceil(recordObj.recordTime/buffLength); 
+%Rounds up if not divisible by buffLength
 builtBuffer = zeros(1, npts*buffLength);
 
 % serial buffer will be divided into two buffers A & B (to prevent the risk
@@ -27,11 +36,11 @@ rec2 = audiorecorder(npts, 24, 1);
 % begin acquiring
 curindex = rec1.CurrentSample;
 
-waveFig = figure(1);
-set(waveFig, 'Name', 'Waveform');
+%waveFig = figure(1);
+%set(waveFig, 'Name', 'Waveform');
 
-specFig = figure(2);
-set(specFig, 'Name', 'Spectrogram (Modified)');
+%specFig = figure(2);
+%set(specFig, 'Name', 'Spectrogram (Modified)');
 
 x = 1:npts*buffLength;
 
@@ -72,7 +81,7 @@ for totalReps = 0:(buffReps-1)
     end
     
     if totalReps == 0
-        figure(1);
+        screen.guiF;
         wavePlot = plot(x,builtBuffer);
         
         title('Waveform');
