@@ -7,7 +7,7 @@ validNum = 0;
 while validNum == 0
     
     fieldContents = get(entryField, 'String');
-    numericContents = str2num(fieldContents);
+    numericContents = str2double(fieldContents);
     if isempty(numericContents) %str2num returns an empty
         %array if the converted string is non-numeric.
         %disp('Not a number');
@@ -30,11 +30,7 @@ while validNum == 0
                 set(entryField, 'BackgroundColor',...
                     'white');
             end
-            
         end
     end
-    
-    
-    
 end
 
