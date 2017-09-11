@@ -188,6 +188,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.checkValidName;
                 import StandardFunctions.addToStatus;
                 
+                %for a = 1:20
+                %    addToStatus('Catch my electric boogaloo on the flippidy-floop', this);
+                %end
+                
                 try
                     originalName = this.recordObj.wavName;
                     if strcmp(throughDirectory, 'via uigetdir')
