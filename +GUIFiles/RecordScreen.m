@@ -51,6 +51,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         labName; %The name of the lab under which the experiment is being run
         errorColor; %The color which fields are changed to when their contents are invalid
         advCanClose; %1 = advanced settings window is permitted to close; 0 = not permitted
+        statusText; %Saves all strings which have been printed to statusWindow
         
     end
     
@@ -86,6 +87,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %import RPvdsExLink.WebcamAnalogue;
             this.recordObj = Recording();
             
+            this.statusText = {'First command'; 'Second command'; 'Third command'};
+            %this.statusText = {['First command'], ['Second command'], ['Third command']};
             this.startingPathway = this.recordObj.wavName;
             this.timeRemaining = this.recordObj.recordTime;
             this.initiateNewTest = 0;
@@ -132,7 +135,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             uicontrol('Style', 'text', 'Position', [50 150 100 80],...
                 'String', 'Status');
             
-            this.statusWindow = uitable('Position', [170 50 800 250]);
+            this.statusWindow = uitable('Position', [170 50 800 250],...
+                'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
+                'ColumnWidth', {798}, 'FontSize', 14, 'Data', this.statusText);
+            
+            %this.statusWindow = uicontrol('Style', 'edit', 'enable', 'inactive',...
+            %    'Max', 2, 'Min', 1, 'String', this.statusText);
             
             this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
                 [350 650 600 200]);
