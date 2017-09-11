@@ -24,6 +24,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         newLab; %Set when the lab is changed from this screen
         recordScreen; %RecordScreen object
         labName; %The lab corresponding to the rat
+        cancelCall; %Indicates whether the window is hidden and the call is canceled
     end
     
     methods
@@ -50,6 +51,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             this.cohortID = '';
             this.dataComplete = 0;
             this.labName = lab;
+            this.cancelCall = 0;
             
             this.guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
                 'off', 'Position', [100 300 900 400], 'WindowKeyPressFcn',...
@@ -161,6 +163,9 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             function HideWindow(~,~)
                 import StandardFunctions.generalHideWindow;
                 generalHideWindow(this.guiF);
+                disp('Producing function cancellation');
+                this.cancelCall = 1;
+                this.dataComplete = 1;
                 %disp('In HideWindow');
                 %set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
@@ -184,7 +189,12 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function [rat, day, cohort, modifiedLab] = getRatData(obj)
+            try
             waitfor(obj, 'dataComplete', 1);
+            if obj.cancelCall == 1
+                errorStruct.identifier = 'RatScreen:callCanceled';
+               error(errorStruct);
+            else
             rat = obj.ratID;
             day = obj.dayID;
             cohort = obj.cohortID;
@@ -196,6 +206,12 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             end
             obj.dataComplete = 0; %Resets value for next time the window
             %is used.
+            end
+            catch ME
+                obj.dataComplete = 0;
+                obj.cancelCall = 0;
+                rethrow(ME);
+            end
         end
     end
     

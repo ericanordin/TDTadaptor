@@ -86,7 +86,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %import RPvdsExLink.WebcamAnalogue;
             this.recordObj = Recording();
 
-            this.startingPathway = 'C:\';
+            this.startingPathway = this.recordObj.wavName;
             this.timeRemaining = this.recordObj.recordTime;
             this.initiateNewTest = 0;
             this.labScr = ''; %isobject returns false
@@ -160,7 +160,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.checkValidName;
                 if strcmp(throughDirectory, 'via uigetdir')
                     %disp('via uigetdir');
-                    [this.recordObj.wavName, this.startingPathway] = setNameManual(this.startingPathway);
+                    originalName = this.recordObj.wavName;
+                    [this.recordObj.wavName, this.startingPathway] = setNameManual(this.recordObj.wavName, this.startingPathway);
                     set(this.fileNameEditable, 'String', this.recordObj.wavName);
                 else
                     %disp('no uigetdir');
@@ -168,8 +169,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 end
                 %disp(this.recordObj.wavName);
                 checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
+                if ~strcmp(originalName, this.recordObj.wavName)
                 set(this.fileNameManual, 'FontWeight', 'bold'); 
                 set(this.fileNameAuto, 'FontWeight', 'normal');
+                end
 
             end
             
@@ -179,7 +182,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.makeLabDirectory;
                 import StandardFunctions.setNameAuto;
                 import StandardFunctions.checkValidName;
-                
+                try
                 if this.firstAuto == 1
                     checkExistence = isobject(this.labScr);
                     if checkExistence == 0
@@ -213,6 +216,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 set(this.fileNameAuto, 'FontWeight', 'bold');
 
                 set(this.fileNameManual, 'FontWeight', 'normal');
+                catch 
+                    disp('Canceled AutoName');
+                end
 
             end
             

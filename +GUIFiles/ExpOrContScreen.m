@@ -22,15 +22,19 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
         %ExpOrContScreen: constructor
         %Shortcuts: enables keyboard shortcuts
         %Selection: assigns appropriate string to choice
+        %HideWindow: Makes the window invisible
         %getExpOrCont: returns subfolderName
         
         %% Function Code:        
         function this = ExpOrContScreen()
             %% GUI Set Up
+            
+            this.subfolderName = '';
+            
             this.guiF = figure('Name', 'Subfolder', 'NumberTitle', 'off',...
                 'Position', [150 620 500 300], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'Resize', 'off', 'WindowKeyPressFcn',...
-                @Shortcuts);
+                @Shortcuts, 'CloseRequestFcn', @HideWindow);
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [30 190 440 70], 'String',...
                 'Is this an experimental or a control rat?',...
@@ -57,12 +61,33 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                 end                
             end
             
+            function HideWindow(~,~)
+                import StandardFunctions.generalHideWindow;
+                generalHideWindow(this.guiF);
+                disp('Producing function cancellation');
+                this.subfolderName = 'CANCEL';
+                %errorStruct.identifier = 'LabScreen:callCanceled';
+                %error(errorStruct);
+                %disp('In HideWindow');
+                %set(this.guiF, 'visible', 'off'); %Makes window invisible
+                %exit;
+            end  
         end
         
         function subfolder = getExpOrCont(obj)
+            originalSubfolder = obj.subfolderName;
+            try
             waitfor(obj, 'subfolderName');
+            if strcmp(obj.subfolderName, 'CANCEL')
+                obj.subfolderName = originalSubfolder;
+                errorStruct.identifier = 'ExpOrContScreen:callCanceled';
+               error(errorStruct);
+            end
             subfolder = obj.subfolderName;
             close(obj.guiF);
+            catch ME
+                rethrow(ME);
+            end
         end
         
     end

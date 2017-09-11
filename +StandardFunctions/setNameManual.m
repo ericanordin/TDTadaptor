@@ -1,4 +1,4 @@
-function [filePath, startingPathway] = setNameManual(startingPathway)
+function [filePath, startingPathway] = setNameManual(filePath, startingPathway)
 %SETNAMEMANUAL Allows the user to enter the file name manually via dialog box.
 %Main saves the pathway from previous rats to take the user to the deepest
 %recent directory.
@@ -13,7 +13,11 @@ disp(startingPathway);
 fileType = '.wav';
 localName = '';
 
+try
 directory = uigetdir(startingPathway);
+catch
+    
+end
 if directory == 0
     disp('Successfully skipped');
 else

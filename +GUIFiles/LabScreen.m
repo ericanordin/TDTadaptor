@@ -36,6 +36,9 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         
         function this = LabScreen()
             %% GUI Set Up
+            
+            this.chosenLab = 'Not Set';
+            
             this.guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
                 'Position', [100 300 500 500], 'WindowKeyPressFcn', ...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none',...
@@ -101,6 +104,10 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
             function HideWindow(~,~)
                 import StandardFunctions.generalHideWindow;
                 generalHideWindow(this.guiF);
+                disp('Producing function cancellation');
+                this.chosenLab = 'CANCEL';
+                %errorStruct.identifier = 'LabScreen:callCanceled';
+                %error(errorStruct);
                 %disp('In HideWindow');
                 %set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
@@ -109,9 +116,23 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function labName = getLabName(obj)
+            originalLab = obj.chosenLab;
+            try
             waitfor(obj, 'chosenLab'); %Function waits to elapse until
            %nameType has been changed.
-           labName = obj.chosenLab;
+           if ischar(obj.chosenLab)
+               obj.chosenLab = originalLab;
+               disp('String');
+               errorStruct.identifier = 'LabScreen:callCanceled';
+               error(errorStruct);
+           else
+               labName = obj.chosenLab;
+               disp('Not string');
+           end
+           
+            catch ME
+                rethrow(ME);
+            end
         end
     end
     
