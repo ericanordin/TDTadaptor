@@ -10,6 +10,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Integrate plots
     %Show dialogue in Status window
     %Make pretty
+    %Make fileName red after pressing new test subject
     
     properties
         %% Figures:
@@ -87,7 +88,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %import RPvdsExLink.WebcamAnalogue;
             this.recordObj = Recording();
             
-            this.statusText = {'First command'; 'Second command'; 'Third command'};
+            this.statusText = {};%{'First command'; 'Second command'; 'Third command'};
+            
+            
+            %this.statusText = {char(pad("Command", this.statusWidth, 'both'))};
             %this.statusText = {['First command'], ['Second command'], ['Third command']};
             this.startingPathway = this.recordObj.wavName;
             this.timeRemaining = this.recordObj.recordTime;
@@ -134,10 +138,26 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             uicontrol('Style', 'text', 'Position', [50 150 100 80],...
                 'String', 'Status');
-            
+
             this.statusWindow = uitable('Position', [170 50 800 250],...
                 'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
-                'ColumnWidth', {798}, 'FontSize', 14, 'Data', this.statusText);
+                'FontSize', 14, 'ColumnWidth', {798}, 'Data', this.statusText);
+            
+            %this.statusWindow = uitable('Units', 'characters',...
+            %    'Position', [30 5 160 15],...
+            %    'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
+            %    'FontSize', 14, 'Units', 'characters', 'ColumnWidth', {158},...
+            %    'Data', this.statusText);
+            
+            %set(this.statusWindow, 'Units', 'characters');
+            %set(this.statusWindow, 'ColumnWidth', {this.statusWidth});
+            %this.statusWindow = uitable('Position', [170 50 800 250],...
+            %    'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
+            %    'FontSize', 14, 'Data', this.statusText);
+            
+            %set(this.statusWindow, 'Units', 'characters');
+            %set(this.statusWindow, 'ColumnWidth', {this.statusWidth});
+            
             
             %this.statusWindow = uicontrol('Style', 'edit', 'enable', 'inactive',...
             %    'Max', 2, 'Min', 1, 'String', this.statusText);
@@ -166,6 +186,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
                 import StandardFunctions.checkValidName;
+                import StandardFunctions.addToStatus;
                 
                 try
                     originalName = this.recordObj.wavName;
