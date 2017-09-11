@@ -416,6 +416,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function waitForNew(obj)
+            %Possibly introduce onCleanup command
             waitfor(obj, 'initiateNewTest', 1);
             obj.initiateNewTest = 0;
             %set(obj.guiF, 'visible', 'off');

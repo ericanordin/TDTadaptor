@@ -1,7 +1,6 @@
 function main()
 %MAIN Runs the show.
     %To do:
-    %Sort out waitfor problems for HideWindow (try/catch?)
     %Update UML
     
     %Before compiling:
