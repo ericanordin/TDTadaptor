@@ -1,4 +1,4 @@
-function [filePath, startingPathway] = setNameManual(filePath, startingPathway)
+function [filePath, startingPathway] = setNameManual(startingPathway)
 %SETNAMEMANUAL Allows the user to enter the file name manually via dialog box.
 %Main saves the pathway from previous rats to take the user to the deepest
 %recent directory.
@@ -13,40 +13,43 @@ disp(startingPathway);
 fileType = '.wav';
 localName = '';
 
-try
 directory = uigetdir(startingPathway);
-catch
-    
-end
-if directory == 0
-    disp('Successfully skipped');
-else
-    startingPathway = directory; %Maintains pathway for future use.
-    
-    
-    nameFileWindow = figure('Name', 'Name Your .wav File', 'Position',...
-        [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none', ...
-        'MenuBar', 'none', 'CloseRequestFcn', @HideWindow);
-    
-    uicontrol('Style', 'text', 'String',...
-        'Type in the local file name and press Enter to continue',...
-        'Position', [20 170 260 100]);
-    
-    nameFileField = uicontrol('Style', 'edit',...
-        'Position', [20 100 200 100], 'Callback', @LocalName);
-    
-    uicontrol('Style', 'text', 'Position', [220 100 80 100], 'String',...
-        fileType);
-    
-    uicontrol(nameFileField); %Places cursor on nameFileField
-    
-    uiwait(gcf); %Pauses program until the local file name has been entered.
-    
-    nameWithDesignation = strcat(localName, fileType);
-    filePath = fullfile(startingPathway, nameWithDesignation);
-    disp(filePath);
-    close(nameFileWindow); %Closes the window
-    
+
+try
+    if directory == 0
+        disp('Successfully skipped');
+        errorStruct.identifier = 'setNameManual:callCanceled';
+        error(errorStruct);
+    else
+        startingPathway = directory; %Maintains pathway for future use.
+        
+        
+        nameFileWindow = figure('Name', 'Name Your .wav File', 'Position',...
+            [200 700 300 300], 'NumberTitle', 'off', 'ToolBar', 'none', ...
+            'MenuBar', 'none', 'CloseRequestFcn', @HideWindow);
+        
+        uicontrol('Style', 'text', 'String',...
+            'Type in the local file name and press Enter to continue',...
+            'Position', [20 170 260 100]);
+        
+        nameFileField = uicontrol('Style', 'edit',...
+            'Position', [20 100 200 100], 'Callback', @LocalName);
+        
+        uicontrol('Style', 'text', 'Position', [220 100 80 100], 'String',...
+            fileType);
+        
+        uicontrol(nameFileField); %Places cursor on nameFileField
+        
+        uiwait(gcf); %Pauses program until the local file name has been entered.
+        
+        nameWithDesignation = strcat(localName, fileType);
+        filePath = fullfile(startingPathway, nameWithDesignation);
+        disp(filePath);
+        close(nameFileWindow); %Closes the window
+        
+    end
+catch ME
+    rethrow(ME);
 end
 
     function LocalName(~,~)

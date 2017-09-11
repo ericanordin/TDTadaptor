@@ -190,23 +190,23 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         
         function [rat, day, cohort, modifiedLab] = getRatData(obj)
             try
-            waitfor(obj, 'dataComplete', 1);
-            if obj.cancelCall == 1
-                errorStruct.identifier = 'RatScreen:callCanceled';
-               error(errorStruct);
-            else
-            rat = obj.ratID;
-            day = obj.dayID;
-            cohort = obj.cohortID;
-            if ~isempty(obj.newLab)
-                modifiedLab = obj.newLab;
-                obj.newLab = '';
-            else
-                modifiedLab = '';
-            end
-            obj.dataComplete = 0; %Resets value for next time the window
-            %is used.
-            end
+                waitfor(obj, 'dataComplete', 1);
+                if obj.cancelCall == 1
+                    errorStruct.identifier = 'RatScreen:callCanceled';
+                    error(errorStruct);
+                else
+                    rat = obj.ratID;
+                    day = obj.dayID;
+                    cohort = obj.cohortID;
+                    if ~isempty(obj.newLab)
+                        modifiedLab = obj.newLab;
+                        obj.newLab = '';
+                    else
+                        modifiedLab = '';
+                    end
+                    obj.dataComplete = 0; %Resets value for next time the window
+                    %is used.
+                end
             catch ME
                 obj.dataComplete = 0;
                 obj.cancelCall = 0;

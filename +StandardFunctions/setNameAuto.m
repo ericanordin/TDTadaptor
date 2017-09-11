@@ -22,7 +22,7 @@ if strcmp(labName, 'Metz')
     filePath = strcat(filePath, saveDate);
     filePath = strcat(filePath, 'T');
     filePath = strcat(filePath, saveTime);
-    filePath = strcat(filePath, '.wav');    
+    filePath = strcat(filePath, '.wav');
     
     
 else %Gibb, Euston, and Other use same naming convention

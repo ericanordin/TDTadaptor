@@ -1,8 +1,8 @@
 classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
-%EXPORCONTSCREEN Opens a GUI to specify whether that rat is experimental or
-%control.
-%   This function is only relevant for the Metz lab.
-
+    %EXPORCONTSCREEN Opens a GUI to specify whether that rat is experimental or
+    %control.
+    %   This function is only relevant for the Metz lab.
+    
     properties
         %% Figures:
         guiF;
@@ -10,7 +10,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
         %% UIControl Objects:
         instructions;
         experimentalButton; %Push button that selects the Experimental subfolder
-        controlButton; %Push button that selects the Control subfolder       
+        controlButton; %Push button that selects the Control subfolder
         
         %% Variables:
         subfolderName; %The selection of experimental or control
@@ -25,7 +25,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
         %HideWindow: Makes the window invisible
         %getExpOrCont: returns subfolderName
         
-        %% Function Code:        
+        %% Function Code:
         function this = ExpOrContScreen()
             %% GUI Set Up
             
@@ -58,7 +58,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                         this.subfolderName = 'Experimental';
                     case {'c'}
                         this.subfolderName = 'Control';
-                end                
+                end
             end
             
             function HideWindow(~,~)
@@ -71,20 +71,20 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                 %disp('In HideWindow');
                 %set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
-            end  
+            end
         end
         
         function subfolder = getExpOrCont(obj)
             originalSubfolder = obj.subfolderName;
             try
-            waitfor(obj, 'subfolderName');
-            if strcmp(obj.subfolderName, 'CANCEL')
-                obj.subfolderName = originalSubfolder;
-                errorStruct.identifier = 'ExpOrContScreen:callCanceled';
-               error(errorStruct);
-            end
-            subfolder = obj.subfolderName;
-            close(obj.guiF);
+                waitfor(obj, 'subfolderName');
+                if strcmp(obj.subfolderName, 'CANCEL')
+                    obj.subfolderName = originalSubfolder;
+                    errorStruct.identifier = 'ExpOrContScreen:callCanceled';
+                    error(errorStruct);
+                end
+                subfolder = obj.subfolderName;
+                close(obj.guiF);
             catch ME
                 rethrow(ME);
             end

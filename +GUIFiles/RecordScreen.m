@@ -38,7 +38,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         spectrogramAxes; %Shows the spectrogram corresponding to the
         %real-time recording.
         newRecord; %Resets to directory with no file name.
- 
+        
         %% Variables:
         recordObj; %The Recording class object
         startingPathway; %What location to open the dialog box at when
@@ -65,7 +65,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %HideWindow: Makes window invisible
         %GetRecordTime: Interfaces between the recordObj.recordTime variable and the
         %recordTimeEditable field.
-        %GetBitDepth: Interfaces between the recObj.bitDepth variable and 
+        %GetBitDepth: Interfaces between the recObj.bitDepth variable and
         %the bitDepthSelect pop up menu.
         
         %DeselectOnEnter: Changes location of the cursor away from the
@@ -85,7 +85,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %import RPvdsExLink.Continuous_Acquire;
             %import RPvdsExLink.WebcamAnalogue;
             this.recordObj = Recording();
-
+            
             this.startingPathway = this.recordObj.wavName;
             this.timeRemaining = this.recordObj.recordTime;
             this.initiateNewTest = 0;
@@ -147,33 +147,40 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.spectrogramDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Spectrogram Display (placeholder)', 'Position', ...
                 [350 350 600 200]);
-            %}
-            this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
-                'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
-                'Position', [20 20 100 100], 'Callback', @PressNewTest);
-            
-            %WebcamAnalogue(this);
-            
-            %% Sub-constructor Functions
+                %}
+                this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
+                    'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
+                    'Position', [20 20 100 100], 'Callback', @PressNewTest);
+                
+                %WebcamAnalogue(this);
+                
+                %% Sub-constructor Functions
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
                 import StandardFunctions.checkValidName;
-                if strcmp(throughDirectory, 'via uigetdir')
-                    %disp('via uigetdir');
+                
+                try
                     originalName = this.recordObj.wavName;
-                    [this.recordObj.wavName, this.startingPathway] = setNameManual(this.recordObj.wavName, this.startingPathway);
-                    set(this.fileNameEditable, 'String', this.recordObj.wavName);
-                else
-                    %disp('no uigetdir');
-                    this.recordObj.wavName = get(this.fileNameEditable, 'String');
+                    if strcmp(throughDirectory, 'via uigetdir')
+                        %disp('via uigetdir');
+                        
+                        [this.recordObj.wavName, this.startingPathway] = setNameManual(this.startingPathway);
+                        set(this.fileNameEditable, 'String', this.recordObj.wavName);
+                    else
+                        %disp('no uigetdir');
+                        this.recordObj.wavName = get(this.fileNameEditable, 'String');
+                    end
+                    %disp(this.recordObj.wavName);
+                    checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
+                    if ~strcmp(originalName, this.recordObj.wavName)
+                        set(this.fileNameManual, 'FontWeight', 'bold');
+                        set(this.fileNameAuto, 'FontWeight', 'normal');
+                    end
+                catch
+                    %ME.stack
+                    disp('Canceled ManualName');
                 end
-                %disp(this.recordObj.wavName);
-                checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
-                if ~strcmp(originalName, this.recordObj.wavName)
-                set(this.fileNameManual, 'FontWeight', 'bold'); 
-                set(this.fileNameAuto, 'FontWeight', 'normal');
-                end
-
+                
             end
             
             function AutoSetName(~,~)
@@ -183,43 +190,43 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.setNameAuto;
                 import StandardFunctions.checkValidName;
                 try
-                if this.firstAuto == 1
-                    checkExistence = isobject(this.labScr);
-                    if checkExistence == 0
-                        this.labScr = LabScreen();
-                    else
-                        set(this.labScr.guiF, 'visible', 'on');
+                    if this.firstAuto == 1
+                        checkExistence = isobject(this.labScr);
+                        if checkExistence == 0
+                            this.labScr = LabScreen();
+                        else
+                            set(this.labScr.guiF, 'visible', 'on');
+                        end
+                        this.labName = getLabName(this.labScr);
+                        this.firstAuto = 0;
                     end
-                    this.labName = getLabName(this.labScr);           
-                    this.firstAuto = 0;
-                end
-                
-                checkExistence = isobject(this.ratScr);
-                if checkExistence == 0
-                    this.ratScr = RatScreen(this, this.labName);
-                else
-                    set(this.ratScr.guiF, 'visible', 'on');
-                end
-                [rat, day, cohort, newLab] = getRatData(this.ratScr);
-                if ~isempty(newLab)
-                    this.labName = newLab;
-                end
-                
-                labDirectory = makeLabDirectory(this.labName, cohort);
-                this.startingPathway = labDirectory;
-                
-                
-                this.recordObj.wavName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
-                set(this.fileNameEditable, 'String', this.recordObj.wavName);
-                checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
-                
-                set(this.fileNameAuto, 'FontWeight', 'bold');
-
-                set(this.fileNameManual, 'FontWeight', 'normal');
-                catch 
+                    
+                    checkExistence = isobject(this.ratScr);
+                    if checkExistence == 0
+                        this.ratScr = RatScreen(this, this.labName);
+                    else
+                        set(this.ratScr.guiF, 'visible', 'on');
+                    end
+                    [rat, day, cohort, newLab] = getRatData(this.ratScr);
+                    if ~isempty(newLab)
+                        this.labName = newLab;
+                    end
+                    
+                    labDirectory = makeLabDirectory(this.labName, cohort);
+                    this.startingPathway = labDirectory;
+                    
+                    
+                    this.recordObj.wavName = setNameAuto(this.startingPathway, this.labName, rat, day, cohort);
+                    set(this.fileNameEditable, 'String', this.recordObj.wavName);
+                    checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
+                    
+                    set(this.fileNameAuto, 'FontWeight', 'bold');
+                    
+                    set(this.fileNameManual, 'FontWeight', 'normal');
+                catch
                     disp('Canceled AutoName');
                 end
-
+                
             end
             
             function AdvancedWindow(~, ~)
@@ -227,40 +234,40 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 
                 checkExistence = isobject(this.advF);
                 if checkExistence == 0
-
-                
-                this.advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
-                    'off', 'Position', [80 820 300 300], 'ToolBar', 'none',...
-                    'MenuBar', 'none', 'Resize', 'off', 'CloseRequestFcn', @HideWindow);
-                %Advanced options figure
-                
-                uicontrol('Style', 'text', 'Position', [20 260 200 20],...
-                    'String', 'Continous Record', 'HorizontalAlignment',...
-                    'left');
-                
-                continuousToggle = uicontrol('Style', 'checkbox',...
-                    'Position', [220 260 20 20], 'Callback', @TogContinuous);
-                
-                this.recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
-                    [20 230 200 20], 'String', 'Recording Time (s)',...
-                    'HorizontalAlignment', 'left');
-                
-                this.recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
-                    [220 230 50 20], 'String', this.recordObj.recordTime, 'Callback',...
-                    @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
-                    'inactive');
-                
-                uicontrol('Style', 'text', 'Position', [20 170 200 20],...
-                    'String', 'Bit Depth', 'HorizontalAlignment', 'left');
-                
-                this.bitDepthSelect = uicontrol('Style', 'popupmenu', 'Position',...
-                    [220 170 50 20], 'String', {16, 24, 32}, 'Value', 2,...
-                    'Callback', @GetBitDepth);
-                
-                uicontrol('Style', 'text', 'Position', [40 100 220 50],...
-                    'String',...
-                    'A red box indicates an invalid entry. Check the manual if you are unsure what is permissible.',...
-                    'FontWeight', 'bold');
+                    
+                    
+                    this.advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
+                        'off', 'Position', [80 820 300 300], 'ToolBar', 'none',...
+                        'MenuBar', 'none', 'Resize', 'off', 'CloseRequestFcn', @HideWindow);
+                    %Advanced options figure
+                    
+                    uicontrol('Style', 'text', 'Position', [20 260 200 20],...
+                        'String', 'Continous Record', 'HorizontalAlignment',...
+                        'left');
+                    
+                    continuousToggle = uicontrol('Style', 'checkbox',...
+                        'Position', [220 260 20 20], 'Callback', @TogContinuous);
+                    
+                    this.recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
+                        [20 230 200 20], 'String', 'Recording Time (s)',...
+                        'HorizontalAlignment', 'left');
+                    
+                    this.recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
+                        [220 230 50 20], 'String', this.recordObj.recordTime, 'Callback',...
+                        @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
+                        'inactive');
+                    
+                    uicontrol('Style', 'text', 'Position', [20 170 200 20],...
+                        'String', 'Bit Depth', 'HorizontalAlignment', 'left');
+                    
+                    this.bitDepthSelect = uicontrol('Style', 'popupmenu', 'Position',...
+                        [220 170 50 20], 'String', {16, 24, 32}, 'Value', 2,...
+                        'Callback', @GetBitDepth);
+                    
+                    uicontrol('Style', 'text', 'Position', [40 100 220 50],...
+                        'String',...
+                        'A red box indicates an invalid entry. Check the manual if you are unsure what is permissible.',...
+                        'FontWeight', 'bold');
                 end
                 
                 function TogContinuous(checkbox, ~)
@@ -304,7 +311,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             function GetRecordTime(field, ~)
                 %Sets recordObj.recordTime to the contents of recordTimeEditable
                 import StandardFunctions.checkNaturalNum;
-                this.advCanClose = 0; %Prevents the window from closing until 
+                this.advCanClose = 0; %Prevents the window from closing until
                 %given a valid entry.
                 numericContents = checkNaturalNum(field, this.errorColor);
                 this.recordObj.recordTime = numericContents;
@@ -314,7 +321,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             function GetBitDepth(field, ~)
                 %Sets recordObj.bitDepth to the contents of bitDepthSelect
-
+                
                 fieldValue = get(field, 'Value');
                 switch fieldValue
                     case 1
@@ -354,14 +361,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     end
                     %Uses the background color of recordTimeEditable as a
                     %check for whether or not the recordObj.recordTime is valid.
-
+                    
                     invalidRecordNonContinuous =...
                         (this.recordObj.continuous == 0 & invalidRecordTime == 1);
                     %invalidRecordNonContinuous is giving an empty logical
                     %array
                     
                     if overwriteFile == 1 || invalidRecordNonContinuous == 1
-                        disp('Invalid field prevents record');                     
+                        disp('Invalid field prevents record');
                     else
                         %record(this.recordObj.webcam);
                         set(this.startStop, 'String', 'Stop Recording',...
@@ -401,7 +408,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     disp('Cannot exit while recording');
                 end
             end
-                      
+            
         end
         
         function setFileName(screenObj, newName)

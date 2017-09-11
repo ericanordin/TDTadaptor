@@ -10,13 +10,13 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         
         %% UIControl Objects:
         instructions;
-        eustonButton; %Push button that selects Euston directory and 
+        eustonButton; %Push button that selects Euston directory and
         %naming format
-        gibbButton; %Push button that selects Gibb directory and 
+        gibbButton; %Push button that selects Gibb directory and
         %naming format
-        metzButton; %Push button that selects Metz directory and 
+        metzButton; %Push button that selects Metz directory and
         %naming format
-        otherButton; %Push button that selects the default directory and 
+        otherButton; %Push button that selects the default directory and
         %uses the Euston naming format
         
         %% Variables:
@@ -64,7 +64,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 [50 50 400 50], 'String', 'Other (o)', 'FontSize', 13,...
                 'Callback', {@Selection, 'o'});
             
-            %% 
+            %%
             %{
             set(guiF, 'visible', 'off');
             ready = input('Type 1 if ready');
@@ -72,7 +72,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 disp('Got in ready');
                 set(guiF, 'visible', 'on');
             end
-                %}
+            %}
             %% Sub-constructor Functions:
             
             function Shortcuts(src, eventdata)
@@ -111,25 +111,25 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 %disp('In HideWindow');
                 %set(this.guiF, 'visible', 'off'); %Makes window invisible
                 %exit;
-            end            
+            end
             
         end
         
         function labName = getLabName(obj)
             originalLab = obj.chosenLab;
             try
-            waitfor(obj, 'chosenLab'); %Function waits to elapse until
-           %nameType has been changed.
-           if ischar(obj.chosenLab)
-               obj.chosenLab = originalLab;
-               disp('String');
-               errorStruct.identifier = 'LabScreen:callCanceled';
-               error(errorStruct);
-           else
-               labName = obj.chosenLab;
-               disp('Not string');
-           end
-           
+                waitfor(obj, 'chosenLab'); %Function waits to elapse until
+                %nameType has been changed.
+                if ischar(obj.chosenLab)
+                    obj.chosenLab = originalLab;
+                    disp('String');
+                    errorStruct.identifier = 'LabScreen:callCanceled';
+                    error(errorStruct);
+                else
+                    labName = obj.chosenLab;
+                    disp('Not string');
+                end
+                
             catch ME
                 rethrow(ME);
             end
