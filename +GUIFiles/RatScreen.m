@@ -22,7 +22,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         cohortID; %The rat's cohort or experiment number
         dataComplete; %1 = data entry done; 0 = not done
         newLab; %Set when the lab is changed from this screen
-        recordScreen; %RecordScreen object
         labName; %The lab corresponding to the rat
         cancelCall; %Indicates whether the window is hidden and the call is canceled
     end

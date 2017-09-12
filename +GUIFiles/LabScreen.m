@@ -80,7 +80,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 Selection(src, eventdata, eventdata.Key);
             end
             
-            function chosenLab = Selection(~, ~, choice)
+            function Selection(~, ~, choice)
                 %Assigns LabName enumeration to chosenLab
                 import Enums.LabName;
                 switch choice
