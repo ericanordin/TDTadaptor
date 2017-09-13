@@ -8,9 +8,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
     %Integrate plots
-    %Show dialogue in Status window
+    %Make relevant output for Status window
     %Make pretty
-    %Make fileName red after pressing new test subject
     
     properties
         %% Figures:
@@ -119,7 +118,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.fileNameEditable = uicontrol('Style', 'edit', 'Position',...
                 [270 900 680 90], 'String', this.recordObj.wavName, 'Callback',...
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
-                @DeselectOnEnter, 'BackgroundColor', this.errorColor);
+                @DeselectOnEnter);%, 'BackgroundColor', this.errorColor);
             
             this.advancedButton = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 800 200 80], 'String', 'Advanced Options', 'Callback',...

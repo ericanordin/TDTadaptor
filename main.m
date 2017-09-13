@@ -32,12 +32,15 @@ recordScr = RecordScreen();
 %nameType = getNameType(entryScr);
 
 while (running == 1)
+    import StandardFunctions.checkValidName;
 %if nameType == NamingMethod.Auto
 
 %else
 %Resets the wav file name to the directory of the most recent rat.
    setFileName(recordScr, recordScr.startingPathway); 
    set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
+   checkValidName(recordScr.startingPathway, recordScr.fileNameEditable, recordScr.errorColor);
+   
 %end
 
 %set(recordScr.guiF, 'visible', 'on');

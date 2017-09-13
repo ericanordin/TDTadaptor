@@ -81,22 +81,22 @@ for totalReps = 0:(buffReps-1)
     end
     
     if totalReps == 0
-        screen.guiF;
-        wavePlot = plot(x,builtBuffer);
+        wavePlot = plot(x, builtBuffer, 'Parent', screen.waveformAxes);
         
         title('Waveform');
         xlabel('Seconds');
         ylabel('Scaled Amplitude (+/-1 is Max)');
         
-        figure(2);
+        %figure(2);
         [~, f, t, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
-        specPlot = imagesc(t, f, 10*log10(p+eps));%log10(abs(s)));
+        specPlot = imagesc(t, f, 10*log10(p+eps), 'Parent', screen.spectrogramAxes);%log10(abs(s)));
         
         ylim([0 80000]);
-        specAxes = specFig.CurrentAxes;
-        yScale = get(specAxes, 'YTick');
+        %specAxes = specFig.CurrentAxes;
+        %yScale = get(specAxes, 'YTick');
+        yScale = get(screen.spectrogramAxes, 'YTick');
         yScale = yScale./1000;
-        set(specAxes, 'Ydir', 'Normal', 'YTickLabel', yScale);
+        set(screen.spectrogramAxes, 'Ydir', 'Normal', 'YTickLabel', yScale);
         
         title('Spectrogram');
         xlabel('Seconds');
@@ -108,22 +108,22 @@ for totalReps = 0:(buffReps-1)
     else
         x = x +(npts*buffLength);
         
-        figure(1);
+        %figure(1);
         wavePlot.YData = builtBuffer;
         wavePlot.XData = x;
         
-        figure(2);
+        %figure(2);
         [~, ~, ~, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
         specPlot.CData = 10*log10(p+eps);
         specPlot.XData = specPlot.XData + buffLength;
     end
     
     
-    figure(1);
-    waveAxes = waveFig.CurrentAxes;
-    xScale = get(waveAxes, 'XTick');
+    %figure(1);
+    %waveAxes = waveFig.CurrentAxes;
+    xScale = get(screen.spectrogramAxes, 'XTick');
     xScale = xScale./npts;
-    set(waveAxes,'XTickLabel', xScale);
+    set(screen.spectrogramAxes,'XTickLabel', xScale);
     
     figure(2);
     xlim([totalReps*buffLength (totalReps+1)*buffLength]);% 0 80000]);

@@ -5,6 +5,11 @@ function checkValidName(filePath, displayField, errorColor)
 %   existing file, if the file name does not end in .wav, if it is not
 %   saving to a drive, or the file is unnamed after the directory.
 
+if length(filePath) < 4
+    set(displayField, 'BackgroundColor', errorColor);
+    return;
+end
+
 fileDesignation = filePath(end-3:end);
 directoryPrefix = filePath(2:3);
 preWav = filePath(end-4);
