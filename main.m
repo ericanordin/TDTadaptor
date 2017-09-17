@@ -6,6 +6,7 @@ function main()
     %Before compiling:
     %Change filepaths in Continuous_Acquire
     %Enable exit in CloseProgram for each GUI
+    %Change Recording.wavName to 'C:\'
     
 import Enums.*
 import GUIFiles.*

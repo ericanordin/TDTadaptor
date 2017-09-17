@@ -17,7 +17,7 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
     methods
         function this = Recording()
             this.recordStatus = 0;
-            this.wavName = 'C:\';
+            this.wavName = 'C:\testing.wav';
             this.recordTime = 600;
             this.continuous = 0;
             this.bitDepth = 32;

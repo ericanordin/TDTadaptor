@@ -83,9 +83,9 @@ for totalReps = 0:(buffReps-1)
     if totalReps == 0
         wavePlot = plot(x, builtBuffer, 'Parent', screen.waveformAxes);
         
-        title('Waveform');
-        xlabel('Seconds');
-        ylabel('Scaled Amplitude (+/-1 is Max)');
+        title(screen.waveformAxes, 'Waveform');
+        xlabel(screen.waveformAxes, 'Seconds');
+        ylabel(screen.waveformAxes, 'Scaled Amplitude (+/-1 is Max)');
         
         %figure(2);
         [~, f, t, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
@@ -98,9 +98,9 @@ for totalReps = 0:(buffReps-1)
         yScale = yScale./1000;
         set(screen.spectrogramAxes, 'Ydir', 'Normal', 'YTickLabel', yScale);
         
-        title('Spectrogram');
-        xlabel('Seconds');
-        ylabel('Frequency (kHz)');
+        title(screen.spectrogramAxes, 'Spectrogram');
+        xlabel(screen.spectrogramAxes, 'Seconds');
+        ylabel(screen.spectrogramAxes, 'Frequency (kHz)');
         specDB = colorbar;
         ylabel(specDB, 'dB');
         colormap('gray');
@@ -125,7 +125,7 @@ for totalReps = 0:(buffReps-1)
     xScale = xScale./npts;
     set(screen.spectrogramAxes,'XTickLabel', xScale);
     
-    figure(2);
+    %figure(2);
     xlim([totalReps*buffLength (totalReps+1)*buffLength]);% 0 80000]);
     
     pause(0.001); %Necessary for plot to appear on each iteration
