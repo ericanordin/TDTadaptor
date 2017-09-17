@@ -452,9 +452,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function stopRecord(screen)
+            import StandardFunctions.addToStatus;
             set(screen.startStop, 'String', 'Start Recording',...
                 'BackgroundColor', [0.5 1 0.5]);
             screen.recordObj.recordStatus = 0;
+            addToStatus('Done recording', screen);
+            
             %stop(this.recordObj.webcam);
             %disp('Done recording');
             %disp(this.recordObj.webcam);
