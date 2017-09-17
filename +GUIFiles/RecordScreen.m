@@ -7,7 +7,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer option to save advanced settings
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
-    %Integrate plots
+    %Integrate plots into Continuous_Acquire
     %Make relevant output for Status window
     %Make pretty
     

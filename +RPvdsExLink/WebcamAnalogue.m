@@ -118,18 +118,28 @@ for totalReps = 0:(buffReps-1)
         specPlot.XData = specPlot.XData + buffLength;
     end
     
+    %screen.waveformAxes.XAxis.Exponent = 0;
+    
+    
+    xScaleWave = get(screen.waveformAxes, 'XTick');
+    xScaleWave = xScaleWave./npts;
+    set(screen.waveformAxes,'XTickLabel', xScaleWave);
     
     %figure(1);
     %waveAxes = waveFig.CurrentAxes;
-    xScale = get(screen.spectrogramAxes, 'XTick');
-    xScale = xScale./npts;
-    set(screen.spectrogramAxes,'XTickLabel', xScale);
     
+    
+    %{
+    xScaleSpec = get(screen.spectrogramAxes, 'XTick');
+    xScaleSpec = xScaleSpec./npts;
+    set(screen.spectrogramAxes,'XTickLabel', xScaleSpec);
+    %}
     %figure(2);
     xlim([totalReps*buffLength (totalReps+1)*buffLength]);% 0 80000]);
     
     pause(0.001); %Necessary for plot to appear on each iteration
 end
 toc;
+%screen.PressStartStop();
 end
 
