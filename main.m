@@ -7,6 +7,7 @@ function main()
     %Change filepaths in Continuous_Acquire
     %Enable exit in CloseProgram for each GUI
     %Change Recording.wavName to 'C:\'
+    %Change Recording.recordTime to new default
     
 import Enums.*
 import GUIFiles.*

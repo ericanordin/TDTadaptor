@@ -18,7 +18,7 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
         function this = Recording()
             this.recordStatus = 0;
             this.wavName = 'C:\testing.wav';
-            this.recordTime = 600;
+            this.recordTime = 10;
             this.continuous = 0;
             this.bitDepth = 32;
             %this.webcam = audiorecorder(48000, 16, 1); %Webcam dummy audio source

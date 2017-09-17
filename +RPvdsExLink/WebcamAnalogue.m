@@ -141,5 +141,6 @@ for totalReps = 0:(buffReps-1)
 end
 toc;
 %screen.PressStartStop();
+stopRecord(screen);
 end
 

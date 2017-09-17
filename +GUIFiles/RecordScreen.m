@@ -137,7 +137,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             uicontrol('Style', 'text', 'Position', [50 150 100 80],...
                 'String', 'Status');
-
+            
             this.statusWindow = uitable('Position', [170 50 800 250],...
                 'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
                 'FontSize', 14, 'ColumnWidth', {798}, 'Data', this.statusText);
@@ -414,16 +414,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     
                     
                 else
-                    set(this.startStop, 'String', 'Start Recording',...
-                        'BackgroundColor', [0.5 1 0.5]);
-                    this.recordObj.recordStatus = 0;
-                    %stop(this.recordObj.webcam);
-                    %disp('Done recording');
-                    %disp(this.recordObj.webcam);
-                    %play(this.recordObj.webcam);
-                    %disp('Done playing');
-                    %set(this.guiF, 'CloseRequestFcn', closereq);
-                    %Only enable closing and new record once saving has completed
+                    this.stopRecord(this);
+                    
                 end
             end
             
@@ -454,6 +446,18 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %set(obj.guiF, 'visible', 'off');
         end
         
+        function stopRecord(screen)
+            set(screen.startStop, 'String', 'Start Recording',...
+                'BackgroundColor', [0.5 1 0.5]);
+            screen.recordObj.recordStatus = 0;
+            %stop(this.recordObj.webcam);
+            %disp('Done recording');
+            %disp(this.recordObj.webcam);
+            %play(this.recordObj.webcam);
+            %disp('Done playing');
+            %set(this.guiF, 'CloseRequestFcn', closereq);
+            %Only enable closing and new record once saving has completed
+        end
     end
     
 end
