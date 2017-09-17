@@ -1,4 +1,5 @@
 function WebcamAnalogue(screen)
+import StandardFunctions.addToStatus;
 % For attempting the version in which the graphs reset with a new
 % buffer after a specified amount of repetitions.
 
@@ -43,7 +44,8 @@ curindex = rec1.CurrentSample;
 %set(specFig, 'Name', 'Spectrogram (Modified)');
 
 x = 1:npts*buffLength;
-
+%addToStatus('Recording...', screen);
+%pause(0.00001);
 % main looping section
 tic;
 for totalReps = 0:(buffReps-1)
@@ -79,6 +81,9 @@ for totalReps = 0:(buffReps-1)
         samples2 = getaudiodata(rec2)';
         builtBuffer(1, (1 + chunkSecond*npts + npts/2):(npts*(chunkSecond+1))) = samples2(1:npts/2);
     end
+    
+    %Update remaining seconds
+    decrementTime(screen, buffLength);
     
     if totalReps == 0
         wavePlot = plot(x, builtBuffer, 'Parent', screen.waveformAxes);

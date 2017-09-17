@@ -7,7 +7,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer option to save advanced settings
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
-    %Integrate plots into Continuous_Acquire
+    %Integrate plots and decrementTime into Continuous_Acquire
     %Make relevant output for Status window
     %Make pretty
     
@@ -78,6 +78,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %CloseProgram: Exits the program
         %setFileName: Allows main to access recordObj.wavName
         %waitForNew: Resets RecordScreen GUI when New Recording is pressed.
+        %stopRecord: Changes setting to halt the recording
+        %decrementTime: Updates time remaining
         
         %% Function Code
         function this = RecordScreen()
@@ -347,6 +349,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 %given a valid entry.
                 numericContents = checkNaturalNum(field, this.errorColor);
                 this.recordObj.recordTime = numericContents;
+                this.timeRemaining = this.recordObj.recordTime;
                 this.advCanClose = 1; %Window can close
                 %disp(this.recordObj.recordTime);
             end
@@ -377,6 +380,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 %Executes when the startStop button is pressed.
                 %import RPvdsExLink.Continuous_Acquire;
                 import RPvdsExLink.WebcamAnalogue;
+                import StandardFunctions.addToStatus;
                 
                 if this.recordObj.recordStatus == 0
                     fileColor = get(this.fileNameEditable, 'BackgroundColor');
@@ -408,7 +412,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         set(this.guiF, 'CloseRequestFcn', '');
                         this.recordObj.recordStatus = 1;
                         set(this.newRecord, 'Enable', 'off');
-                        pause(0.001);
+                        addToStatus('Recording...', this);
+                        pause(0.002);  
                         WebcamAnalogue(this);
                     end
                     
@@ -457,6 +462,11 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %disp('Done playing');
             %set(this.guiF, 'CloseRequestFcn', closereq);
             %Only enable closing and new record once saving has completed
+        end
+        
+        function decrementTime(screen, buffLength)
+            screen.timeRemaining = screen.timeRemaining-buffLength;
+            set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
         end
     end
     
