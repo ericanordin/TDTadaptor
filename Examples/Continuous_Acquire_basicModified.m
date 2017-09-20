@@ -9,7 +9,10 @@ addpath('C:\TDT\ActiveX\ActXExamples\Matlab');
 % filePath - set this to wherever the examples are stored
 filePath = 'C:\Users\erica.nordin\Documents\MATLAB\TDT_development\SavedAudio\';
 
-RP = TDTRP('C:\TDT\ActiveX\ActXExamples\RP_files\Continuous_Acquire.rcx', 'RX6');
+%RP = TDTRP('C:\TDT\ActiveX\ActXExamples\RP_files\Continuous_Acquire.rcx', 'RX6');
+RP = TDTRP(...
+    'C:\Continuous_AcquireRX6modified.rcx',...
+    'RX6');
 
 % size of the entire serial buffer
 npts = RP.GetTagSize('dataout');  
@@ -72,11 +75,19 @@ for i = 1:3
 
 end
 
+disp('Making sound (fnoise)');
+sound(fnoise, floor(fs));
+pause(7);
+disp('Done sound');
+
 fclose(fnoise);
 
 %totalData = textscan(filePath, '%f32');
 toot = fopen(filePath, 'r');
 totalData = fread(toot);
+disp('Making sound (totalData)');
+sound(totalData, floor(fs));
+disp('Done sound');
 audiowrite(wavPath, totalData, floor(fs), 'BitsPerSample', 32);
 
 fclose(toot);
