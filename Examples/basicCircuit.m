@@ -11,7 +11,7 @@ filePath = 'C:\Users\erica.nordin\Documents\MATLAB\TDT_development\SavedAudio\';
 
 %RP = TDTRP('C:\TDT\ActiveX\ActXExamples\RP_files\Continuous_Acquire.rcx', 'RX6');
 RP = TDTRP(...
-    'C:\Continuous_AcquireRX6modified.rcx',...
+    'C:\basicCircuit.rcx',...
     'RX6');
 
 % size of the entire serial buffer
@@ -29,7 +29,7 @@ wavPath = strcat(filePath, 'example.wav');
 filePath = strcat(filePath, 'fnoise.F32');
 fnoise = fopen(filePath,'w');
 %disp(fnoise);
-    
+
 % begin acquiring
 RP.SoftTrg(1);
 curindex = RP.GetTagVal('index');
