@@ -467,9 +467,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %Only enable closing and new record once saving has completed
         end
         
-        function decrementTime(screen, buffLength)
-            screen.timeRemaining = screen.timeRemaining-buffLength;
+        function decrementTime(screen)
+            screen.timeRemaining = screen.timeRemaining-1;%-buffLength;
             set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
+            pause(0.001);
         end
     end
     

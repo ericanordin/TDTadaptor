@@ -80,10 +80,12 @@ for totalReps = 0:(buffReps-1)
         curindex = 0;
         samples2 = getaudiodata(rec2)';
         builtBuffer(1, (1 + chunkSecond*npts + npts/2):(npts*(chunkSecond+1))) = samples2(1:npts/2);
+        
+        %Update remaining seconds
+        decrementTime(screen);
     end
     
-    %Update remaining seconds
-    decrementTime(screen, buffLength);
+    
     
     if totalReps == 0
         wavePlot = plot(x, builtBuffer, 'Parent', screen.waveformAxes);
