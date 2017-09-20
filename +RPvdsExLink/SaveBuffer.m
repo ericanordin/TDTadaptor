@@ -13,6 +13,8 @@ end
 %May only be able to store data in 16-bit or 32-bit
 noise = RP.ReadTagVEX('dataout', 0, bufpts, 'F32', 'F32', 1);
 disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
+%pdf pg 66: SendSrcFile. May be necessary for .wav
+
 
 % checks to see if the data transfer rate is fast enough
 curindex = RP.GetTagVal('index');

@@ -5,6 +5,7 @@ function Continuous_Acquire(screen)
 % This program writes to the buffer once it has cyled halfway through
 % (double-buffering)
 
+%May have to add ActXExamples to path
 %screen is RecordScreen object. Function uses get to receive Recording
 %object.
 
@@ -23,7 +24,7 @@ clear all; clc;
 
 %Change this once all files have been stored in their final location
 RP = TDTRP(...
-    'C:\Users\erica.nordin\OneDrive\Documents\Fall 2017\Ultrasonic files\TDT\Continuous_AcquireRX6modified',...
+    'C:\Users\erica.nordin\OneDrive\Documents\Fall 2017 NSERC\Ultrasonic files\TDT\Continuous_AcquireRX6modified',...
     'RX6');
 
 % size of the entire serial buffer
@@ -42,7 +43,7 @@ filePath = recordObj.wavName;
 
 %Wait here for recordStatus to change so that the proper settings are used.
 
-filePath = strcat(filePath, 'fnoise.F32'); %Change this for .wav
+%filePath = strcat(filePath, 'fnoise.F32'); %Change this for .wav
 fnoise = fopen(filePath,'w');
 
 %% Acquisition
