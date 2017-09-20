@@ -1,6 +1,6 @@
 classdef Recording < handle & matlab.mixin.SetGetExactNames
     %RECORDING Stores the details of the recording to prevent circular
-    %dependency issues between RecordScreen and Continuous_Acquire.
+    %dependency issues between RecordScreen and AcquireAudio.
     %   Detailed explanation goes here
     
     properties

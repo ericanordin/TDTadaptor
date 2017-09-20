@@ -4,7 +4,7 @@ function main()
     %Update UML
     
     %Before compiling:
-    %Change filepaths in Continuous_Acquire
+    %Change filepaths in AcquireAudio
     %Enable exit in CloseProgram for each GUI
     %Change Recording.wavName to 'C:\'
     %Change Recording.recordTime to new default
@@ -47,8 +47,8 @@ while (running == 1)
 
 %set(recordScr.guiF, 'visible', 'on');
 
-%Continuous_Acquire(recordScr);
-%Might put Continuous_Acquire here; dependent upon recordStatus and
+%AcquireAudio(recordScr);
+%Might put AcquireAudio here; dependent upon recordStatus and
 %filePath
 
 waitForNew(recordScr);

@@ -1,6 +1,6 @@
 function [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise)
 %SAVEBUFFER Takes in and save information through the microphone
-%   Used to prevent redundancy in the for/while loops in Continuous_Acquire
+%   Used to prevent redundancy in the for/while loops in AcquireAudio
 
 % wait until done writing A
 while(curindex < bufpts)

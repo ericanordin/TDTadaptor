@@ -1,4 +1,4 @@
-function Continuous_Acquire(screen)
+function AcquireAudio(screen)
 %See ActiveX Reference Manual (pdf pg 86) for information about the example template.
 
 % One-channel continuous acquire example using a serial buffer

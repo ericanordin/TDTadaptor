@@ -7,7 +7,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer option to save advanced settings
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
-    %Integrate plots and decrementTime into Continuous_Acquire
+    %Integrate plots and decrementTime into AcquireAudio
     %Make relevant output for Status window
     %Make pretty
     
@@ -85,7 +85,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         function this = RecordScreen()
             %% GUI Set Up
             import RPvdsExLink.Recording;
-            %import RPvdsExLink.Continuous_Acquire;
+            %import RPvdsExLink.AcquireAudio;
             %import RPvdsExLink.WebcamAnalogue;
             this.recordObj = Recording();
             
@@ -378,7 +378,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
-                %import RPvdsExLink.Continuous_Acquire;
+                %import RPvdsExLink.AcquireAudio;
                 import RPvdsExLink.WebcamAnalogue;
                 import StandardFunctions.addToStatus;
                 
