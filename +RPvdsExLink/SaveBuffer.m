@@ -1,6 +1,8 @@
-function [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise)
+function [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen)
 %SAVEBUFFER Takes in and save information through the microphone
 %   Used to prevent redundancy in the for/while loops in AcquireAudio
+
+import StandardFunctions.addToStatus
 
 % wait until done writing A
 while(curindex < bufpts)
@@ -21,6 +23,7 @@ curindex = RP.GetTagVal('index');
 disp(['Current buffer index: ' num2str(curindex)]);
 if(curindex < bufpts)
     warning('Transfer rate is too slow');
+    addToStatus('Warning: Transfer rate is too slow', screen);
 end
 
 % wait until start writing A
@@ -39,6 +42,7 @@ curindex = RP.GetTagVal('index');
 disp(['Current index: ' num2str(curindex)]);
 if(curindex > bufpts)
     warning('Transfer rate too slow');
+    addToStatus('Warning: Transfer rate is too slow', screen);
 end
 
 end

@@ -12,6 +12,7 @@ function AcquireAudio(screen)
 %% Set Up
 import GUIFiles.RecordScreen
 import RPvdsExLink.*
+import StandardFunctions.addToStatus
 
 clear all; clc;
 
@@ -56,11 +57,11 @@ disp(['Current buffer index: ' num2str(curindex)]);
 % main looping section
 if recordObj.continuous == 1
     while recordObj.recordStatus == 1
-        [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise);
+        [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen);
     end
 else
     for i = 1:recordObj.recordTime
-        [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise);
+        [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen);
     end
 end
 
@@ -72,6 +73,6 @@ RP.SoftTrg(2);
 RP.Halt; %Stops processing chain
 
 % plots the last npts data points
-plot(t,noise);
-axis tight;
+%plot(t,noise);
+%axis tight;
 
