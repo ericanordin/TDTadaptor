@@ -378,8 +378,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
-                %import RPvdsExLink.AcquireAudio;
-                import RPvdsExLink.WebcamAnalogue;
+                import RPvdsExLink.AcquireAudio;
+                %import RPvdsExLink.WebcamAnalogue;
                 import StandardFunctions.addToStatus;
                 
                 if this.recordObj.recordStatus == 0
@@ -414,7 +414,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         set(this.newRecord, 'Enable', 'off');
                         addToStatus('Recording...', this);
                         pause(0.002);  
-                        WebcamAnalogue(this);
+                        %WebcamAnalogue(this);
+                        AcquireAudio(this);
                     end
                     
                     

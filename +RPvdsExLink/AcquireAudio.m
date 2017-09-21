@@ -14,7 +14,7 @@ import GUIFiles.RecordScreen
 import RPvdsExLink.*
 import StandardFunctions.addToStatus
 
-clear all; clc;
+%clear all; clc;
 
 
 
@@ -38,14 +38,19 @@ bufpts = npts/2;
 t=(1:bufpts)/fs;
 
 recordObj = get(screen, 'recordObj');
-waitfor(recordObj, recordStatus, 1);
 
-filePath = recordObj.wavName;
+%waitfor(recordObj, recordStatus, 1);
+
+%filePathWav = recordObj.wavName;
+filePathF32 = recordObj.wavName(1:end-3);
+filePathF32 = [filePathF32 'F32'];
+disp(filePathF32);
 
 %Wait here for recordStatus to change so that the proper settings are used.
 
 %filePath = strcat(filePath, 'fnoise.F32'); %Change this for .wav
-fnoise = fopen(filePath,'w');
+fnoise = fopen(filePathF32, 'w');
+disp(fnoise); %Unsuccessfully opening file
 
 %% Acquisition
 
@@ -61,16 +66,24 @@ if recordObj.continuous == 1
     end
 else
     for i = 1:recordObj.recordTime
+        %fwrite(fnoise, [1 2 3], 'float32');
         [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen);
     end
 end
-
-fclose(fnoise);
 
 %% Post-Acquisition
 % stop acquiring
 RP.SoftTrg(2);
 RP.Halt; %Stops processing chain
+
+fclose(fnoise);
+
+F32Complete = fopen(filePathF32, 'r');
+totalSound = fread(F32Complete, '*float32');
+audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 32);
+
+fclose(F32Complete);
+delete(filePathF32);
 
 % plots the last npts data points
 %plot(t,noise);
