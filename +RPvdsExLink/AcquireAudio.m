@@ -44,20 +44,18 @@ recordObj = get(screen, 'recordObj');
 %filePathWav = recordObj.wavName;
 filePathF32 = recordObj.wavName(1:end-3);
 filePathF32 = [filePathF32 'F32'];
-disp(filePathF32);
 
 %Wait here for recordStatus to change so that the proper settings are used.
 
 %filePath = strcat(filePath, 'fnoise.F32'); %Change this for .wav
 fnoise = fopen(filePathF32, 'w');
-disp(fnoise); %Unsuccessfully opening file
 
 %% Acquisition
 
 % begin acquiring
 RP.SoftTrg(1); %Software trigger 1 allows buffer to intake info from AdcIn
 curindex = RP.GetTagVal('index');
-disp(['Current buffer index: ' num2str(curindex)]);
+%disp(['Current buffer index: ' num2str(curindex)]);
 
 % main looping section
 if recordObj.continuous == 1
@@ -80,10 +78,12 @@ fclose(fnoise);
 
 F32Complete = fopen(filePathF32, 'r');
 totalSound = fread(F32Complete, '*float32');
+addToStatus('Saving...', screen);
 audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 32);
 
 fclose(F32Complete);
 delete(filePathF32);
+addToStatus('Saved successfully', screen);
 
 % plots the last npts data points
 %plot(t,noise);

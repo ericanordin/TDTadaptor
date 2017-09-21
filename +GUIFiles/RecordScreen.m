@@ -5,9 +5,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
     %Offer option to save advanced settings
+    %Fix advanced settings re-open bug (or remove advanced settings window)
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
-    %Integrate plots and decrementTime into AcquireAudio
+    %Integrate plots, stopRecord, and decrementTime into AcquireAudio
     %Make relevant output for Status window
     %Make pretty
     
