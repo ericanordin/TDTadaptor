@@ -11,7 +11,7 @@ filePath = 'C:\Users\erica.nordin\Documents\MATLAB\TDT_development\SavedAudio\';
 
 %RP = TDTRP('C:\TDT\ActiveX\ActXExamples\RP_files\Continuous_Acquire.rcx', 'RX6');
 RP = TDTRP(...
-    'C:\Continuous_AcquireRX6modified.rcx',...
+    'C:\Users\erica.nordin\OneDrive\Documents\Fall 2017 NSERC\Ultrasonic files\TDT\Continuous_AcquireRX6modified.rcx',...
     'RX6');
 
 % size of the entire serial buffer
@@ -80,7 +80,7 @@ RP.SoftTrg(2);
 RP.Halt;
 
 disp('Making sound (fnoise)');
-sound(fnoise, floor(fs));
+%sound(fnoise, floor(fs));
 %pause(7);
 %disp('Done sound');
 
@@ -88,7 +88,8 @@ fclose(fnoise);
 
 %totalData = textscan(filePath, '%f32');
 toot = fopen(filePath, 'r');
-totalData = fread(toot);
+totalData = fread(toot, '*float32'); %MUST specify *float32
+sound(totalData, floor(fs));
 %disp('Making sound (totalData)');
 %sound(totalData, floor(fs));
 %disp('Done sound');
