@@ -25,7 +25,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %the user to edit it when clicked.
         continousToggle; %Checkbox that indicates whether the recording
         %will have a time limit
-        bitDepthSelect; %Options 16, 24, and 32 bits
         advancedButton; %Displays advanced options
         startStop; %Pushbutton that changes between "Start Recording" and
         %"Stop Recording" and toggles the microphone and recordObj.recordStatus.
@@ -292,13 +291,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
                         'inactive');
                     
-                    uicontrol('Style', 'text', 'Position', [20 170 200 20],...
-                        'String', 'Bit Depth', 'HorizontalAlignment', 'left');
-                    
-                    this.bitDepthSelect = uicontrol('Style', 'popupmenu', 'Position',...
-                        [220 170 50 20], 'String', {16, 24, 32}, 'Value', 2,...
-                        'Callback', @GetBitDepth);
-                    
                     uicontrol('Style', 'text', 'Position', [40 100 220 50],...
                         'String',...
                         'A red box indicates an invalid entry. Check the manual if you are unsure what is permissible.',...
@@ -354,21 +346,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 this.advCanClose = 1; %Window can close
                 %disp(this.recordObj.recordTime);
             end
-            
-            function GetBitDepth(field, ~)
-                %Sets recordObj.bitDepth to the contents of bitDepthSelect
-                
-                fieldValue = get(field, 'Value');
-                switch fieldValue
-                    case 1
-                        this.recordObj.bitDepth = 16;
-                    case 2
-                        this.recordObj.bitDepth = 24;
-                    case 3
-                        this.recordObj.bitDepth = 32;
-                end
-                disp(this.recordObj.bitDepth);
-            end
+
             
             function DeselectOnEnter(~, eventdata)
                 if strcmp(eventdata.Key, 'return')
