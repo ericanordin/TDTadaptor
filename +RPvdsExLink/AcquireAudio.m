@@ -59,6 +59,7 @@ else
         end
         decrementTime(screen);
     end
+    stopRecord(screen);
 end
 
 %% Post-Acquisition
