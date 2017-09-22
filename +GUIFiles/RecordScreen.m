@@ -85,6 +85,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             import RPvdsExLink.Recording;
             %import RPvdsExLink.AcquireAudio;
             %import RPvdsExLink.WebcamAnalogue;
+            import StandardFunctions.ClearText;
+            
             this.recordObj = Recording();
             
             this.statusText = {};%{'First command'; 'Second command'; 'Third command'};
@@ -120,20 +122,37 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
                 @DeselectOnEnter);%, 'BackgroundColor', this.errorColor);
             
-            this.advancedButton = uicontrol('Style', 'pushbutton', 'Position',...
-                [50 800 200 80], 'String', 'Advanced Options', 'Callback',...
-                @AdvancedWindow);
+            uicontrol('Style', 'text', 'Position', [50 750 200 20],...
+                'String', 'Continous Record', 'HorizontalAlignment',...
+                'left', 'FontSize', 12);
+            
+            continuousToggle = uicontrol('Style', 'checkbox',...
+                'Position', [240 750 20 20], 'Callback', @TogContinuous);
+            
+            this.recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
+                [50 700 200 20], 'String', 'Recording Time (s)',...
+                'HorizontalAlignment', 'left', 'FontSize', 12);
+            
+            this.recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
+                [215 695 70 25], 'String', this.recordObj.recordTime, 'Callback',...
+                @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
+                'inactive', 'FontSize', 12);
+            
+            uicontrol('Style', 'text', 'Position', [40 800 220 50],...
+                'String',...
+                'A red box indicates an invalid entry. Check the manual if you are unsure what is permissible.',...
+                'FontWeight', 'bold');
             
             this.startStop = uicontrol('Style', 'pushbutton', 'Position', ...
-                [60 700 180 80], 'String', 'Start Recording', 'BackgroundColor',...
+                [60 550 180 80], 'String', 'Start Recording', 'BackgroundColor',...
                 [0.5 1 0.5], 'Callback', @PressStartStop);
             
             this.timeRemainingLabel = uicontrol('Style', 'text', 'Position',...
-                [50 600 100 80], 'String', 'Time Remaining:');
+                [50 420 100 80], 'String', 'Time Remaining:', 'FontSize', 11);
             
             this.timeRemainingDisplay = uicontrol('Style', 'text',...
-                'Position', [150 600 100 80], 'String', this.timeRemaining,...
-                'BackgroundColor', [0.85 0.85 0.85]);
+                'Position', [150 450 100 50], 'String', this.timeRemaining,...
+                'BackgroundColor', [0.85 0.85 0.85], 'FontSize', 11);
             
             uicontrol('Style', 'text', 'Position', [50 150 100 80],...
                 'String', 'Status');
@@ -261,65 +280,33 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 
             end
             
-            function AdvancedWindow(~, ~)
-                import StandardFunctions.ClearText;
-                
-                checkExistence = isobject(this.advF);
-                if checkExistence == 0
-                    
-                    
-                    this.advF = figure('Name', 'Advanced Options', 'NumberTitle', ...
-                        'off', 'Position', [80 820 300 300], 'ToolBar', 'none',...
-                        'MenuBar', 'none', 'Resize', 'off', 'CloseRequestFcn', @HideWindow);
-                    %Advanced options figure
-                    
-                    uicontrol('Style', 'text', 'Position', [20 260 200 20],...
-                        'String', 'Continous Record', 'HorizontalAlignment',...
-                        'left');
-                    
-                    continuousToggle = uicontrol('Style', 'checkbox',...
-                        'Position', [220 260 20 20], 'Callback', @TogContinuous);
-                    
-                    this.recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
-                        [20 230 200 20], 'String', 'Recording Time (s)',...
-                        'HorizontalAlignment', 'left');
-                    
-                    this.recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
-                        [220 230 50 20], 'String', this.recordObj.recordTime, 'Callback',...
-                        @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
-                        'inactive');
-                    
-                    uicontrol('Style', 'text', 'Position', [40 100 220 50],...
-                        'String',...
-                        'A red box indicates an invalid entry. Check the manual if you are unsure what is permissible.',...
-                        'FontWeight', 'bold');
+            
+            
+            function TogContinuous(checkbox, ~)
+                %Makes appropriate changes based on the status of the
+                %checkbox.
+                isCont = get(checkbox, 'Value'); %isCont corresponds to
+                %whether or not the Continuous checkbox is checked or not.
+                %disp(isCont);
+                if isCont == 1 %Box is checked
+                    %recordObj.recordTime fields are made invisible
+                    set(this.timeRemainingLabel, 'Visible', 'off');
+                    set(this.timeRemainingDisplay, 'Visible', 'off');
+                    set(this.recordTimeLabel, 'Visible', 'off');
+                    set(this.recordTimeEditable, 'Visible', 'off');
+                    this.recordObj.continuous = 1;
+                else %Box is unchecked
+                    %recordObj.recordTime fields are made visible
+                    set(this.timeRemainingLabel, 'Visible', 'on');
+                    set(this.timeRemainingDisplay, 'Visible', 'on');
+                    set(this.recordTimeLabel, 'Visible', 'on');
+                    set(this.recordTimeEditable, 'Visible', 'on');
+                    this.recordObj.continuous = 0;
                 end
-                
-                function TogContinuous(checkbox, ~)
-                    %Makes appropriate changes based on the status of the
-                    %checkbox.
-                    isCont = get(checkbox, 'Value'); %isCont corresponds to
-                    %whether or not the Continuous checkbox is checked or not.
-                    %disp(isCont);
-                    if isCont == 1 %Box is checked
-                        %recordObj.recordTime fields are made invisible
-                        set(this.timeRemainingLabel, 'Visible', 'off');
-                        set(this.timeRemainingDisplay, 'Visible', 'off');
-                        set(this.recordTimeLabel, 'Visible', 'off');
-                        set(this.recordTimeEditable, 'Visible', 'off');
-                        this.recordObj.continuous = 1;
-                    else %Box is unchecked
-                        %recordObj.recordTime fields are made visible
-                        set(this.timeRemainingLabel, 'Visible', 'on');
-                        set(this.timeRemainingDisplay, 'Visible', 'on');
-                        set(this.recordTimeLabel, 'Visible', 'on');
-                        set(this.recordTimeEditable, 'Visible', 'on');
-                        this.recordObj.continuous = 0;
-                    end
-                    %disp(recordObj.continuous);
-                end
-                
-                function HideWindow(~,~)
+                %disp(recordObj.continuous);
+            end
+            %{
+function HideWindow(~,~)
                     disp('In HideWindow');
                     if this.advCanClose == 1
                         disp('Allowed to hide');
@@ -331,7 +318,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     end
                     %exit;
                 end
-            end
+            %}
             
             function GetRecordTime(field, ~)
                 %Sets recordObj.recordTime to the contents of recordTimeEditable
@@ -344,7 +331,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 this.advCanClose = 1; %Window can close
                 %disp(this.recordObj.recordTime);
             end
-
+            
             
             function DeselectOnEnter(~, eventdata)
                 if strcmp(eventdata.Key, 'return')
@@ -390,7 +377,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         this.recordObj.recordStatus = 1;
                         set(this.newRecord, 'Enable', 'off');
                         addToStatus('Recording...', this);
-                        pause(0.002);  
+                        pause(0.002);
                         %WebcamAnalogue(this);
                         AcquireAudio(this);
                     end
