@@ -5,7 +5,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
     %Offer option to save advanced settings
-    %Fix advanced settings re-open bug (or remove advanced settings window)
+    %Offer scaled vs unscaled waveform
     %Integrate plots into AcquireAudio
     %Make relevant output for Status window
     %Make pretty
@@ -436,6 +436,12 @@ function HideWindow(~,~)
             screen.timeRemaining = screen.timeRemaining-1;%-buffLength;
             set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
             pause(0.001);
+        end
+        
+        function enableNew(screen)
+            set(screen.newRecord, 'Enable', 'on');
+            set(screen.guiF, 'CloseRequestFcn', @CloseProgram);
+            %Re-enable closing of window
         end
     end
     

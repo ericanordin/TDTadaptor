@@ -78,4 +78,5 @@ audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 32);
 fclose(F32Complete);
 delete(filePathF32);
 addToStatus('Saved successfully', screen);
+enableNew(screen);
 
