@@ -8,7 +8,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Fix advanced settings re-open bug (or remove advanced settings window)
     %Remove bit depth options. Should be 32 bit floating point (if
     %there is no buffer issue).
-    %Integrate plots, stopRecord, and decrementTime into AcquireAudio
+    %Integrate plots into AcquireAudio
     %Make relevant output for Status window
     %Make pretty
     
@@ -421,7 +421,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     
                     
                 else
-                    this.stopRecord(this);
+                    stopRecord(this);
                     
                 end
             end

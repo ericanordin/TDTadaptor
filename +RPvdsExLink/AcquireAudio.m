@@ -14,13 +14,6 @@ import GUIFiles.RecordScreen
 import RPvdsExLink.*
 import StandardFunctions.addToStatus
 
-%clear all; clc;
-
-
-
-% filePath - set this to wherever the examples are stored
-%filePath = 'C:\TDT\ActiveX\ActXExamples\Matlab\';
-
 %May need actxcontrol() call to use ActiveX methods
 
 %Change this once all files have been stored in their final location
@@ -35,19 +28,12 @@ npts = RP.GetTagSize('dataout'); %Returns maximum number of accessible data poin
 % of data in the buffer being overwritten)
 fs = RP.GetSFreq(); %Returns sampling frequency
 bufpts = npts/2;
-t=(1:bufpts)/fs;
 
 recordObj = get(screen, 'recordObj');
 
-%waitfor(recordObj, recordStatus, 1);
-
-%filePathWav = recordObj.wavName;
 filePathF32 = recordObj.wavName(1:end-3);
 filePathF32 = [filePathF32 'F32'];
 
-%Wait here for recordStatus to change so that the proper settings are used.
-
-%filePath = strcat(filePath, 'fnoise.F32'); %Change this for .wav
 fnoise = fopen(filePathF32, 'w');
 
 %% Acquisition
@@ -66,12 +52,19 @@ else
     for i = 1:recordObj.recordTime
         %fwrite(fnoise, [1 2 3], 'float32');
         [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen);
+        if recordObj.recordStatus == 0
+            screen.timeRemaining = 0;
+            set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
+            break
+        end
+        decrementTime(screen);
     end
 end
 
 %% Post-Acquisition
-% stop acquiring
-RP.SoftTrg(2);
+
+
+RP.SoftTrg(2); %Stop acquiring
 RP.Halt; %Stops processing chain
 
 fclose(fnoise);
@@ -84,8 +77,4 @@ audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 32);
 fclose(F32Complete);
 delete(filePathF32);
 addToStatus('Saved successfully', screen);
-
-% plots the last npts data points
-%plot(t,noise);
-%axis tight;
 
