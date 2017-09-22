@@ -373,7 +373,7 @@ function HideWindow(~,~)
                         %record(this.recordObj.webcam);
                         set(this.startStop, 'String', 'Stop Recording',...
                             'BackgroundColor', [0.8 0.1 0.1]);
-                        set(this.guiF, 'CloseRequestFcn', '');
+                        %set(this.guiF, 'CloseRequestFcn', '');
                         this.recordObj.recordStatus = 1;
                         set(this.newRecord, 'Enable', 'off');
                         addToStatus('Recording...', this);
@@ -391,15 +391,19 @@ function HideWindow(~,~)
             
             function PressNewTest(~,~)
                 this.initiateNewTest = 1;
+                this.statusText = {};
+                set(this.statusWindow, 'Data', this.statusText);
             end
             
             function CloseProgram(~,~)
+                import StandardFunctions.addToStatus;
                 disp('In CloseProgram');
                 if this.recordObj.recordStatus == 0
                     disp('Exit - enable before compilation');
                     %exit;
                 else
-                    disp('Cannot exit while recording');
+                    addToStatus('Cannot exit while recording or saving', this);
+                    %disp('Cannot exit while recording');
                 end
             end
             
@@ -440,7 +444,7 @@ function HideWindow(~,~)
         
         function enableNew(screen)
             set(screen.newRecord, 'Enable', 'on');
-            set(screen.guiF, 'CloseRequestFcn', @CloseProgram);
+            %set(screen.guiF, 'CloseRequestFcn', @CloseProgram);
             %Re-enable closing of window
         end
     end
