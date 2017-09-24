@@ -4,6 +4,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
     %Offer scaled vs unscaled waveform
+    %Enquire with David about hovering around non-0 amplitude
     %Make relevant output for Status window
     %Clear graphs on NewTest
     %Make pretty
@@ -175,17 +176,26 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             
             this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
                 [350 650 600 200], 'YLim', [-10 4], 'YLimMode', 'manual', 'YTick', [-10 -6.5 -3 0.5 4]);
-            
+            %Audio input ranges from -10 to +4 on max settings. Input clips past
+            %that.
             yScaleWav = get(this.waveformAxes, 'YTick');
-    yScaleWav = (yScaleWav+3)./7;
-    set(this.waveformAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleWav);%, 'YTick', [-10 -6.5 -3 0.5 4]);
-    
+            yScaleWav = (yScaleWav+3)./7;
+            set(this.waveformAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleWav);
+            
+            title(this.waveformAxes, 'Waveform');
+            xlabel(this.waveformAxes, 'Seconds');
+            ylabel(this.waveformAxes, 'Scaled Amplitude (+/-1 is Max)');
+            
             this.spectrogramAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
                 [350 350 600 200], 'Ylim', [0 80000], 'YLimMode', 'manual');
             
             yScaleSpec = get(this.spectrogramAxes, 'YTick');
-    yScaleSpec = yScaleSpec./1000;
-    set(this.spectrogramAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleSpec);
+            yScaleSpec = yScaleSpec./1000;
+            set(this.spectrogramAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleSpec);
+            
+            title(this.spectrogramAxes, 'Spectrogram');
+            xlabel(this.spectrogramAxes, 'Seconds');
+            ylabel(this.spectrogramAxes, 'Frequency (kHz)');
             %{
             this.waveformDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Waveform Display (placeholder)', 'Position', ...
@@ -194,14 +204,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.spectrogramDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Spectrogram Display (placeholder)', 'Position', ...
                 [350 350 600 200]);
-                %}
-                this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
-                    'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
-                    'Position', [20 20 100 100], 'Callback', @PressNewTest);
-                
-                %WebcamAnalogue(this);
-                
-                %% Sub-constructor Functions
+            %}
+            this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
+                'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
+                'Position', [20 20 100 100], 'Callback', @PressNewTest);
+            
+            %WebcamAnalogue(this);
+            
+            %% Sub-constructor Functions
             function ManualSetName(~,~, throughDirectory)
                 import StandardFunctions.setNameManual;
                 import StandardFunctions.checkValidName;
