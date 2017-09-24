@@ -54,7 +54,7 @@ else
     %for buffObj.totalReps = 0:(buffReps-1)
         
         %fwrite(fnoise, [1 2 3], 'float32');
-        SaveBuffer(RP, curindex, bufpts, fnoise, screen);
+        SaveBuffer(RP, curindex, buffObj, fnoise, screen);
         PlotBuffer(screen, buffObj, recordObj.continuous);
         if recordObj.recordStatus == 0
             screen.timeRemaining = 0;

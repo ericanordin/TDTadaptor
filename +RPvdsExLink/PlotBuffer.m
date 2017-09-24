@@ -33,16 +33,16 @@ else
     buffObj.wavePlot.XData = buffObj.displaySampleRange;
     
     %figure(2);
-    [~, ~, ~, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
+    [~, ~, ~, p] = spectrogram(buffObj.builtBuffer, 1024, 256, [], buffObj.npts, 'yaxis');
     buffObj.specPlot.CData = 10*log10(p+eps);
-    buffObj.specPlot.XData = specPlot.XData + buffLength;
+    buffObj.specPlot.XData = buffObj.specPlot.XData + buffObj.buffLength;
 end
 
 %screen.waveformAxes.XAxis.Exponent = 0;
 
 
 xScaleWave = get(screen.waveformAxes, 'XTick');
-xScaleWave = xScaleWave./npts;
+xScaleWave = xScaleWave./buffObj.npts;
 set(screen.waveformAxes,'XTickLabel', xScaleWave);
 
 %figure(1);

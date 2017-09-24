@@ -24,7 +24,7 @@ for chunkSecond = 0:(buffObj.buffLength-1)
     % checks to see if the data transfer rate is fast enough
     curindex = RP.GetTagVal('index');
     %disp(['Current buffer index: ' num2str(curindex)]);
-    if(curindex < bufpts)
+    if(curindex < buffObj.bufpts)
         warning('Transfer rate is too slow');
         addToStatus('Warning: Transfer rate is too slow', screen);
     end
@@ -39,7 +39,7 @@ for chunkSecond = 0:(buffObj.buffLength-1)
     
     noise = RP.ReadTagVEX('dataout', buffObj.bufpts, buffObj.bufpts, 'F32', 'F32', 1);
     fwrite(fnoise,noise,'float32');
-    buffObj.builtBuffer(1, (1 + chunkSecond*npts):(npts/2 + npts*chunkSecond)) = noise(1:npts/2);
+    buffObj.builtBuffer(1, (1 + chunkSecond*buffObj.npts):(buffObj.npts/2 + buffObj.npts*chunkSecond)) = noise(1:buffObj.npts/2);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
     
     % make sure we're still playing A

@@ -15,6 +15,7 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
     
     methods
         function this = BufferObject(RP)
+            this.totalReps = 0;
             % size of the entire serial buffer
             this.npts = RP.GetTagSize('dataout'); %Returns maximum number of accessible data points
             
