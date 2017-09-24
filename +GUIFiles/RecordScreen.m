@@ -1,21 +1,15 @@
 classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
-    %Enable 'New Recording' button and exit figure when saving is complete.
     %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
-    %Offer option to save advanced settings
     %Offer scaled vs unscaled waveform
-    %Integrate plots into AcquireAudio
     %Make relevant output for Status window
     %Make pretty
-    %Change variables in AcquireAudio passed to SaveBuffer into handle
-    %objects
     
     properties
         %% Figures:
         guiF; %Main figure
-        advF; %Advanced options figure
         
         %% UIControl objects:
         fileNameAuto; %Push button that takes the user through LabScreen
@@ -25,7 +19,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %the user to edit it when clicked.
         continousToggle; %Checkbox that indicates whether the recording
         %will have a time limit
-        advancedButton; %Displays advanced options
         startStop; %Pushbutton that changes between "Start Recording" and
         %"Stop Recording" and toggles the microphone and recordObj.recordStatus.
         recordTimeLabel; %Text that identifies recordTimeEditable
@@ -49,8 +42,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         ratScr; %Holds the RatScreen object
         firstAuto; %1 = first auto save iteration; 0 = not first
         labName; %The name of the lab under which the experiment is being run
-        errorColor; %The color which fields are changed to when their contents are invalid
-        advCanClose; %1 = advanced settings window is permitted to close; 0 = not permitted
+        errorColor; %The color which fields are changed to when their contents are invalid 0 = not permitted
         statusText; %Saves all strings which have been printed to statusWindow
         
     end
@@ -101,10 +93,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.initiateNewTest = 0;
             this.labScr = ''; %isobject returns false
             this.ratScr = ''; %isobject returns false
-            this.advF = ''; %isobject returns false
             this.firstAuto = 1;
             this.errorColor = [1 0.1 0.1];
-            this.advCanClose = 1;
             
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
@@ -325,12 +315,10 @@ function HideWindow(~,~)
             function GetRecordTime(field, ~)
                 %Sets recordObj.recordTime to the contents of recordTimeEditable
                 import StandardFunctions.checkNaturalNum;
-                this.advCanClose = 0; %Prevents the window from closing until
-                %given a valid entry.
                 numericContents = checkNaturalNum(field, this.errorColor);
                 this.recordObj.recordTime = numericContents;
                 this.timeRemaining = this.recordObj.recordTime;
-                this.advCanClose = 1; %Window can close
+                set(this.timeRemainingDisplay, 'String', this.timeRemaining);
                 %disp(this.recordObj.recordTime);
             end
             
@@ -395,6 +383,8 @@ function HideWindow(~,~)
                 this.initiateNewTest = 1;
                 this.statusText = {};
                 set(this.statusWindow, 'Data', this.statusText);
+                this.timeRemaining = this.recordObj.recordTime;
+                set(this.timeRemainingDisplay, 'String', this.timeRemaining);
             end
             
             function CloseProgram(~,~)

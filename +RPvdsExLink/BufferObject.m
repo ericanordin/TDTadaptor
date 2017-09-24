@@ -36,6 +36,10 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
             this.wavePlot = '';
             this.specPlot = '';
         end
+        
+        %function delete(buffObj)
+            
+        %end
     end
     
 end
