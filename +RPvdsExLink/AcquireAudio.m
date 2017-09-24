@@ -55,19 +55,25 @@ curindex = RP.GetTagVal('index');
 
 % main looping section
 if recordObj.continuous == 1
+    totalReps = 0;
     while recordObj.recordStatus == 1
-        [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen);
+        SaveBuffer(RP, curindex, bufpts, fnoise, screen, builtBuffer, npts, buffLength, totalReps);
+        PlotBuffer(screen, displaySampleRange, builtBuffer, buffLength, npts, totalReps, recordObj.continuous);
     end
 else
-    for i = 1:recordObj.recordTime
+    for totalReps = 0:(buffReps-1)
+        
         %fwrite(fnoise, [1 2 3], 'float32');
-        [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen);
+        SaveBuffer(RP, curindex, bufpts, fnoise, screen, builtBuffer, npts, buffLength);
+        PlotBuffer(screen, displaySampleRange, builtBuffer, buffLength, npts, totalReps, recordObj.continuous);
         if recordObj.recordStatus == 0
             screen.timeRemaining = 0;
             set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
             break
         end
-        decrementTime(screen);
+        
+        %end
+        
     end
     stopRecord(screen);
 end

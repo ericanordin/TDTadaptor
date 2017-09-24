@@ -9,6 +9,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Integrate plots into AcquireAudio
     %Make relevant output for Status window
     %Make pretty
+    %Change variables in AcquireAudio passed to SaveBuffer into handle
+    %objects
     
     properties
         %% Figures:

@@ -1,9 +1,10 @@
-function [RP, fnoise] = SaveBuffer(RP, curindex, bufpts, fnoise, screen)
+function SaveBuffer(RP, curindex, bufpts, fnoise, screen, builtBuffer, npts, buffLength)
 %SAVEBUFFER Takes in and save information through the microphone
 %   Used to prevent redundancy in the for/while loops in AcquireAudio
 
 import StandardFunctions.addToStatus
-
+for chunkSecond = 0:(buffLength-1)
+    
 % wait until done writing A
 while(curindex < bufpts)
     curindex = RP.GetTagVal('index');
@@ -15,6 +16,7 @@ end
 %May only be able to store data in 16-bit or 32-bit
 noise = RP.ReadTagVEX('dataout', 0, bufpts, 'F32', 'F32', 1);
 fwrite(fnoise,noise,'float32');
+builtBuffer(1, (1 + chunkSecond*npts):(npts/2 + npts*chunkSecond)) = noise(1:npts/2);
 %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
 %pdf pg 66: SendSrcFile. May be necessary for .wav
 
@@ -37,6 +39,7 @@ end
 
 noise = RP.ReadTagVEX('dataout', bufpts, bufpts, 'F32', 'F32', 1);
 fwrite(fnoise,noise,'float32');
+builtBuffer(1, (1 + chunkSecond*npts):(npts/2 + npts*chunkSecond)) = noise(1:npts/2);
 %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
 
 % make sure we're still playing A
@@ -45,6 +48,8 @@ curindex = RP.GetTagVal('index');
 if(curindex > bufpts)
     warning('Transfer rate too slow');
     addToStatus('Warning: Transfer rate is too slow', screen);
+end
+decrementTime(screen);
 end
 
 end
