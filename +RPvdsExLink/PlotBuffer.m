@@ -6,6 +6,12 @@ if buffObj.totalReps == 0
     title(screen.waveformAxes, 'Waveform');
     xlabel(screen.waveformAxes, 'Seconds');
     ylabel(screen.waveformAxes, 'Scaled Amplitude (+/-1 is Max)');
+    %Audio input ranges from -10 to +4 on max settings. Input clips past
+    %that.
+    ylim([-1 1]);
+    yScaleWav = get(screen.waveformAxes, 'YTick');
+    yScaleWav = (yScaleWav+3)./7;
+    set(screen.waveformAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleWav);
     
     %figure(2);
     [~, f, t, p] = spectrogram(buffObj.builtBuffer, 1024, 256, [], buffObj.npts, 'yaxis');
@@ -14,9 +20,9 @@ if buffObj.totalReps == 0
     ylim([0 80000]);
     %specAxes = specFig.CurrentAxes;
     %yScale = get(specAxes, 'YTick');
-    yScale = get(screen.spectrogramAxes, 'YTick');
-    yScale = yScale./1000;
-    set(screen.spectrogramAxes, 'Ydir', 'Normal', 'YTickLabel', yScale);
+    yScaleSpec = get(screen.spectrogramAxes, 'YTick');
+    yScaleSpec = yScaleSpec./1000;
+    set(screen.spectrogramAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleSpec);
     
     title(screen.spectrogramAxes, 'Spectrogram');
     xlabel(screen.spectrogramAxes, 'Seconds');

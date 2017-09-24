@@ -418,6 +418,8 @@ function HideWindow(~,~)
                 'BackgroundColor', [0.5 1 0.5]);
             screen.recordObj.recordStatus = 0;
             addToStatus('Done recording', screen);
+            set(screen.startStop, 'Enable', 'off');
+            %checkValidName(screen.recordObj.wavName, screen.fileNameEditable, screen.errorColor);
             
             %stop(this.recordObj.webcam);
             %disp('Done recording');
@@ -435,7 +437,11 @@ function HideWindow(~,~)
         end
         
         function enableNew(screen)
+            import StandardFunctions.checkValidName
             set(screen.newRecord, 'Enable', 'on');
+            set(screen.startStop, 'Enable', 'on');
+            checkValidName(screen.recordObj.wavName, screen.fileNameEditable, screen.errorColor);
+            
             %set(screen.guiF, 'CloseRequestFcn', @CloseProgram);
             %Re-enable closing of window
         end
