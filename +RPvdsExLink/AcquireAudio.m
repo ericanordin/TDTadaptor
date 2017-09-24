@@ -16,6 +16,8 @@ import StandardFunctions.addToStatus
 
 %May need actxcontrol() call to use ActiveX methods
 
+recordObj = get(screen, 'recordObj');
+
 %Change this once all files have been stored in their final location
 RP = TDTRP(...
     'C:\Users\erica.nordin\OneDrive\Documents\Fall 2017 NSERC\Ultrasonic files\TDT\Continuous_AcquireRX6modified.rcx',...
@@ -24,12 +26,20 @@ RP = TDTRP(...
 % size of the entire serial buffer
 npts = RP.GetTagSize('dataout'); %Returns maximum number of accessible data points
 
+fs = RP.GetSFreq(); %Returns sampling frequency
+buffLength = 2; %2s buffer
+if recordObj.continuous == 0
+    buffReps = ceil(recordObj.recordTime/buffLength); 
+end
+%Rounds up if not divisible by buffLength
+builtBuffer = zeros(1, npts*buffLength);
+
 % serial buffer will be divided into two buffers A & B (to prevent the risk
 % of data in the buffer being overwritten)
-fs = RP.GetSFreq(); %Returns sampling frequency
 bufpts = npts/2;
 
-recordObj = get(screen, 'recordObj');
+displaySampleRange = 1:npts*buffLength;
+
 
 filePathF32 = recordObj.wavName(1:end-3);
 filePathF32 = [filePathF32 'F32'];

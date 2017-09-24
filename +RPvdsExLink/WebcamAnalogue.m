@@ -43,7 +43,7 @@ curindex = rec1.CurrentSample;
 %specFig = figure(2);
 %set(specFig, 'Name', 'Spectrogram (Modified)');
 
-x = 1:npts*buffLength;
+displaySampleRange = 1:npts*buffLength;
 %addToStatus('Recording...', screen);
 %pause(0.00001);
 % main looping section
@@ -88,7 +88,7 @@ for totalReps = 0:(buffReps-1)
     
     
     if totalReps == 0
-        wavePlot = plot(x, builtBuffer, 'Parent', screen.waveformAxes);
+        wavePlot = plot(displaySampleRange, builtBuffer, 'Parent', screen.waveformAxes);
         
         title(screen.waveformAxes, 'Waveform');
         xlabel(screen.waveformAxes, 'Seconds');
@@ -113,11 +113,11 @@ for totalReps = 0:(buffReps-1)
         colormap('gray');
         
     else
-        x = x +(npts*buffLength);
+        displaySampleRange = displaySampleRange +(npts*buffLength);
         
         %figure(1);
         wavePlot.YData = builtBuffer;
-        wavePlot.XData = x;
+        wavePlot.XData = displaySampleRange;
         
         %figure(2);
         [~, ~, ~, p] = spectrogram(builtBuffer, 1024, 256, [], npts, 'yaxis');
