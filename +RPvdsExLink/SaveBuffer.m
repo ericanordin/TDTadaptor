@@ -3,8 +3,9 @@ function SaveBuffer(RP, curindex, buffObj, fnoise, screen)
 %   Used to prevent redundancy in the for/while loops in AcquireAudio
 
 import StandardFunctions.addToStatus
-for chunkSecond = 0:(buffObj.buffLength-1)
-    
+
+chunkRep = 0;
+while chunkRep < buffObj.buffLength*buffObj.bufsPerSec    
     % wait until done writing A
     while(curindex < buffObj.bufpts)
         curindex = RP.GetTagVal('index');
@@ -16,11 +17,11 @@ for chunkSecond = 0:(buffObj.buffLength-1)
     %May only be able to store data in 16-bit or 32-bit
     noise = RP.ReadTagVEX('dataout', 0, buffObj.bufpts, 'F32', 'F32', 1);
     fwrite(fnoise,noise,'float32');
-    buffObj.builtBuffer(1, (1 + chunkSecond*buffObj.npts):(buffObj.npts/2 + buffObj.npts*chunkSecond)) = noise(1:buffObj.npts/2);
+    buffObj.builtBuffer(1, (1 + chunkRep*buffObj.bufpts):(buffObj.bufpts + buffObj.bufpts*chunkRep)) = noise(1:buffObj.bufpts);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
     %pdf pg 66: SendSrcFile. May be necessary for .wav
     
-    
+    chunkRep = chunkRep + 1;
     % checks to see if the data transfer rate is fast enough
     curindex = RP.GetTagVal('index');
     %disp(['Current buffer index: ' num2str(curindex)]);
@@ -39,8 +40,10 @@ for chunkSecond = 0:(buffObj.buffLength-1)
     
     noise = RP.ReadTagVEX('dataout', buffObj.bufpts, buffObj.bufpts, 'F32', 'F32', 1);
     fwrite(fnoise,noise,'float32');
-    buffObj.builtBuffer(1, (1 + chunkSecond*buffObj.npts):(buffObj.npts/2 + buffObj.npts*chunkSecond)) = noise(1:buffObj.npts/2);
+    buffObj.builtBuffer(1, (1 + chunkRep*buffObj.bufpts):(buffObj.bufpts + buffObj.bufpts*chunkRep)) = noise(1:buffObj.bufpts);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
+    
+    chunkRep = chunkRep + 1;
     
     % make sure we're still playing A
     curindex = RP.GetTagVal('index');

@@ -3,6 +3,7 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
     %functions in AcquireAudio
     
     properties
+        bufsPerSec; %The number of buffer chunks taken every second
         npts; %The maximum number of points that can be stored in the RPvdsEx SerialBuf
         bufpts; %The size of the half-buffer
         buffLength; %The number of seconds displayed at a time on the GUI
@@ -15,6 +16,8 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
     
     methods
         function this = BufferObject(RP)
+            this.bufsPerSec = 2;
+            
             this.totalReps = 0;
             % size of the entire serial buffer
             this.npts = RP.GetTagSize('dataout'); %Returns maximum number of accessible data points

@@ -26,9 +26,9 @@ RP = TDTRP(...
 buffObj = BufferObject(RP);
 
 if recordObj.continuous == 0
-                buffReps = ceil(recordObj.recordTime/buffObj.buffLength);
+    buffReps = ceil(recordObj.recordTime/buffObj.buffLength);
 end
-            
+
 fs = RP.GetSFreq(); %Returns sampling frequency
 
 filePathF32 = recordObj.wavName(1:end-3);
@@ -51,7 +51,7 @@ if recordObj.continuous == 1
     end
 else
     while buffObj.totalReps <= buffReps -1
-    %for buffObj.totalReps = 0:(buffReps-1)
+        %for buffObj.totalReps = 0:(buffReps-1)
         
         %fwrite(fnoise, [1 2 3], 'float32');
         SaveBuffer(RP, curindex, buffObj, fnoise, screen);
