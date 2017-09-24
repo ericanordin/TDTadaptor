@@ -6,7 +6,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer scaled vs unscaled waveform
     %Enquire with David about hovering around non-0 amplitude
     %Make relevant output for Status window
+    %Enable while-loop exit upon window close
     %Clear graphs on NewTest
+    %Introduce incrementing run time for continuous
+    %Change to 1-s buffer
     %Make pretty
     
     properties

@@ -8,6 +8,7 @@ function main()
     %Enable exit in CloseProgram for each GUI
     %Change Recording.wavName to 'C:\'
     %Change Recording.recordTime to new default
+    %Confirm save format in manual
     
 import Enums.*
 import GUIFiles.*
