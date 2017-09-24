@@ -23,23 +23,13 @@ RP = TDTRP(...
     'C:\Users\erica.nordin\OneDrive\Documents\Fall 2017 NSERC\Ultrasonic files\TDT\Continuous_AcquireRX6modified.rcx',...
     'RX6');
 
-% size of the entire serial buffer
-npts = RP.GetTagSize('dataout'); %Returns maximum number of accessible data points
+buffObj = BufferObject(RP);
 
-fs = RP.GetSFreq(); %Returns sampling frequency
-buffLength = 2; %2s buffer
 if recordObj.continuous == 0
-    buffReps = ceil(recordObj.recordTime/buffLength); 
+                buffReps = ceil(recordObj.recordTime/buffObj.buffLength);
 end
-%Rounds up if not divisible by buffLength
-builtBuffer = zeros(1, npts*buffLength);
-
-% serial buffer will be divided into two buffers A & B (to prevent the risk
-% of data in the buffer being overwritten)
-bufpts = npts/2;
-
-displaySampleRange = 1:npts*buffLength;
-
+            
+fs = RP.GetSFreq(); %Returns sampling frequency
 
 filePathF32 = recordObj.wavName(1:end-3);
 filePathF32 = [filePathF32 'F32'];
@@ -55,17 +45,17 @@ curindex = RP.GetTagVal('index');
 
 % main looping section
 if recordObj.continuous == 1
-    totalReps = 0;
     while recordObj.recordStatus == 1
-        SaveBuffer(RP, curindex, bufpts, fnoise, screen, builtBuffer, npts, buffLength, totalReps);
-        PlotBuffer(screen, displaySampleRange, builtBuffer, buffLength, npts, totalReps, recordObj.continuous);
+        SaveBuffer(RP, curindex, buffObj, fnoise, screen);
+        PlotBuffer(screen, buffObj, recordObj.continuous);
     end
 else
-    for totalReps = 0:(buffReps-1)
+    while buffObj.totalReps <= buffReps -1
+    %for buffObj.totalReps = 0:(buffReps-1)
         
         %fwrite(fnoise, [1 2 3], 'float32');
-        SaveBuffer(RP, curindex, bufpts, fnoise, screen, builtBuffer, npts, buffLength);
-        PlotBuffer(screen, displaySampleRange, builtBuffer, buffLength, npts, totalReps, recordObj.continuous);
+        SaveBuffer(RP, curindex, bufpts, fnoise, screen);
+        PlotBuffer(screen, buffObj, recordObj.continuous);
         if recordObj.recordStatus == 0
             screen.timeRemaining = 0;
             set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
@@ -73,6 +63,7 @@ else
         end
         
         %end
+        buffObj.totalReps = buffObj.totalReps + 1;
         
     end
     stopRecord(screen);
