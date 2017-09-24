@@ -5,6 +5,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Work out kinks from going back and forth between Auto and Manual
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
+    %Clear graphs on NewTest
     %Make pretty
     
     properties
@@ -173,10 +174,18 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %    'Max', 2, 'Min', 1, 'String', this.statusText);
             
             this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
-                [350 650 600 200]);
+                [350 650 600 200], 'YLim', [-10 4], 'YLimMode', 'manual', 'YTick', [-10 -6.5 -3 0.5 4]);
             
+            yScaleWav = get(this.waveformAxes, 'YTick');
+    yScaleWav = (yScaleWav+3)./7;
+    set(this.waveformAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleWav);%, 'YTick', [-10 -6.5 -3 0.5 4]);
+    
             this.spectrogramAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
-                [350 350 600 200]);
+                [350 350 600 200], 'Ylim', [0 80000], 'YLimMode', 'manual');
+            
+            yScaleSpec = get(this.spectrogramAxes, 'YTick');
+    yScaleSpec = yScaleSpec./1000;
+    set(this.spectrogramAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleSpec);
             %{
             this.waveformDisplay = uicontrol('Style', 'pushbutton', 'String',...
                 'Waveform Display (placeholder)', 'Position', ...
