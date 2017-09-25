@@ -5,7 +5,6 @@ function main()
     
     %Before compiling:
     %Change filepaths in AcquireAudio
-    %Enable exit in CloseProgram for each GUI
     %Change Recording.wavName to 'C:\'
     %Change Recording.recordTime to new default
     %Confirm save format in manual
