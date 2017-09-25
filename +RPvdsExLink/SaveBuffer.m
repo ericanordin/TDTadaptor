@@ -52,7 +52,11 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
         warning('Transfer rate too slow');
         addToStatus('Warning: Transfer rate is too slow', screen);
     end
-    decrementTime(screen);
+    if screen.recordObj.continuous == 0
+        decrementTime(screen);
+    else
+        incrementTime(screen);
+    end
 end
 
 end

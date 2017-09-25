@@ -4,7 +4,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Work out kinks from going back and forth between Auto and Manual
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
-    %Introduce incrementing run time for continuous
     %Choose 1 or 2-s buffer
     %Fix weird x-scaling on waveform reset
     %Make pretty
@@ -19,14 +18,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         fileNameManual; %Push button that opens saving GUI
         fileNameEditable; %Edit field that displays the recordObj.wavName and allows
         %the user to edit it when clicked.
-        continousToggle; %Checkbox that indicates whether the recording
+        continuousToggle; %Checkbox that indicates whether the recording
         %will have a time limit
         startStop; %Pushbutton that changes between "Start Recording" and
         %"Stop Recording" and toggles the microphone and recordObj.recordStatus.
         recordTimeLabel; %Text that identifies recordTimeEditable
         recordTimeEditable; %Edit field corresponding to recordObj.recordTime variable
-        timeRemainingLabel; %Text that identifies timeRemainingDisplay
-        timeRemainingDisplay; %Edit field corresponding to timeRemaining variable
+        timeChangingLabel; %Text that identifies timeChangingDisplay as incrementing or decrementing
+        timeChangingDisplay; %Edit field corresponding to timeChanging variable
         statusWindow; %Displays text describing the background processes
         waveformAxes; %Shows the waveform corresponding to the real-time
         %recording.
@@ -38,7 +37,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         recordObj; %The Recording class object
         startingPathway; %What location to open the dialog box at when
         %fileNameManual is pressed.
-        timeRemaining;
+        timeRemaining; %Displayed during timed record
+        timeAccumulated; %Displayed during continuous record
         %initiateNewTest; %0 = don't reset screen; 1 = reset screen
         labScr; %Holds the LabScreen object
         ratScr; %Holds the RatScreen object
@@ -75,7 +75,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %waitForChange: Resets RecordScreen GUI when New Recording is pressed
         %or exits while loop when the window is closed.
         %stopRecord: Changes setting to halt the recording
-        %decrementTime: Updates time remaining
+        %decrementTime: Updates timeRemaining
+        %incrementTime: Updates timeAccumulated
         
         %% Function Code
         function this = RecordScreen()
@@ -94,6 +95,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %this.statusText = {['First command'], ['Second command'], ['Third command']};
             this.startingPathway = this.recordObj.wavName;
             this.timeRemaining = this.recordObj.recordTime;
+            this.timeAccumulated = 0;
             %this.initiateNewTest = 0;
             this.labScr = ''; %isobject returns false
             this.ratScr = ''; %isobject returns false
@@ -122,7 +124,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 'String', 'Continous Record', 'HorizontalAlignment',...
                 'left', 'FontSize', 12);
             
-            continuousToggle = uicontrol('Style', 'checkbox',...
+            this.continuousToggle = uicontrol('Style', 'checkbox',...
                 'Position', [240 750 20 20], 'Callback', @TogContinuous);
             
             this.recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
@@ -143,10 +145,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 [60 550 180 80], 'String', 'Start Recording', 'BackgroundColor',...
                 [0.5 1 0.5], 'Callback', @PressStartStop);
             
-            this.timeRemainingLabel = uicontrol('Style', 'text', 'Position',...
-                [50 420 100 80], 'String', 'Time Remaining:', 'FontSize', 11);
+            this.timeChangingLabel = uicontrol('Style', 'text', 'Position',...
+                [50 420 100 80], 'String', 'Time Remaining (s):', 'FontSize', 11);
             
-            this.timeRemainingDisplay = uicontrol('Style', 'text',...
+            this.timeChangingDisplay = uicontrol('Style', 'text',...
                 'Position', [150 450 100 50], 'String', this.timeRemaining,...
                 'BackgroundColor', [0.85 0.85 0.85], 'FontSize', 11);
             
@@ -304,15 +306,15 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 %disp(isCont);
                 if isCont == 1 %Box is checked
                     %recordObj.recordTime fields are made invisible
-                    set(this.timeRemainingLabel, 'Visible', 'off');
-                    set(this.timeRemainingDisplay, 'Visible', 'off');
+                    set(this.timeChangingLabel, 'String', 'Elapsed Time (s):');%'Visible', 'off');
+                    set(this.timeChangingDisplay, 'String', this.timeAccumulated);%'Visible', 'off');
                     set(this.recordTimeLabel, 'Visible', 'off');
                     set(this.recordTimeEditable, 'Visible', 'off');
                     this.recordObj.continuous = 1;
                 else %Box is unchecked
                     %recordObj.recordTime fields are made visible
-                    set(this.timeRemainingLabel, 'Visible', 'on');
-                    set(this.timeRemainingDisplay, 'Visible', 'on');
+                    set(this.timeChangingLabel, 'String', 'Time Remaining (s):'); % 'Visible', 'on');
+                    set(this.timeChangingDisplay, 'String', this.timeRemaining);%'Visible', 'on');
                     set(this.recordTimeLabel, 'Visible', 'on');
                     set(this.recordTimeEditable, 'Visible', 'on');
                     this.recordObj.continuous = 0;
@@ -347,7 +349,7 @@ function HideWindow(~,~)
             
             function DeselectOnEnter(~, eventdata)
                 if strcmp(eventdata.Key, 'return')
-                    uicontrol(this.timeRemainingLabel); %Switches cursor to textbox
+                    uicontrol(this.timeChangingLabel); %Switches cursor to textbox
                     %in order to move cursor from current location.
                 end
             end
@@ -406,7 +408,14 @@ function HideWindow(~,~)
                 this.statusText = {};
                 set(this.statusWindow, 'Data', this.statusText);
                 this.timeRemaining = this.recordObj.recordTime;
+                this.timeAccumulated = 0;
+                TogContinuous(this.continuousToggle);
+                %{
+                if
                 set(this.timeRemainingDisplay, 'String', this.timeRemaining);
+                else
+                end
+                %}
                 wavPlot = get(this.waveformAxes, 'Children');
                 delete(wavPlot);
                 specPlot = get(this.spectrogramAxes, 'Children');
@@ -466,7 +475,13 @@ function HideWindow(~,~)
         
         function decrementTime(screen)
             screen.timeRemaining = screen.timeRemaining-1;%-buffLength;
-            set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
+            set(screen.timeChangingDisplay, 'String', screen.timeRemaining);
+            pause(0.001);
+        end
+        
+        function incrementTime(screen)
+            screen.timeAccumulated = screen.timeAccumulated+1;%-buffLength;
+            set(screen.timeChangingDisplay, 'String', screen.timeAccumulated);
             pause(0.001);
         end
         
