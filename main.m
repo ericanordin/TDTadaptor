@@ -19,7 +19,7 @@ import RPvdsExLink.*
 % user doesn't have to constantly redo the procedure from opening the
 % program.
 
-running = 1;
+%running = 1;
 %firstRun = 1;
 %entryScr = EntryScreen();
 
@@ -34,7 +34,7 @@ recordScr = RecordScreen();
 
 %nameType = getNameType(entryScr);
 
-while (running == 1)
+while (recordScr.running == 1)
     import StandardFunctions.checkValidName;
 %if nameType == NamingMethod.Auto
 
@@ -52,13 +52,13 @@ while (running == 1)
 %Might put AcquireAudio here; dependent upon recordStatus and
 %filePath
 
-waitForNew(recordScr);
+waitForChange(recordScr);
 %disp('New while loop rendition');
 %firstRun = 0;
 %set(recordScr.guiF, 'visible', 'off');
 
 end
-
+delete(recordScr); 
 delete(findall(0, 'Type', 'figure'));
 end
 

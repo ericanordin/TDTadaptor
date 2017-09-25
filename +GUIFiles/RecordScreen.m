@@ -1,14 +1,12 @@
 classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %RECORDSCREEN Displays the GUI for settings and audio recording.
     %To do:
-    %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
-    %Enable while-loop exit upon window close
-    %Clear graphs on NewTest
     %Introduce incrementing run time for continuous
     %Change to 1-s buffer
+    %Fix weird x-scaling on waveform reset
     %Make pretty
     
     properties
@@ -41,14 +39,15 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         startingPathway; %What location to open the dialog box at when
         %fileNameManual is pressed.
         timeRemaining;
-        initiateNewTest; %0 = don't reset screen; 1 = reset screen
+        %initiateNewTest; %0 = don't reset screen; 1 = reset screen
         labScr; %Holds the LabScreen object
         ratScr; %Holds the RatScreen object
         firstAuto; %1 = first auto save iteration; 0 = not first
         labName; %The name of the lab under which the experiment is being run
         errorColor; %The color which fields are changed to when their contents are invalid 0 = not permitted
         statusText; %Saves all strings which have been printed to statusWindow
-        
+        running; %Breaks out of while loop in main file when the figure is closed
+        changeState; %Used in waitForChange function to stimulate exit or new recording
     end
     
     methods
@@ -73,7 +72,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %interfacing with waitForNew.
         %CloseProgram: Exits the program
         %setFileName: Allows main to access recordObj.wavName
-        %waitForNew: Resets RecordScreen GUI when New Recording is pressed.
+        %waitForChange: Resets RecordScreen GUI when New Recording is pressed
+        %or exits while loop when the window is closed.
         %stopRecord: Changes setting to halt the recording
         %decrementTime: Updates time remaining
         
@@ -86,7 +86,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             import StandardFunctions.ClearText;
             
             this.recordObj = Recording();
-            
+            this.running = 1;
             this.statusText = {};%{'First command'; 'Second command'; 'Third command'};
             
             
@@ -94,7 +94,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %this.statusText = {['First command'], ['Second command'], ['Third command']};
             this.startingPathway = this.recordObj.wavName;
             this.timeRemaining = this.recordObj.recordTime;
-            this.initiateNewTest = 0;
+            %this.initiateNewTest = 0;
             this.labScr = ''; %isobject returns false
             this.ratScr = ''; %isobject returns false
             this.firstAuto = 1;
@@ -402,18 +402,25 @@ function HideWindow(~,~)
             end
             
             function PressNewTest(~,~)
-                this.initiateNewTest = 1;
+                %this.initiateNewTest = 1;
                 this.statusText = {};
                 set(this.statusWindow, 'Data', this.statusText);
                 this.timeRemaining = this.recordObj.recordTime;
                 set(this.timeRemainingDisplay, 'String', this.timeRemaining);
+                wavPlot = get(this.waveformAxes, 'Children');
+                delete(wavPlot);
+                specPlot = get(this.spectrogramAxes, 'Children');
+                delete(specPlot);
+                this.changeState = 1;
             end
             
             function CloseProgram(~,~)
                 import StandardFunctions.addToStatus;
-                disp('In CloseProgram');
+                %disp('In CloseProgram');
                 if this.recordObj.recordStatus == 0
-                    disp('Exit - enable before compilation');
+                    this.running = 0;
+                    this.changeState = 1;
+                    %disp('Exit - enable before compilation');
                     %exit;
                 else
                     addToStatus('Cannot exit while recording or saving', this);
@@ -427,10 +434,15 @@ function HideWindow(~,~)
             screenObj.recordObj.wavName = newName;
         end
         
-        function waitForNew(obj)
+        function waitForChange(obj)
             %Possibly introduce onCleanup command
-            waitfor(obj, 'initiateNewTest', 1);
-            obj.initiateNewTest = 0;
+            %waitfor(obj, 'initiateNewTest', 1) || waitfor(obj, 'running');
+            waitfor(obj, 'changeState', 1);
+            obj.changeState = 0;
+            %Loop resets to new recording if running == 1. Otherwise, the
+            %program terminates.
+            
+            %obj.initiateNewTest = 0;
             %set(obj.guiF, 'visible', 'off');
         end
         

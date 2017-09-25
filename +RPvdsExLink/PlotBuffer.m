@@ -2,7 +2,8 @@ function PlotBuffer(screen, buffObj, continuous)
 %PlotBuffer Plots the saved buffer to the GUI
 if buffObj.totalReps == 0
     hold(screen.waveformAxes, 'on');
-    buffObj.wavePlot = plot(buffObj.displaySampleRange, buffObj.builtBuffer, 'Parent', screen.waveformAxes);
+    buffObj.wavePlot = plot(buffObj.displaySampleRange, buffObj.builtBuffer,...
+        'Parent', screen.waveformAxes, 'Color', 'b');
     hold(screen.waveformAxes, 'off');
 
     hold(screen.spectrogramAxes, 'on');
