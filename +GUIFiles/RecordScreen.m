@@ -4,7 +4,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Write destructor
     %Work out kinks from going back and forth between Auto and Manual
     %Offer scaled vs unscaled waveform
-    %Enquire with David about hovering around non-0 amplitude
     %Make relevant output for Status window
     %Enable while-loop exit upon window close
     %Clear graphs on NewTest
@@ -178,11 +177,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %    'Max', 2, 'Min', 1, 'String', this.statusText);
             
             this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
-                [350 650 600 200], 'YLim', [-10 4], 'YLimMode', 'manual', 'YTick', [-10 -6.5 -3 0.5 4]);
-            %Audio input ranges from -10 to +4 on max settings. Input clips past
+                [350 650 600 200], 'YLim', [-10 10], 'YLimMode', 'manual', 'YTick', [-10 -5 0 5 10]);
+            %Audio input ranges from -10 to +10 on max settings. Input clips past
             %that.
+            
             yScaleWav = get(this.waveformAxes, 'YTick');
-            yScaleWav = (yScaleWav+3)./7;
+            yScaleWav = yScaleWav./10; %Scales +/-10 to +/-1
             set(this.waveformAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleWav);
             
             title(this.waveformAxes, 'Waveform');
