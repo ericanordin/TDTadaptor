@@ -48,6 +48,7 @@ RP.SoftTrg(1); %Software trigger 1 allows buffer to intake info from AdcIn
 curindex = RP.GetTagVal('index');
 %disp(['Current buffer index: ' num2str(curindex)]);
 
+try
 % main looping section
 if recordObj.continuous == 1
     while recordObj.recordStatus == 1
@@ -72,6 +73,10 @@ else
         
     end
     stopRecord(screen);
+end
+catch
+    disp('Caught error');
+    rethrow(ME);
 end
 
 %% Post-Acquisition

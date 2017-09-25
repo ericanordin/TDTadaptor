@@ -20,14 +20,20 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
         disp('In first rep check');
         gettingSound = 0;
         %Check that the microphone is getting input
+        %disp(noise);
         for bufferPoint = 1:length(noise)
-            if noise(bufferPoint) ~= 0
+            if noise(bufferPoint) < 0.01 || noise(bufferPoint) > 0.02
+                %When the microphone is turned off but the buffer is
+                %running, it outputs junk data within the 0.01-0.02 range.
+                %Any actual sound should produce data outside of this
+                %range.
                 gettingSound = 1;
                 break;
             end
         end
         if gettingSound == 0
-            disp('No sound');
+            addToStatus('Microphone not connected', screen);
+            error('No sound');
             %Throw error
         end
     end

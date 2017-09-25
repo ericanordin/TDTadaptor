@@ -4,7 +4,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Work out kinks from going back and forth between Auto and Manual
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
-    %Choose 1 or 2-s buffer
     %Fix weird x-scaling on waveform reset
     %Catch error and display when mic is not turned on
     %Change to 100 kHz
