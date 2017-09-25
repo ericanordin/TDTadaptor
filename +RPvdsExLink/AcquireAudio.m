@@ -18,10 +18,15 @@ import StandardFunctions.addToStatus
 
 recordObj = get(screen, 'recordObj');
 
+try
 %Change this once all files have been stored in their final location
 RP = TDTRP(...
     'C:\Users\erica.nordin\OneDrive\Documents\Fall 2017 NSERC\Ultrasonic files\TDT\Continuous_AcquireRX6modified.rcx',...
     'RX6');
+catch ME
+    addToStatus('TDT not connected', screen);
+    rethrow(ME);
+end
 
 buffObj = BufferObject(RP);
 
@@ -58,7 +63,7 @@ else
         PlotBuffer(screen, buffObj, recordObj.continuous);
         if recordObj.recordStatus == 0
             screen.timeRemaining = 0;
-            set(screen.timeRemainingDisplay, 'String', screen.timeRemaining);
+            set(screen.timeChangingDisplay, 'String', screen.timeRemaining);
             break
         end
         

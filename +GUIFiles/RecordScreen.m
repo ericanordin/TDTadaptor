@@ -6,6 +6,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Make relevant output for Status window
     %Choose 1 or 2-s buffer
     %Fix weird x-scaling on waveform reset
+    %Catch error and display when mic is not turned on
+    %Change to 100 kHz
     %Make pretty
     
     properties
@@ -100,12 +102,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.labScr = ''; %isobject returns false
             this.ratScr = ''; %isobject returns false
             this.firstAuto = 1;
-            this.errorColor = [1 0.1 0.1];
+            this.errorColor = [1 0.3 0.3];
             
             
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
-                'Position', [100 100 1000 1000], 'ToolBar', 'none',...
+                'Position', [50 50 1000 1000], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'CloseRequestFcn', @CloseProgram, 'Resize', 'off');
+            %Position [100 100] - big monitor
+            %Position [50 50] - back monitor
             
             this.fileNameAuto = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 950 200 40], 'String', 'Name File Automatically',...
@@ -342,7 +346,7 @@ function HideWindow(~,~)
                 numericContents = checkNaturalNum(field, this.errorColor);
                 this.recordObj.recordTime = numericContents;
                 this.timeRemaining = this.recordObj.recordTime;
-                set(this.timeRemainingDisplay, 'String', this.timeRemaining);
+                set(this.timeChangingDisplay, 'String', this.timeRemaining);
                 %disp(this.recordObj.recordTime);
             end
             
@@ -393,7 +397,22 @@ function HideWindow(~,~)
                         addToStatus('Recording...', this);
                         pause(0.002);
                         %WebcamAnalogue(this);
-                        AcquireAudio(this);
+                        set(this.fileNameAuto, 'Enable', 'off');
+                        set(this.fileNameManual, 'Enable', 'off');
+                        set(this.fileNameEditable, 'Enable', 'off');
+                        try
+                            AcquireAudio(this);
+                        catch
+                            %stopRecord(this);
+                            disp('In catch');
+                            set(this.newRecord, 'Enable', 'on');
+                            set(this.fileNameAuto, 'Enable', 'on');
+                            set(this.fileNameManual, 'Enable', 'on');
+                            set(this.fileNameEditable, 'Enable', 'on');
+                            set(this.startStop, 'String', 'Start Recording',...
+                                'BackgroundColor', [0.5 1 0.5]);
+                            this.recordObj.recordStatus = 0;
+                        end
                     end
                     
                     
@@ -410,16 +429,13 @@ function HideWindow(~,~)
                 this.timeRemaining = this.recordObj.recordTime;
                 this.timeAccumulated = 0;
                 TogContinuous(this.continuousToggle);
-                %{
-                if
-                set(this.timeRemainingDisplay, 'String', this.timeRemaining);
-                else
-                end
-                %}
                 wavPlot = get(this.waveformAxes, 'Children');
                 delete(wavPlot);
                 specPlot = get(this.spectrogramAxes, 'Children');
                 delete(specPlot);
+                set(this.fileNameAuto, 'Enable', 'on');
+                set(this.fileNameManual, 'Enable', 'on');
+                set(this.fileNameEditable, 'Enable', 'on');
                 this.changeState = 1;
             end
             
