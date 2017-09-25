@@ -5,7 +5,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
     %Introduce incrementing run time for continuous
-    %Change to 1-s buffer
+    %Choose 1 or 2-s buffer
     %Fix weird x-scaling on waveform reset
     %Make pretty
     

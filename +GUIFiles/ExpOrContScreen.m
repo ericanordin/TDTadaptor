@@ -34,7 +34,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
             this.guiF = figure('Name', 'Subfolder', 'NumberTitle', 'off',...
                 'Position', [150 620 500 300], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'Resize', 'off', 'WindowKeyPressFcn',...
-                @Shortcuts, 'CloseRequestFcn', @HideWindow);
+                @Shortcuts, 'CloseRequestFcn', @ExitWindow);
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [30 190 440 70], 'String',...
                 'Is this an experimental or a control rat?',...
@@ -61,11 +61,18 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                 end
             end
             
+            function ExitWindow(~,~)
+                disp('Producing function cancellation');
+                this.subfolderName = 'CANCEL';
+                HideWindow();
+                
+            end
+            
             function HideWindow(~,~)
                 import StandardFunctions.generalHideWindow;
                 generalHideWindow(this.guiF);
-                disp('Producing function cancellation');
-                this.subfolderName = 'CANCEL';
+                %disp('Producing function cancellation');
+                %this.subfolderName = 'CANCEL';
                 %errorStruct.identifier = 'LabScreen:callCanceled';
                 %error(errorStruct);
                 %disp('In HideWindow');

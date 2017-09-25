@@ -22,7 +22,7 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
             % size of the entire serial buffer
             this.npts = RP.GetTagSize('dataout'); %Returns maximum number of accessible data points
             
-            this.buffLength = 2; %2s buffer
+            this.buffLength = 1; %2s buffer
             
             %Rounds up if not divisible by buffLength
             this.builtBuffer = zeros(1, this.npts*this.buffLength);
