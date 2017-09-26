@@ -5,8 +5,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
     %Fix weird x-scaling on waveform reset
-    %Catch error and display when mic is not turned on
-    %Change to 100 kHz
     %Make pretty
     
     properties
@@ -195,7 +193,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             ylabel(this.waveformAxes, 'Scaled Amplitude (+/-1 is Max)');
             
             this.spectrogramAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
-                [350 350 600 200], 'Ylim', [0 80000], 'YLimMode', 'manual');
+                [350 350 600 200], 'Ylim', [0 100000], 'YLimMode', 'manual');
             
             yScaleSpec = get(this.spectrogramAxes, 'YTick');
             yScaleSpec = yScaleSpec./1000;

@@ -17,7 +17,7 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
     %May only be able to store data in 16-bit or 32-bit
     noise = RP.ReadTagVEX('dataout', 0, buffObj.bufpts, 'F32', 'F32', 1);
     if buffObj.totalReps == 0
-        disp('In first rep check');
+        %disp('In first rep check');
         gettingSound = 0;
         %Check that the microphone is getting input
         %disp(noise);
