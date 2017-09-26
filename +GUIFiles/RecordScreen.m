@@ -5,6 +5,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
     %Fix weird x-scaling on waveform reset
+    %Visually disable start button after save
+    %Clean up junk commenting
     %Make pretty
     
     properties
