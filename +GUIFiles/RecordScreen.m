@@ -435,6 +435,7 @@ function HideWindow(~,~)
                 set(this.fileNameAuto, 'Enable', 'on');
                 set(this.fileNameManual, 'Enable', 'on');
                 set(this.fileNameEditable, 'Enable', 'on');
+                set(this.startStop, 'Enable', 'on');%'BackgroundColor', [0.5 1 0.5]);
                 this.changeState = 1;
             end
             
@@ -503,7 +504,7 @@ function HideWindow(~,~)
         function enableNew(screen)
             import StandardFunctions.checkValidName
             set(screen.newRecord, 'Enable', 'on');
-            set(screen.startStop, 'Enable', 'on');
+            %set(screen.startStop, 'Enable', 'on');
             checkValidName(screen.recordObj.wavName, screen.fileNameEditable, screen.errorColor);
             
             %set(screen.guiF, 'CloseRequestFcn', @CloseProgram);
