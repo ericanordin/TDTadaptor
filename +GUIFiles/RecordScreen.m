@@ -5,7 +5,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Offer scaled vs unscaled waveform
     %Make relevant output for Status window
     %Fix weird x-scaling on waveform reset
-    %Visually disable start button after save
     %Clean up junk commenting
     %Make pretty
     
@@ -185,6 +184,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 [350 650 600 200], 'YLim', [-10 10], 'YLimMode', 'manual', 'YTick', [-10 -5 0 5 10]);
             %Audio input ranges from -10 to +10 on max settings. Input clips past
             %that.
+            %Max and min appear to change at times. Ranges that have
+            %appeared: [-8 10], [-10 4]
             
             yScaleWav = get(this.waveformAxes, 'YTick');
             yScaleWav = yScaleWav./10; %Scales +/-10 to +/-1
@@ -385,7 +386,8 @@ function HideWindow(~,~)
                     %array
                     
                     if overwriteFile == 1 || invalidRecordNonContinuous == 1
-                        disp('Invalid field prevents record');
+                        %disp('Invalid field prevents record');
+                        addToStatus('Invalid field prevents record', this);
                     else
                         %record(this.recordObj.webcam);
                         set(this.startStop, 'String', 'Stop Recording',...

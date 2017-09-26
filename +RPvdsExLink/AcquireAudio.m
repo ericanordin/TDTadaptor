@@ -20,9 +20,12 @@ recordObj = get(screen, 'recordObj');
 
 try
 %Change this once all files have been stored in their final location
+RP = TDTRP('C:\Ultrasonic Recording Program\AcquireAudio.rcx', 'RX6');
+%{
 RP = TDTRP(...
     'C:\Users\erica.nordin\OneDrive\Documents\Fall 2017 NSERC\Ultrasonic files\TDT\Continuous_AcquireRX6modified.rcx',...
     'RX6');
+%}
 catch ME
     addToStatus('TDT not connected', screen);
     rethrow(ME);

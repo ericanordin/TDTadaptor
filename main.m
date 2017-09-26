@@ -6,8 +6,7 @@ function main()
     %Before compiling:
     %Change filepaths in AcquireAudio
     %Change Recording.wavName to 'C:\'
-    %Change Recording.recordTime to new default
-    %Confirm save format in manual
+    %Change Recording.recordTime to new default (12 min)
     %Change starting location of window(s)
     
 import Enums.*

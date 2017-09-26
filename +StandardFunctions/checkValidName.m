@@ -13,8 +13,9 @@ end
 fileDesignation = filePath(end-3:end);
 directoryPrefix = filePath(2:3);
 preWav = filePath(end-4);
+numFolders = length(strfind(filePath, '\'));
 validName = strcmp(fileDesignation, '.wav') && strcmp(directoryPrefix, ':\') ...
-    && ~strcmp(preWav, '\');
+    && ~strcmp(preWav, '\') && numFolders >= 2;
 
 if exist(filePath, 'file') == 2 || ~validName
     %Prevent overwrite or invalid path
