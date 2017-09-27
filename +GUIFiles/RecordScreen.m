@@ -6,6 +6,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Make relevant output for Status window
     %Fix weird x-scaling on waveform reset
     %Clean up junk commenting
+    %Test removal of try/catch in ManualSetName
     %Make pretty
     
     properties
@@ -82,21 +83,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         function this = RecordScreen()
             %% GUI Set Up
             import RPvdsExLink.Recording;
-            %import RPvdsExLink.AcquireAudio;
-            %import RPvdsExLink.WebcamAnalogue;
             import StandardFunctions.ClearText;
             
             this.recordObj = Recording();
             this.running = 1;
-            this.statusText = {};%{'First command'; 'Second command'; 'Third command'};
-            
-            
-            %this.statusText = {char(pad("Command", this.statusWidth, 'both'))};
-            %this.statusText = {['First command'], ['Second command'], ['Third command']};
+            this.statusText = {};
             this.startingPathway = this.recordObj.wavName;
             this.timeRemaining = this.recordObj.recordTime;
             this.timeAccumulated = 0;
-            %this.initiateNewTest = 0;
             this.labScr = ''; %isobject returns false
             this.ratScr = ''; %isobject returns false
             this.firstAuto = 1;
@@ -106,8 +100,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.guiF = figure('Name', 'Ready to Record', 'NumberTitle', 'off',...
                 'Position', [50 50 1000 1000], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'CloseRequestFcn', @CloseProgram, 'Resize', 'off');
-            %Position [100 100] - big monitor
-            %Position [50 50] - back monitor
             
             this.fileNameAuto = uicontrol('Style', 'pushbutton', 'Position',...
                 [50 950 200 40], 'String', 'Name File Automatically',...
@@ -120,7 +112,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.fileNameEditable = uicontrol('Style', 'edit', 'Position',...
                 [270 900 680 90], 'String', this.recordObj.wavName, 'Callback',...
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
-                @DeselectOnEnter);%, 'BackgroundColor', this.errorColor);
+                @DeselectOnEnter);
+            
             
             uicontrol('Style', 'text', 'Position', [50 750 200 20],...
                 'String', 'Continous Record', 'HorizontalAlignment',...
@@ -161,25 +154,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
                 'FontSize', 14, 'ColumnWidth', {798}, 'Data', this.statusText);
             
-            %this.statusWindow = uitable('Units', 'characters',...
-            %    'Position', [30 5 160 15],...
-            %    'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
-            %    'FontSize', 14, 'Units', 'characters', 'ColumnWidth', {158},...
-            %    'Data', this.statusText);
-            
-            %set(this.statusWindow, 'Units', 'characters');
-            %set(this.statusWindow, 'ColumnWidth', {this.statusWidth});
-            %this.statusWindow = uitable('Position', [170 50 800 250],...
-            %    'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
-            %    'FontSize', 14, 'Data', this.statusText);
-            
-            %set(this.statusWindow, 'Units', 'characters');
-            %set(this.statusWindow, 'ColumnWidth', {this.statusWidth});
-            
-            
-            %this.statusWindow = uicontrol('Style', 'edit', 'enable', 'inactive',...
-            %    'Max', 2, 'Min', 1, 'String', this.statusText);
-            
             this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
                 [350 650 600 200], 'YLim', [-10 10], 'YLimMode', 'manual', 'YTick', [-10 -5 0 5 10]);
             %Audio input ranges from -10 to +10 on max settings. Input clips past
@@ -205,20 +179,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             title(this.spectrogramAxes, 'Spectrogram');
             xlabel(this.spectrogramAxes, 'Seconds');
             ylabel(this.spectrogramAxes, 'Frequency (kHz)');
-            %{
-            this.waveformDisplay = uicontrol('Style', 'pushbutton', 'String',...
-                'Waveform Display (placeholder)', 'Position', ...
-                [350 650 600 200]);
-            
-            this.spectrogramDisplay = uicontrol('Style', 'pushbutton', 'String',...
-                'Spectrogram Display (placeholder)', 'Position', ...
-                [350 350 600 200]);
-            %}
+
             this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
                 'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
                 'Position', [32 50 100 100], 'Callback', @PressNewTest);
-            
-            %WebcamAnalogue(this);
             
             %% Sub-constructor Functions
             function ManualSetName(~,~, throughDirectory)
@@ -226,30 +190,21 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.checkValidName;
                 import StandardFunctions.addToStatus;
                 
-                %for a = 1:20
-                %    addToStatus('Catch my electric boogaloo on the flippidy-floop', this);
-                %end
-                
                 try
                     originalName = this.recordObj.wavName;
                     if strcmp(throughDirectory, 'via uigetdir')
-                        %disp('via uigetdir');
                         
                         [this.recordObj.wavName, this.startingPathway] = setNameManual(this.startingPathway);
                         set(this.fileNameEditable, 'String', this.recordObj.wavName);
                     else
-                        %disp('no uigetdir');
                         this.recordObj.wavName = get(this.fileNameEditable, 'String');
                     end
-                    %disp(this.recordObj.wavName);
                     checkValidName(this.recordObj.wavName, this.fileNameEditable, this.errorColor);
                     if ~strcmp(originalName, this.recordObj.wavName)
                         set(this.fileNameManual, 'FontWeight', 'bold');
                         set(this.fileNameAuto, 'FontWeight', 'normal');
                     end
                 catch
-                    %ME.stack
-                    disp('Canceled ManualName');
                 end
                 
             end
@@ -262,9 +217,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.checkValidName;
                 try
                     if this.firstAuto == 1
+                        %LabScreen does not automatically open on all
+                        %iterations
                         checkExistence = isobject(this.labScr);
                         if checkExistence == 0
                             this.labScr = LabScreen();
+                            %Object is retained after AutoSetName concludes
                         else
                             set(this.labScr.guiF, 'visible', 'on');
                         end
