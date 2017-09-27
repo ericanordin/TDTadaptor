@@ -160,11 +160,11 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             %that.
             %Max and min appear to change at times. Ranges that have
             %appeared: [-8 10], [-10 4]
-            
+            %{
             yScaleWav = get(this.waveformAxes, 'YTick');
             yScaleWav = yScaleWav./10; %Scales +/-10 to +/-1
             set(this.waveformAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleWav);
-            
+            %}
             title(this.waveformAxes, 'Waveform');
             xlabel(this.waveformAxes, 'Seconds');
             ylabel(this.waveformAxes, 'Scaled Amplitude (+/-1 is Max)');
