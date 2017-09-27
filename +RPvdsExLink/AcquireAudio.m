@@ -94,6 +94,7 @@ F32Complete = fopen(filePathF32, 'r');
 totalSound = fread(F32Complete, '*float32');
 addToStatus('Saving...', screen);
 audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 32);
+disp(floor(fs));
 
 fclose(F32Complete);
 delete(filePathF32);

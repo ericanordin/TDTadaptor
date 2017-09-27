@@ -4,10 +4,11 @@ function main()
     %Update UML
     
     %Before compiling:
-    %Change filepaths in AcquireAudio
     %Change Recording.wavName to 'C:\'
     %Change Recording.recordTime to new default (12 min)
     %Change starting location of window(s)
+    
+    %Computer crashed after ~2.5 hours
     
 import Enums.*
 import GUIFiles.*
