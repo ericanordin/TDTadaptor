@@ -16,8 +16,8 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
     methods
         function this = Recording()
             this.recordStatus = 0;
-            this.wavName = 'C:\Users\erica.nordin\Documents\MATLAB\TDT_development\SavedAudio\testing.wav';
-            this.recordTime = 2; %12*60
+            this.wavName = 'C:\';%Users\erica.nordin\Documents\MATLAB\TDT_development\SavedAudio\testing.wav';
+            this.recordTime = 12*60;
             this.continuous = 0;
         end
     end

@@ -15,8 +15,12 @@ import RPvdsExLink.*
 import StandardFunctions.addToStatus
 
 %May need actxcontrol() call to use ActiveX methods
-
 recordObj = get(screen, 'recordObj');
+if ~exist(screen.startingPathway, 'dir')
+    mkdir(screen.startingPathway);
+end
+%Stalling here
+disp('Past directory check');
 
 try
 %Change this once all files have been stored in their final location

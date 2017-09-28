@@ -157,7 +157,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             
             function Proceed()
                 this.dataComplete = 1; %Triggers getRatData
-                disp('Ready to proceed');
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             

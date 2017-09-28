@@ -6,7 +6,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
     %Make relevant output for Status window
     %Fix weird x-scaling on waveform reset
     %Clean up junk commenting
-    %Test removal of try/catch in ManualSetName
     %Make pretty
     
     properties
@@ -357,6 +356,8 @@ function HideWindow(~,~)
                         set(this.fileNameAuto, 'Enable', 'off');
                         set(this.fileNameManual, 'Enable', 'off');
                         set(this.fileNameEditable, 'Enable', 'off');
+                        disp(this.startingPathway);
+                        exist(this.startingPathway, 'dir')
                         try
                             AcquireAudio(this);
                         catch
