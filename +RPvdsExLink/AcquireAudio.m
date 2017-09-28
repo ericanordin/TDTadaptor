@@ -27,7 +27,7 @@ RP = TDTRP(...
     'RX6');
 %}
 catch ME
-    addToStatus('TDT not connected', screen);
+    addToStatus('RX6 not connected', screen);
     rethrow(ME);
 end
 
@@ -93,8 +93,8 @@ fclose(fnoise);
 F32Complete = fopen(filePathF32, 'r');
 totalSound = fread(F32Complete, '*float32');
 addToStatus('Saving...', screen);
+pause(0.01);
 audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 32);
-disp(floor(fs));
 
 fclose(F32Complete);
 delete(filePathF32);

@@ -157,14 +157,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
                 [350 650 600 200], 'YLim', [-10 10], 'YLimMode', 'manual', 'YTick', [-10 -5 0 5 10]);
             %Audio input ranges from -10 to +10 on max settings. Input clips past
-            %that.
-            %Max and min appear to change at times. Ranges that have
-            %appeared: [-8 10], [-10 4]
-            %{
+            %that. Watch out for DC offset (when the mean is not 0).
+            
             yScaleWav = get(this.waveformAxes, 'YTick');
             yScaleWav = yScaleWav./10; %Scales +/-10 to +/-1
             set(this.waveformAxes, 'Ydir', 'Normal', 'YTickLabel', yScaleWav);
-            %}
+            
             title(this.waveformAxes, 'Waveform');
             xlabel(this.waveformAxes, 'Seconds');
             ylabel(this.waveformAxes, 'Scaled Amplitude (+/-1 is Max)');
