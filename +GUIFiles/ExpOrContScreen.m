@@ -1,6 +1,6 @@
 classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
-    %EXPORCONTSCREEN Opens a GUI to specify whether that rat is experimental or
-    %control.
+    %EXPORCONTSCREEN Opens a GUI to specify whether that rat is part of the
+    %experimental or control group.
     %   This function is only relevant for the Metz lab.
     
     properties
@@ -20,10 +20,10 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
     methods
         %% Function Descriptions:
         %ExpOrContScreen: constructor
-        %Shortcuts: enables keyboard shortcuts
-        %Selection: assigns appropriate string to choice
-        %HideWindow: Makes the window invisible
-        %getExpOrCont: returns subfolderName
+        %Shortcuts: Enables keyboard shortcuts
+        %Selection: Assigns appropriate string to choice
+        %ExitWindow: Closes window before selection is made
+        %getExpOrCont: Returns subfolderName
         
         %% Function Code:
         function this = ExpOrContScreen()
@@ -35,16 +35,16 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
                 'Position', [350 400 500 300], 'ToolBar', 'none',...
                 'MenuBar', 'none', 'Resize', 'off', 'WindowKeyPressFcn',...
                 @Shortcuts, 'CloseRequestFcn', @ExitWindow);
-            %Position [150 620] - big monitor
-            %Position [350 400] - back monitor
             
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [30 190 440 70], 'String',...
                 'Is this an experimental or a control rat?',...
                 'FontSize', 14);
+            
             this.experimentalButton = uicontrol('Style', 'pushbutton',...
                 'Position', [50 100 150 100], 'String', 'Experimental (e)',...
                 'Callback', {@Selection, 'e'}, 'FontSize', 13);
+            
             this.controlButton = uicontrol('Style', 'pushbutton',...
                 'Position', [300 100 150 100], 'String', 'Control (c)',...
                 'Callback', {@Selection, 'c'}, 'FontSize', 13);
@@ -65,22 +65,8 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
             end
             
             function ExitWindow(~,~)
-                disp('Producing function cancellation');
-                this.subfolderName = 'CANCEL';
-                HideWindow();
-                
-            end
-            
-            function HideWindow(~,~)
-                import StandardFunctions.generalHideWindow;
-                generalHideWindow(this.guiF);
-                %disp('Producing function cancellation');
-                %this.subfolderName = 'CANCEL';
-                %errorStruct.identifier = 'LabScreen:callCanceled';
-                %error(errorStruct);
-                %disp('In HideWindow');
-                %set(this.guiF, 'visible', 'off'); %Makes window invisible
-                %exit;
+                this.subfolderName = 'CANCEL'; %getExpOrCont proceeds
+                delete(this.guiF);
             end
         end
         
@@ -89,17 +75,16 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
             try
                 waitfor(obj, 'subfolderName');
                 if strcmp(obj.subfolderName, 'CANCEL')
-                    obj.subfolderName = originalSubfolder;
+                    obj.subfolderName = originalSubfolder; %Resets to original assigment
                     errorStruct.identifier = 'ExpOrContScreen:callCanceled';
                     error(errorStruct);
                 end
                 subfolder = obj.subfolderName;
-                close(obj.guiF);
+                delete(obj.guiF);
             catch ME
                 rethrow(ME);
             end
         end
-        
     end
 end
 

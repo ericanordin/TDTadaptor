@@ -1,6 +1,7 @@
 function BinaryToWav()
 %BinaryToWave converts .f32 files to .wav in the case of program crash before
 %the conversion has occurred in AcquireAudio.
+
 [fileName, filePath, ~] = uigetfile('*.f32');
 fullPath = strcat(filePath, fileName);
 Wavfile = fullPath(1:end-3);
@@ -11,7 +12,7 @@ audiowrite(Wavfile, totalSound, 195312, 'BitsPerSample', 32);
 %195312 is the frequency of the TDT
 
 fclose(F32file);
-delete(fullPath);
+delete(fullPath); %Deletes .f32 file
 msgbox({'Conversion complete.' '.wav file saved and .f32 file deleted'});
 end
 

@@ -1,2 +1,5 @@
-mcc -e -d C:\AcquireAudio -o Ultrasonic_Recording_Interface main.m
-mcc -e -d C:\AcquireAudio -o BinaryToWav BinaryToWav.m
+%Ultrasonic_Recording_Interface
+mcc -e -d 'C:\Ultrasonic Recording Program' -o Ultrasonic_Recording_Interface main.m
+
+%BinaryToWav
+mcc -e -d 'C:\Ultrasonic Recording Program' -o BinaryToWav BinaryToWav.m

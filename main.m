@@ -1,64 +1,32 @@
 function main()
-%MAIN Runs the show.
-    %To do:
-    %Update UML
-    
-    %Before compiling:
-    %Change Recording.wavName to 'C:\'
-    %Change Recording.recordTime to new default (12 min)
-    %Change starting location of window(s)
-    
-    %Computer crashed after ~2.5 hours
-    
+%MAIN Runs the show for the ultrasonic recording program.
+
+%Make any cancellation step in Auto-name reset to original lab name
+
 import Enums.*
 import GUIFiles.*
 import StandardFunctions.*
 import RPvdsExLink.*
 
-% The same GUI objects are used until the program is closed so that the
-% user doesn't have to constantly redo the procedure from opening the
-% program.
-
-%running = 1;
-%firstRun = 1;
-%entryScr = EntryScreen();
-
-%Names for screens not initially created are initialized to
-%an empty string so that isobject returns 0 instead of crashing the
-%program. The exist function doesn't work on objects.
-%labScr = '';
-%ratScr = '';
+% The same LabScreen, RatScreen, and RecordScreen GUI objects are used 
+% until the program is closed so that the user doesn't have to 
+% constantly redo the procedure from opening the program.
 
 recordScr = RecordScreen();
-%set(recordScr.guiF, 'visible', 'off');
-
-%nameType = getNameType(entryScr);
 
 while (recordScr.running == 1)
     import StandardFunctions.checkValidName;
-%if nameType == NamingMethod.Auto
-
-%else
-%Resets the wav file name to the directory of the most recent rat.
-   setFileName(recordScr, recordScr.startingPathway); 
-   set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
-   checkValidName(recordScr.startingPathway, recordScr.fileNameEditable, recordScr.errorColor);
-   
-%end
-
-%set(recordScr.guiF, 'visible', 'on');
-
-%AcquireAudio(recordScr);
-%Might put AcquireAudio here; dependent upon recordStatus and
-%filePath
-
-waitForChange(recordScr);
-%disp('New while loop rendition');
-%firstRun = 0;
-%set(recordScr.guiF, 'visible', 'off');
-
+    
+    %Resets the wav file name to the directory of the most recent rat.
+    setFileName(recordScr, recordScr.startingPathway);
+    set(recordScr.fileNameEditable, 'String', recordScr.startingPathway);
+    checkValidName(recordScr.startingPathway, recordScr.fileNameEditable, recordScr.errorColor);
+    
+    waitForChange(recordScr);
 end
-delete(recordScr); 
+
+%Program termination
+delete(recordScr);
 delete(findall(0, 'Type', 'figure'));
 end
 

@@ -1,8 +1,5 @@
 classdef LabScreen < handle & matlab.mixin.SetGetExactNames
     %LABSCREEN Chooses the LabName.
-    %To do:
-    %Make pretty
-    %Write destructor
     
     properties
         %% Figures:
@@ -26,11 +23,11 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
     
     methods
         %% Function Descriptions:
-        %LabScreen: constructor
-        %Shortcuts: enables keyboard shortcuts
-        %Selection: assigns appropriate enumeration to chosenLab
+        %LabScreen: Constructor
+        %Shortcuts: Enables keyboard shortcuts
+        %Selection: Assigns appropriate enumeration to chosenLab
         %HideWindow: Makes the window invisible
-        %getLabName: returns chosenLab
+        %getLabName: Returns chosenLab
         
         %% Function Code:
         
@@ -99,7 +96,6 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                         this.chosenLab = LabName.Other;
                         %'Chose Other'
                 end
-                %disp(this.chosenLab);
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             

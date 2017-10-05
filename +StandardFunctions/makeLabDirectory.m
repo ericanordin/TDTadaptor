@@ -13,6 +13,7 @@ subfolder = '';
 if strcmp(labName, 'Metz')
     subfolderGUI = ExpOrContScreen();
     subfolder = getExpOrCont(subfolderGUI);
+    delete(subfolderGUI);
     subfolder = strcat(subfolder, '\');
 else
     if strcmp(labName, 'Gibb')
