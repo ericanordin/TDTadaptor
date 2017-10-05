@@ -26,7 +26,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         %LabScreen: Constructor
         %Shortcuts: Enables keyboard shortcuts
         %Selection: Assigns appropriate enumeration to chosenLab
-        %HideWindow: Makes the window invisible
+        %ExitWindow: Makes the window invisible and terminates auto naming
         %getLabName: Returns chosenLab
         
         %% Function Code:
@@ -39,7 +39,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
             this.guiF = figure('Name', 'Select Lab', 'NumberTitle', 'off',...
                 'Position', [100 300 500 500], 'WindowKeyPressFcn', ...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none',...
-                'Resize', 'off', 'CloseRequestFcn', @HideWindow);
+                'Resize', 'off', 'CloseRequestFcn', @ExitWindow);
             %Position [100 300] - big monitor
             %Position [100 300] - back monitor
             
@@ -99,7 +99,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             
-            function HideWindow(~,~)
+            function ExitWindow(~,~)
                 import StandardFunctions.generalHideWindow;
                 generalHideWindow(this.guiF);
                 disp('Producing function cancellation');
@@ -114,18 +114,24 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function labName = getLabName(obj)
+            disp('In getLabName');
             originalLab = obj.chosenLab;
             try
+                disp('In try');
+                %Problem arises in waitfor if exited prematurely on previous 
+                %attempt for that lab
                 waitfor(obj, 'chosenLab'); %Function waits to elapse until
                 %nameType has been changed.
+                %Never passes this point
+                disp('Past waitfor');
                 if ischar(obj.chosenLab)
+                    disp('Not enum');
                     obj.chosenLab = originalLab;
-                    disp('String');
                     errorStruct.identifier = 'LabScreen:callCanceled';
                     error(errorStruct);
                 else
+                    disp('In labName assignment');
                     labName = obj.chosenLab;
-                    disp('Not string');
                 end
                 
             catch ME

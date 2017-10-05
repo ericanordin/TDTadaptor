@@ -10,6 +10,7 @@ combinedDirectory = strcat(baseDirectory, char(labName));
 combinedDirectory = strcat(combinedDirectory, '\');
 
 subfolder = '';
+try
 if strcmp(labName, 'Metz')
     subfolderGUI = ExpOrContScreen();
     subfolder = getExpOrCont(subfolderGUI);
@@ -21,6 +22,10 @@ else
         subfolder = strcat(subfolder, expNum);
         subfolder = strcat(subfolder, '\');
     end
+end
+catch ME
+    delete(subfolderGUI);
+    rethrow (ME);
 end
 
 labDirectory = strcat(combinedDirectory, subfolder);

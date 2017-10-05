@@ -74,13 +74,14 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
             originalSubfolder = obj.subfolderName;
             try
                 waitfor(obj, 'subfolderName');
+                delete(obj.guiF);
                 if strcmp(obj.subfolderName, 'CANCEL')
                     obj.subfolderName = originalSubfolder; %Resets to original assigment
                     errorStruct.identifier = 'ExpOrContScreen:callCanceled';
                     error(errorStruct);
                 end
                 subfolder = obj.subfolderName;
-                delete(obj.guiF);
+                
             catch ME
                 rethrow(ME);
             end

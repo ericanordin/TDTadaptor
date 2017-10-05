@@ -176,7 +176,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             title(this.spectrogramAxes, 'Spectrogram');
             xlabel(this.spectrogramAxes, 'Seconds');
             ylabel(this.spectrogramAxes, 'Frequency (kHz)');
-
+            
             this.newRecord = uicontrol('Style', 'pushbutton', 'String',...
                 'New Test Subject', 'BackgroundColor', [0.4 0.4 0.9],...
                 'Position', [32 50 100 100], 'Callback', @PressNewTest);
@@ -212,6 +212,11 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.makeLabDirectory;
                 import StandardFunctions.setNameAuto;
                 import StandardFunctions.checkValidName;
+                
+                
+                originalLab = this.labName; 
+                originalPath = this.startingPathway;
+                
                 try
                     if this.firstAuto == 1
                         %LabScreen does not automatically open on all
@@ -223,14 +228,17 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         else
                             set(this.labScr.guiF, 'visible', 'on');
                         end
+                        
                         this.labName = getLabName(this.labScr);
                         this.firstAuto = 0;
                     end
-                    
+                    disp('Past getName');
                     checkExistence = isobject(this.ratScr);
                     if checkExistence == 0
                         this.ratScr = RatScreen(this, this.labName);
+                        disp('Creating ratScr');
                     else
+                        disp('Displaying existing ratScr');
                         set(this.ratScr.guiF, 'visible', 'on');
                     end
                     [rat, day, cohort, newLab] = getRatData(this.ratScr);
@@ -250,6 +258,13 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     
                     set(this.fileNameManual, 'FontWeight', 'normal');
                 catch
+                    %Names are set to originals if naming is exited
+                    %prematurely.
+                    this.labName = originalLab;
+                    if isempty(this.labName)
+                        this.firstAuto = 1;
+                    end
+                    this.startingPathway = originalPath;
                     disp('Canceled AutoName');
                 end
                 
