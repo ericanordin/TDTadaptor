@@ -47,6 +47,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             this.cohortID = '';
             this.dataComplete = 0;
             this.labName = lab;
+            this.newLab = '';
             this.cancelCall = 0;
             
             this.guiF = figure('Name', 'Enter Rat Information', 'NumberTitle', ...
@@ -129,7 +130,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                             set(recordScreen.labScr.guiF, 'visible', 'on');
                         end
                         this.newLab = getLabName(recordScreen.labScr);
-                        disp(this.newLab);
                         SetLabels(this.newLab);
                 end
                 
@@ -189,12 +189,14 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                         modifiedLab = obj.newLab;
                         obj.newLab = '';
                     else
+                        obj.newLab = '';
                         modifiedLab = '';
                     end
                     obj.dataComplete = 0; %Resets value for next time the window
                     %is used.
                 end
             catch ME
+                obj.newLab = '';
                 obj.dataComplete = 0;
                 obj.cancelCall = 0;
                 rethrow(ME);

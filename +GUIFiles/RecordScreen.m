@@ -235,6 +235,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     if checkExistence == 0
                         this.ratScr = RatScreen(this, this.labName);
                     else
+                        this.ratScr.labName = this.labName;
                         set(this.ratScr.guiF, 'visible', 'on');
                     end
                     [rat, day, cohort, newLab] = getRatData(this.ratScr);
@@ -257,6 +258,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     %Names are set to originals if naming is exited
                     %prematurely.
                     this.labName = originalLab;
+                    
                     this.labScr.chosenLab = originalLab;
                     if isempty(this.labName)
                         this.firstAuto = 1;
