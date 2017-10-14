@@ -3,8 +3,6 @@ function main()
 
 %Make any cancellation step in Auto-name reset to original lab name
 %Phase out generalHideWindow
-%Fix glitch with repeated lab attempts and premature exit (see
-%LabScreen->getLabName)
 
 import Enums.*
 import GUIFiles.*

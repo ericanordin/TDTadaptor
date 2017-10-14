@@ -215,6 +215,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 
                 
                 originalLab = this.labName; 
+                %disp('originalLab pre-try');
+                %disp(originalLab);
+                %disp('after originalLab');
                 originalPath = this.startingPathway;
                 
                 try
@@ -261,11 +264,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     %Names are set to originals if naming is exited
                     %prematurely.
                     this.labName = originalLab;
+                    this.labScr.chosenLab = originalLab;
                     if isempty(this.labName)
                         this.firstAuto = 1;
                     end
                     this.startingPathway = originalPath;
-                    disp('Canceled AutoName');
+                    %disp('Canceled AutoName');
                 end
                 
             end

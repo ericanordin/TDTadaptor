@@ -102,7 +102,7 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
             function ExitWindow(~,~)
                 import StandardFunctions.generalHideWindow;
                 generalHideWindow(this.guiF);
-                disp('Producing function cancellation');
+                %disp('Producing function cancellation');
                 this.chosenLab = 'CANCEL';
                 %errorStruct.identifier = 'LabScreen:callCanceled';
                 %error(errorStruct);
@@ -114,23 +114,19 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function labName = getLabName(obj)
-            disp('In getLabName');
+            %disp('In getLabName');
             originalLab = obj.chosenLab;
+            %disp(originalLab);
             try
-                disp('In try');
-                %Problem arises in waitfor if exited prematurely on previous 
-                %attempt for that lab
                 waitfor(obj, 'chosenLab'); %Function waits to elapse until
                 %nameType has been changed.
-                %Never passes this point
-                disp('Past waitfor');
                 if ischar(obj.chosenLab)
-                    disp('Not enum');
+                    %disp('Not enum');
                     obj.chosenLab = originalLab;
                     errorStruct.identifier = 'LabScreen:callCanceled';
                     error(errorStruct);
                 else
-                    disp('In labName assignment');
+                    %disp('In labName assignment');
                     labName = obj.chosenLab;
                 end
                 
