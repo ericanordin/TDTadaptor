@@ -1,8 +1,6 @@
 function main()
 %MAIN Runs the show for the ultrasonic recording program.
 
-%Make any cancellation step in Auto-name reset to original lab name
-
 import Enums.*
 import GUIFiles.*
 import StandardFunctions.*

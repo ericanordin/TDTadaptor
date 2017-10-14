@@ -19,10 +19,10 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
             this.bufsPerSec = 2;
             
             this.totalReps = 0;
-            % size of the entire serial buffer
+
             this.npts = RP.GetTagSize('dataout'); %Returns maximum number of accessible data points
             
-            this.buffLength = 1; %2s buffer
+            this.buffLength = 1; %1s buffer
             
             %Rounds up if not divisible by buffLength
             this.builtBuffer = zeros(1, this.npts*this.buffLength);
@@ -36,10 +36,6 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
             this.wavePlot = '';
             this.specPlot = '';
         end
-        
-        %function delete(buffObj)
-            
-        %end
     end
     
 end

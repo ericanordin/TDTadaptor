@@ -63,15 +63,6 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 [50 50 400 50], 'String', 'Other (o)', 'FontSize', 13,...
                 'Callback', {@Selection, 'o'});
             
-            %%
-            %{
-            set(guiF, 'visible', 'off');
-            ready = input('Type 1 if ready');
-            if ready == 1
-                disp('Got in ready');
-                set(guiF, 'visible', 'on');
-            end
-            %}
             %% Sub-constructor Functions:
             
             function Shortcuts(src, eventdata)
@@ -85,16 +76,12 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 switch choice
                     case {'e'}
                         this.chosenLab = LabName.Euston;
-                        %'Chose Euston'
                     case {'g'}
                         this.chosenLab = LabName.Gibb;
-                        %'Chose Gibb'
                     case {'m'}
                         this.chosenLab = LabName.Metz;
-                        %'Chose Metz'
                     case {'o'}
                         this.chosenLab = LabName.Other;
-                        %'Chose Other'
                     otherwise
                         this.chosenLab = 'CANCEL';
                 end
@@ -114,12 +101,10 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                 waitfor(obj, 'chosenLab'); %Function waits to elapse until
                 %nameType has been changed.
                 if ischar(obj.chosenLab)
-                    %disp('Not enum');
                     obj.chosenLab = originalLab;
                     errorStruct.identifier = 'LabScreen:callCanceled';
                     error(errorStruct);
                 else
-                    %disp('In labName assignment');
                     labName = obj.chosenLab;
                 end
                 

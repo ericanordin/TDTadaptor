@@ -5,12 +5,12 @@ if buffObj.totalReps == 0
     buffObj.wavePlot = plot(buffObj.displaySampleRange, buffObj.builtBuffer,...
         'Parent', screen.waveformAxes, 'Color', 'b');
     hold(screen.waveformAxes, 'off');
-
+    
     hold(screen.spectrogramAxes, 'on');
     [~, f, t, p] = spectrogram(buffObj.builtBuffer, 1024, 256, [], buffObj.npts, 'yaxis');
     buffObj.specPlot = imagesc(t, f, 10*log10(p+eps), 'Parent', screen.spectrogramAxes);%log10(abs(s)));
     hold(screen.spectrogramAxes, 'off');
-
+    
     specDB = colorbar;
     ylabel(specDB, 'dB');
     colormap('gray');

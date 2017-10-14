@@ -274,14 +274,14 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 isCont = get(checkbox, 'Value'); %isCont corresponds to
                 %whether or not the Continuous checkbox is checked or not.
                 if isCont == 1 %Box is checked
-                    %recordObj.recordTime fields are made invisible
+                    %recordTime fields are made invisible
                     set(this.timeChangingLabel, 'String', 'Elapsed Time (s):');%'Visible', 'off');
                     set(this.timeChangingDisplay, 'String', this.timeAccumulated);%'Visible', 'off');
                     set(this.recordTimeLabel, 'Visible', 'off');
                     set(this.recordTimeEditable, 'Visible', 'off');
                     this.recordObj.continuous = 1;
                 else %Box is unchecked
-                    %recordObj.recordTime fields are made visible
+                    %recordTime fields are made visible
                     set(this.timeChangingLabel, 'String', 'Time Remaining (s):'); % 'Visible', 'on');
                     set(this.timeChangingDisplay, 'String', this.timeRemaining);%'Visible', 'on');
                     set(this.recordTimeLabel, 'Visible', 'on');
@@ -297,7 +297,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 this.recordObj.recordTime = numericContents;
                 this.timeRemaining = this.recordObj.recordTime;
                 set(this.timeChangingDisplay, 'String', this.timeRemaining);
-                %disp(this.recordObj.recordTime);
             end
             
             
@@ -311,7 +310,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             function PressStartStop(~,~)
                 %Executes when the startStop button is pressed.
                 import RPvdsExLink.AcquireAudio;
-                %import RPvdsExLink.WebcamAnalogue;
                 import StandardFunctions.addToStatus;
                 
                 if this.recordObj.recordStatus == 0
@@ -332,22 +330,16 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     
                     invalidRecordNonContinuous =...
                         (this.recordObj.continuous == 0 & invalidRecordTime == 1);
-                    %invalidRecordNonContinuous is giving an empty logical
-                    %array
                     
                     if overwriteFile == 1 || invalidRecordNonContinuous == 1
-                        %disp('Invalid field prevents record');
                         addToStatus('Invalid field prevents record', this);
                     else
-                        %record(this.recordObj.webcam);
                         set(this.startStop, 'String', 'Stop Recording',...
                             'BackgroundColor', [0.8 0.1 0.1]);
-                        %set(this.guiF, 'CloseRequestFcn', '');
                         this.recordObj.recordStatus = 1;
                         set(this.newRecord, 'Enable', 'off');
                         addToStatus('Recording...', this);
                         pause(0.002);
-                        %WebcamAnalogue(this);
                         set(this.fileNameAuto, 'Enable', 'off');
                         set(this.fileNameManual, 'Enable', 'off');
                         set(this.fileNameEditable, 'Enable', 'off');
@@ -356,7 +348,6 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         try
                             AcquireAudio(this);
                         catch
-                            %stopRecord(this);
                             disp('In catch');
                             set(this.newRecord, 'Enable', 'on');
                             set(this.fileNameAuto, 'Enable', 'on');
@@ -367,16 +358,12 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                             this.recordObj.recordStatus = 0;
                         end
                     end
-                    
-                    
                 else
                     stopRecord(this);
-                    
                 end
             end
             
             function PressNewTest(~,~)
-                %this.initiateNewTest = 1;
                 this.statusText = {};
                 set(this.statusWindow, 'Data', this.statusText);
                 this.timeRemaining = this.recordObj.recordTime;
@@ -389,21 +376,17 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 set(this.fileNameAuto, 'Enable', 'on');
                 set(this.fileNameManual, 'Enable', 'on');
                 set(this.fileNameEditable, 'Enable', 'on');
-                set(this.startStop, 'Enable', 'on');%'BackgroundColor', [0.5 1 0.5]);
+                set(this.startStop, 'Enable', 'on');
                 this.changeState = 1;
             end
             
             function CloseProgram(~,~)
                 import StandardFunctions.addToStatus;
-                %disp('In CloseProgram');
                 if this.recordObj.recordStatus == 0
                     this.running = 0;
                     this.changeState = 1;
-                    %disp('Exit - enable before compilation');
-                    %exit;
                 else
                     addToStatus('Cannot exit while recording or saving', this);
-                    %disp('Cannot exit while recording');
                 end
             end
             
@@ -414,15 +397,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function waitForChange(obj)
-            %Possibly introduce onCleanup command
-            %waitfor(obj, 'initiateNewTest', 1) || waitfor(obj, 'running');
             waitfor(obj, 'changeState', 1);
             obj.changeState = 0;
             %Loop resets to new recording if running == 1. Otherwise, the
             %program terminates.
-            
-            %obj.initiateNewTest = 0;
-            %set(obj.guiF, 'visible', 'off');
         end
         
         function stopRecord(screen)
@@ -432,19 +410,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             screen.recordObj.recordStatus = 0;
             addToStatus('Done recording', screen);
             set(screen.startStop, 'Enable', 'off');
-            %checkValidName(screen.recordObj.wavName, screen.fileNameEditable, screen.errorColor);
-            
-            %stop(this.recordObj.webcam);
-            %disp('Done recording');
-            %disp(this.recordObj.webcam);
-            %play(this.recordObj.webcam);
-            %disp('Done playing');
-            %set(this.guiF, 'CloseRequestFcn', closereq);
-            %Only enable closing and new record once saving has completed
         end
         
         function decrementTime(screen)
-            screen.timeRemaining = screen.timeRemaining-1;%-buffLength;
+            screen.timeRemaining = screen.timeRemaining-1;
             set(screen.timeChangingDisplay, 'String', screen.timeRemaining);
             pause(0.001);
         end
@@ -458,11 +427,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         function enableNew(screen)
             import StandardFunctions.checkValidName
             set(screen.newRecord, 'Enable', 'on');
-            %set(screen.startStop, 'Enable', 'on');
             checkValidName(screen.recordObj.wavName, screen.fileNameEditable, screen.errorColor);
-            
-            %set(screen.guiF, 'CloseRequestFcn', @CloseProgram);
-            %Re-enable closing of window
         end
     end
     
