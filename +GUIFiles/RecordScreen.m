@@ -231,13 +231,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         this.labName = getLabName(this.labScr);
                         this.firstAuto = 0;
                     end
-                    disp('Past getName');
                     checkExistence = isobject(this.ratScr);
                     if checkExistence == 0
                         this.ratScr = RatScreen(this, this.labName);
-                        disp('Creating ratScr');
                     else
-                        disp('Displaying existing ratScr');
                         set(this.ratScr.guiF, 'visible', 'on');
                     end
                     [rat, day, cohort, newLab] = getRatData(this.ratScr);

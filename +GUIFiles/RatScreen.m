@@ -1,8 +1,5 @@
 classdef RatScreen < handle & matlab.mixin.SetGetExactNames
     %RATSCREEN Enter the details of the rat being tested.
-    %To do:
-    %Write destructor
-    %Make pretty
     
     properties
         %% Figures:
@@ -56,8 +53,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                 'off', 'Position', [100 300 900 400], 'WindowKeyPressFcn',...
                 @Shortcuts, 'ToolBar', 'none', 'MenuBar', 'none', 'Resize',...
                 'off', 'CloseRequestFcn', @HideWindow);
-            %Position [100 300] - big monitor
-            %Position [100 300] - back monitor
             
             this.instructions = uicontrol('Style', 'text', 'Position',...
                 [100 300 700 90], 'String',...
@@ -97,7 +92,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                 %Data entered in the ratEntry field is copied into the
                 %ratID variable.
                 this.ratID = get(this.ratEntry, 'String');
-                %display(this.ratID);
                 uiresume(gcbf);
             end
             
@@ -105,7 +99,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                 %Data entered in the dayEntry field is copied into the
                 %dayID variable.
                 this.dayID = get(this.dayEntry, 'String');
-                %display(this.dayID);
                 uiresume(gcbf);
             end
             
@@ -113,7 +106,6 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                 %Data entered in the cohortEntry field is copied into the
                 %cohortID variable.
                 this.cohortID = get(this.cohortEntry, 'String');
-                %display(this.cohortID);
                 uiresume(gcbf);
             end
             
@@ -161,7 +153,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             end
             
             function HideWindow(~,~)
-                set(window, 'visible', 'off');
+                set(this.guiF, 'visible', 'off');
                 this.cancelCall = 1;
                 this.dataComplete = 1;
             end

@@ -95,21 +95,21 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
                     case {'o'}
                         this.chosenLab = LabName.Other;
                         %'Chose Other'
+                    otherwise
+                        this.chosenLab = 'CANCEL';
                 end
                 set(this.guiF, 'visible', 'off'); %Makes window invisible
             end
             
             function ExitWindow(~,~)
-                set(window, 'visible', 'off');
+                set(this.guiF, 'visible', 'off');
                 this.chosenLab = 'CANCEL';
             end
             
         end
         
         function labName = getLabName(obj)
-            %disp('In getLabName');
             originalLab = obj.chosenLab;
-            %disp(originalLab);
             try
                 waitfor(obj, 'chosenLab'); %Function waits to elapse until
                 %nameType has been changed.
