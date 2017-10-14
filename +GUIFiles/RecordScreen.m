@@ -213,11 +213,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.setNameAuto;
                 import StandardFunctions.checkValidName;
                 
-                
                 originalLab = this.labName; 
-                %disp('originalLab pre-try');
-                %disp(originalLab);
-                %disp('after originalLab');
                 originalPath = this.startingPathway;
                 
                 try
@@ -269,19 +265,15 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         this.firstAuto = 1;
                     end
                     this.startingPathway = originalPath;
-                    %disp('Canceled AutoName');
                 end
                 
             end
-            
-            
             
             function TogContinuous(checkbox, ~)
                 %Makes appropriate changes based on the status of the
                 %checkbox.
                 isCont = get(checkbox, 'Value'); %isCont corresponds to
                 %whether or not the Continuous checkbox is checked or not.
-                %disp(isCont);
                 if isCont == 1 %Box is checked
                     %recordObj.recordTime fields are made invisible
                     set(this.timeChangingLabel, 'String', 'Elapsed Time (s):');%'Visible', 'off');
@@ -297,22 +289,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                     set(this.recordTimeEditable, 'Visible', 'on');
                     this.recordObj.continuous = 0;
                 end
-                %disp(recordObj.continuous);
             end
-            %{
-function HideWindow(~,~)
-                    disp('In HideWindow');
-                    if this.advCanClose == 1
-                        disp('Allowed to hide');
-                        import StandardFunctions.generalHideWindow;
-                        generalHideWindow(this.advF);
-                        %set(this.advF, 'visible', 'off'); %Makes window invisible
-                    else
-                        disp('Shouldnt be closing');
-                    end
-                    %exit;
-                end
-            %}
             
             function GetRecordTime(field, ~)
                 %Sets recordObj.recordTime to the contents of recordTimeEditable

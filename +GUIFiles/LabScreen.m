@@ -100,15 +100,8 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
             end
             
             function ExitWindow(~,~)
-                import StandardFunctions.generalHideWindow;
-                generalHideWindow(this.guiF);
-                %disp('Producing function cancellation');
+                set(window, 'visible', 'off');
                 this.chosenLab = 'CANCEL';
-                %errorStruct.identifier = 'LabScreen:callCanceled';
-                %error(errorStruct);
-                %disp('In HideWindow');
-                %set(this.guiF, 'visible', 'off'); %Makes window invisible
-                %exit;
             end
             
         end

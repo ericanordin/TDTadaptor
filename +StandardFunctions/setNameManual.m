@@ -66,11 +66,7 @@ end
     end
 
     function HideWindow(~,~)
-        import StandardFunctions.generalHideWindow;
-        generalHideWindow(nameFileWindow);
-        %disp('In HideWindow');
-        %set(nameFileWindow, 'visible', 'off'); %Makes window invisible
-        %exit;
+        set(window, 'visible', 'off');
     end
 %{
 function TabShortcut(~, eventdata)
