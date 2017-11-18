@@ -32,6 +32,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         spectrogramAxes; %Shows the spectrogram corresponding to the
         %real-time recording.
         newRecord; %Resets to directory with no file name.
+        bitDepthGroup; %uibuttongroup that offers choice of 32 or 16 bit recording
+        bitButton32; %32 bit radio button
+        bitButton16; %16 bit radio button
         
         %% Variables:
         recordObj; %The Recording class object
@@ -112,6 +115,15 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 [270 900 680 90], 'String', this.recordObj.wavName, 'Callback',...
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
                 @DeselectOnEnter);
+            
+            this.bitDepthGroup = uibuttongroup('Units', 'pixels', ...
+                'Position', [50 800 110 90]);
+            
+            this.bitButton32 = uicontrol(this.bitDepthGroup, 'Style',...
+                'radiobutton', 'String', '32 bit', 'Position', [5 50 100 30]);
+            
+            this.bitButton16 = uicontrol(this.bitDepthGroup, 'Style',... 
+                'radiobutton', 'String', '16 bit', 'Position', [5 10 100 30]);
             
             
             uicontrol('Style', 'text', 'Position', [50 750 200 20],...
