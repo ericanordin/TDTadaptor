@@ -31,10 +31,10 @@ end
 
 fs = RP.GetSFreq(); %Returns sampling frequency
 
-filePathF32 = recordObj.wavName(1:end-3);
-filePathF32 = [filePathF32 'I16'];
+binaryFilePath = recordObj.wavName(1:end-3);
+binaryFilePath = [binaryFilePath 'I16'];
 
-fnoise = fopen(filePathF32, 'w');
+fnoise = fopen(binaryFilePath, 'w');
 
 %% Acquisition
 
@@ -77,14 +77,14 @@ RP.Halt; %Stops processing chain
 fclose(fnoise);
 
 %Conversion from .f32 to .wav
-F32Complete = fopen(filePathF32, 'r');
-totalSound = fread(F32Complete, '*int16');
+binaryFile = fopen(binaryFilePath, 'r');
+totalSound = fread(binaryFile, '*int16');
 addToStatus('Saving...', screen);
 pause(0.01);
 audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 16);
 
-fclose(F32Complete);
-delete(filePathF32);
+fclose(binaryFile);
+delete(binaryFilePath);
 delete(buffObj);
 addToStatus('Saved successfully', screen);
 enableNew(screen);
