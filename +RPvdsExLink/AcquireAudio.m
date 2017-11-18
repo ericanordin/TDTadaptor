@@ -32,7 +32,7 @@ end
 fs = RP.GetSFreq(); %Returns sampling frequency
 
 filePathF32 = recordObj.wavName(1:end-3);
-filePathF32 = [filePathF32 'F32'];
+filePathF32 = [filePathF32 'I16'];
 
 fnoise = fopen(filePathF32, 'w');
 
