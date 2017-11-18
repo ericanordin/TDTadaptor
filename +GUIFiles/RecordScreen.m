@@ -64,8 +64,8 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         %HideWindow: Makes window invisible
         %GetRecordTime: Interfaces between the recordObj.recordTime variable and the
         %recordTimeEditable field.
-        %GetBitDepth: Interfaces between the recObj.bitDepth variable and
-        %the bitDepthSelect pop up menu.
+        %SelectBitDepth: Interfaces between the recordObj.bitDepth variable and
+        %bitDepthGroup.
         
         %DeselectOnEnter: Changes location of the cursor away from the
         %currently selected edit field.
@@ -121,16 +121,16 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 'HorizontalAlignment', 'left');
             
             this.bitDepthGroup = uibuttongroup('Units', 'pixels', ...
-                'Position', [150 690 110 90]);
+                'Position', [150 690 110 90], 'SelectionChangedFcn', ...
+                @SelectBitDepth);
             
             this.bitButton32 = uicontrol(this.bitDepthGroup, 'Style',...
                 'radiobutton', 'String', '32 bit', 'Position', ...
-                [15 50 100 30], 'FontSize', 10);
+                [15 50 100 30], 'FontSize', 10, 'Tag', '32bitButton');
             
-            this.bitButton16 = uicontrol(this.bitDepthGroup, 'Style',... 
+            this.bitButton16 = uicontrol(this.bitDepthGroup, 'Style',...
                 'radiobutton', 'String', '16 bit', 'Position', ...
-                [15 10 100 30], 'FontSize', 10);
-            
+                [15 10 100 30], 'FontSize', 10, 'Tag', '16bitButton');
             
             uicontrol('Style', 'text', 'Position', [50 650 200 20],...
                 'String', 'Continous Record', 'HorizontalAlignment',...
@@ -231,7 +231,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 import StandardFunctions.setNameAuto;
                 import StandardFunctions.checkValidName;
                 
-                originalLab = this.labName; 
+                originalLab = this.labName;
                 originalPath = this.startingPathway;
                 
                 try
@@ -317,6 +317,24 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 set(this.timeChangingDisplay, 'String', this.timeRemaining);
             end
             
+            function SelectBitDepth(source, ~)
+                if strcmp('32bitButton', source.SelectedObject.Tag)
+                    bitValue = 32;
+                else
+                    if strcmp('16bitButton', source.SelectedObject.Tag)
+                        bitValue = 16;
+                    else
+                        bitValue = NaN;
+                        disp('Problem with bit depth selection');
+                    end
+                end
+                
+                try
+                    updateBitVariables(this.recordObj, bitValue);
+                catch
+                    disp('Bit variable updates failed');
+                end
+            end
             
             function DeselectOnEnter(~, eventdata)
                 if strcmp(eventdata.Key, 'return')
