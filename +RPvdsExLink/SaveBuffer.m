@@ -15,7 +15,7 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
     % read segment A
     %See pdf pg 58 for ReadRagVEX
     %May only be able to store data in 16-bit or 32-bit
-    noise = RP.ReadTagVEX('dataout', 0, buffObj.bufpts, 'F32', 'F32', 1);
+    noise = RP.ReadTagVEX('dataout', 0, buffObj.bufpts, 'I16', 'I16', 1);
     if buffObj.totalReps == 0
         %disp('In first rep check');
         gettingSound = 0;
@@ -37,7 +37,7 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
             %Throw error
         end
     end
-    fwrite(fnoise,noise,'float32');
+    fwrite(fnoise,noise,'int16');
     buffObj.builtBuffer(1, (1 + chunkRep*buffObj.bufpts):(buffObj.bufpts + buffObj.bufpts*chunkRep)) = noise(1:buffObj.bufpts);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
     %pdf pg 66: SendSrcFile. May be necessary for .wav
@@ -59,8 +59,8 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
     
     % read segment B
     
-    noise = RP.ReadTagVEX('dataout', buffObj.bufpts, buffObj.bufpts, 'F32', 'F32', 1);
-    fwrite(fnoise,noise,'float32');
+    noise = RP.ReadTagVEX('dataout', buffObj.bufpts, buffObj.bufpts, 'I16', 'I16', 1);
+    fwrite(fnoise,noise,'int16');
     buffObj.builtBuffer(1, (1 + chunkRep*buffObj.bufpts):(buffObj.bufpts + buffObj.bufpts*chunkRep)) = noise(1:buffObj.bufpts);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
     

@@ -78,10 +78,10 @@ fclose(fnoise);
 
 %Conversion from .f32 to .wav
 F32Complete = fopen(filePathF32, 'r');
-totalSound = fread(F32Complete, '*float32');
+totalSound = fread(F32Complete, '*int16');
 addToStatus('Saving...', screen);
 pause(0.01);
-audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 32);
+audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', 16);
 
 fclose(F32Complete);
 delete(filePathF32);
