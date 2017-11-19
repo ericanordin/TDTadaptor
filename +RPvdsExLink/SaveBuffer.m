@@ -17,7 +17,7 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
     %See pdf pg 58 for ReadRagVEX
     %May only be able to store data in 16-bit or 32-bit
     noise = RP.ReadTagVEX('dataout', 0, buffObj.bufpts, ...
-        'F32', recordObj.binaryFormat, 1);
+        recordObj.binaryFormat, recordObj.binaryFormat, 1);
     if buffObj.totalReps == 0
         %disp('In first rep check');
         gettingSound = 0;
@@ -62,7 +62,7 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
     % read segment B
     
     noise = RP.ReadTagVEX('dataout', buffObj.bufpts, buffObj.bufpts, ...
-        'F32', recordObj.binaryFormat, 1);
+        recordObj.binaryFormat, recordObj.binaryFormat, 1);
     fwrite(fnoise, noise, recordObj.valuePrecision);
     buffObj.builtBuffer(1, (1 + chunkRep*buffObj.bufpts):(buffObj.bufpts + buffObj.bufpts*chunkRep)) = noise(1:buffObj.bufpts);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);

@@ -31,6 +31,25 @@ end
 
 fs = RP.GetSFreq(); %Returns sampling frequency
 
+dataType = RP.GetTagType('dataout');
+
+switch dataType
+    case 68
+        addToStatus('Data Type: Data Buffer', screen);
+    case 73
+        addToStatus('Data Type: Integer', screen);
+    case 78
+        addToStatus('Data Type: Logical', screen);
+    case 83
+        addToStatus('Data Type: Float(Single)', screen);
+    case 80
+        addToStatus('Data Type: Coefficient Buffer', screen);
+    case 65
+        addToStatus('Data Type Undefined', screen);
+    otherwise
+        addToStatus('Problem reading data type', screen);
+end
+
 binaryFilePath = recordObj.wavName(1:end-3);
 binaryFilePath = [binaryFilePath recordObj.binaryFormat];
 
