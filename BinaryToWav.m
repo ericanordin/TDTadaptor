@@ -7,6 +7,7 @@ function BinaryToWav()
 
 fullPath = strcat(filePath, fileName);
 [~, ~, ext] = fileparts(fullPath);
+disp(ext);
 if strcmp(ext, '.I16')
     bits = 16;
     precision = '*int16';
