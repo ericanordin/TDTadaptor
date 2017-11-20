@@ -31,6 +31,8 @@ end
 
 fs = RP.GetSFreq(); %Returns sampling frequency
 
+%dataType = Data buffer
+%{
 dataType = RP.GetTagType('dataout');
 
 switch dataType
@@ -49,6 +51,7 @@ switch dataType
     otherwise
         addToStatus('Problem reading data type', screen);
 end
+%}
 
 binaryFilePath = recordObj.wavName(1:end-3);
 binaryFilePath = [binaryFilePath recordObj.binaryFormat];
