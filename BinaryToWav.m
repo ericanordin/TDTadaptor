@@ -23,9 +23,19 @@ else
     return;
 end
 
+gui = figure('Name', 'Choose Bit Depth', 'NumberTitle', 'off', ...
+    'Position', [100 100 550 400], 'Toolbar', 'none', 'Menubar', ...
+    'none', 'Resize', 'off');
+uicontrol('Style', 'pushbutton', 'Position', [40 40 100 100], ...
+    'String', '32 bit int', 'Callback', {@Selection, 32});
+uicontrol('Style', 'pushbutton', 'Position', [40 40 250 100], ...
+    'String', '24 bit float', 'Callback', {@Selection, 24});
+uicontrol('Style', 'pushbutton', 'Position', [40 40 400 100], ...
+    'String', '16 bit float', 'Callback', {@Selection, 16});
+
 Wavfile = erase(fullPath, ext);
 Wavfile = strcat(Wavfile, '.wav');
-disp(Wavfile);
+
 binaryFile = fopen(fullPath, 'r');
 totalSound = fread(binaryFile, precision);
 audiowrite(Wavfile, totalSound, 195312, 'BitsPerSample', bits);
@@ -34,5 +44,9 @@ audiowrite(Wavfile, totalSound, 195312, 'BitsPerSample', bits);
 fclose(binaryFile);
 %delete(fullPath); %Deletes binary file
 msgbox({'Conversion complete.' '.wav file saved.'});
+
+    function bitDepth = Selection (~, ~, choice)
+        bitDepth = choice;
+    end
 end
 
