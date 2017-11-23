@@ -14,7 +14,6 @@ end
 
 fullPath = strcat(filePath, fileName);
 [~, ~, ext] = fileparts(fullPath);
-disp(ext);
 
 if strcmp(ext, '.F32')
     bits = 32;
@@ -23,7 +22,6 @@ else
     msgbox('Error reading file. Conversion not completed.');
     return;
 end
-
 
 Wavfile = erase(fullPath, ext);
 Wavfile = strcat(Wavfile, '.wav');
