@@ -10,15 +10,15 @@ if length(filePath) < 4
     return;
 end
 
-[~,~,ext] = fileparts(filePath);
+[~,localName,ext] = fileparts(filePath);
 directoryPrefix = filePath(2:3);
-preWav = filePath(end-4);
+%preWav = filePath(end-4);
 numFolders = length(strfind(filePath, '\'));
 nameNoExt = erase(filePath, ext);
 binaryName = [nameNoExt, '.F32'];
 
 validName = strcmp(ext, '.wav') && strcmp(directoryPrefix, ':\') ...
-    && ~strcmp(preWav, '\') && numFolders >= 2;
+    && ~strcmp(localName, '\') && numFolders >= 2;
 
 if exist(filePath, 'file') == 2 || exist(binaryName, 'file') == 2 || ~validName
     %Prevent overwrite or invalid path
