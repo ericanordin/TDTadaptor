@@ -22,18 +22,25 @@ else
     return;
 end
 
+willOverwrite = StandardFunctions.checkForWAV(fullPath);
+
+if willOverwrite == 1
+    msgbox('A .wav file with this name already exists. Please move or rename the existing file to prevent overwrite. Conversion cancelled.');
+    return;
+end
+
 Wavfile = erase(fullPath, ext);
 Wavfile = strcat(Wavfile, '.wav');
 
-%try
+try
     guiObj = BinaryToWavGUI();
 
     waitfor(guiObj, 'bitDepth');
     set(guiObj.gui, 'Visible', 'off');
-%catch
-%    msgbox('Bit depth selected ended prematurely. Conversion cancelled.');
-%    return;
-%end
+catch
+    msgbox('Bit depth selected ended prematurely. Conversion cancelled.');
+    return;
+end
 
 if guiObj.bitDepth == 0
     msgbox('Bit depth error. Conversion cancelled.');
