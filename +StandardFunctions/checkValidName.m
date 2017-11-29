@@ -20,7 +20,8 @@ binaryName = [nameNoExt, '.F32'];
 validName = strcmp(ext, '.wav') && strcmp(directoryPrefix, ':\') ...
     && ~strcmp(localName, '\') && numFolders >= 2;
 
-if exist(filePath, 'file') == 2 || exist(binaryName, 'file') == 2 || ~validName
+if StandardFunctions.checkForWAV(filePath) || ...
+        exist(binaryName, 'file') == 2 || ~validName
     %Prevent overwrite or invalid path
     set(displayField, 'BackgroundColor', errorColor);
 else
