@@ -32,15 +32,18 @@ end
 Wavfile = erase(fullPath, ext);
 Wavfile = strcat(Wavfile, '.wav');
 
-try
-    guiObj = BinaryToWavGUI();
 
-    waitfor(guiObj, 'bitDepth');
-    set(guiObj.gui, 'Visible', 'off');
-catch
+guiObj = BinaryToWavGUI();
+
+waitfor(guiObj, 'bitDepth');
+
+if guiObj.bitDepth == -1
     msgbox('Bit depth selected ended prematurely. Conversion cancelled.');
     return;
+else
+    set(guiObj.gui, 'Visible', 'off');
 end
+
 
 if guiObj.bitDepth == 0
     msgbox('Bit depth error. Conversion cancelled.');
