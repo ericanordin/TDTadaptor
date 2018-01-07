@@ -34,6 +34,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
         newRecord; %Resets to directory with no file name.
         bitDepthGroup; %uibuttongroup that offers choice of 32 or 16 bit recording
         bitButton32; %32 bit radio button
+        bitButton24; %24 bit radio button
         bitButton16; %16 bit radio button
         
         %% Variables:
@@ -116,35 +117,39 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                 {@ManualSetName, 'no uigetdir'}, 'KeyPressFcn',...
                 @DeselectOnEnter);
             
-            uicontrol('Style', 'text', 'Position', [50 650 100 100], ...
+            uicontrol('Style', 'text', 'Position', [50 640 100 100], ...
                 'FontSize', 12, 'String', 'Bit Depth', ...
                 'HorizontalAlignment', 'left');
             
             this.bitDepthGroup = uibuttongroup('Units', 'pixels', ...
-                'Position', [150 690 110 90], 'SelectionChangedFcn', ...
+                'Position', [150 660 110 130], 'SelectionChangedFcn', ...
                 @SelectBitDepth);
             
             this.bitButton32 = uicontrol(this.bitDepthGroup, 'Style',...
                 'radiobutton', 'String', '32 bit', 'Position', ...
-                [15 50 100 30], 'FontSize', 10, 'Tag', '32bitButton');
+                [15 90 100 30], 'FontSize', 10, 'Tag', '32bitButton');
+            
+            this.bitButton24 = uicontrol(this.bitDepthGroup, 'Style',...
+                'radiobutton', 'String', '24 bit', 'Position', ...
+                [15 50 100 30], 'FontSize', 10, 'Tag', '24bitButton');
             
             this.bitButton16 = uicontrol(this.bitDepthGroup, 'Style',...
                 'radiobutton', 'String', '16 bit', 'Position', ...
                 [15 10 100 30], 'FontSize', 10, 'Tag', '16bitButton');
             
-            uicontrol('Style', 'text', 'Position', [50 650 200 20],...
+            uicontrol('Style', 'text', 'Position', [50 620 200 20],...
                 'String', 'Continous Record', 'HorizontalAlignment',...
                 'left', 'FontSize', 12);
             
             this.continuousToggle = uicontrol('Style', 'checkbox',...
-                'Position', [240 650 20 20], 'Callback', @TogContinuous);
+                'Position', [240 620 20 20], 'Callback', @TogContinuous);
             
             this.recordTimeLabel = uicontrol('Style', 'Text', 'Position',...
-                [50 600 200 20], 'String', 'Recording Time (s)',...
+                [50 570 200 20], 'String', 'Recording Time (s)',...
                 'HorizontalAlignment', 'left', 'FontSize', 12);
             
             this.recordTimeEditable = uicontrol('Style', 'edit', 'Position',...
-                [215 595 70 25], 'String', this.recordObj.recordTime, 'Callback',...
+                [215 565 70 25], 'String', this.recordObj.recordTime, 'Callback',...
                 @GetRecordTime, 'ButtonDownFcn', @ClearText, 'Enable',...
                 'inactive', 'FontSize', 12);
             
@@ -318,8 +323,21 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             end
             
             function SelectBitDepth(source, ~)
+                import Enums.SaveFormat;
+                switch source.SelectedObject.Tag
+                    case '32bitButton'
+                        bitFormat = SaveFormat.Int32;
+                    case '24bitButton'
+                        bitFormat = SaveFormat.Float24;
+                    case '16bitButton'
+                        bitFormat = SaveFormat.Float16;
+                    otherwise
+                        bitFormat = NaN;
+                        disp('Problem with bit depth selection');
+                end
+                %{
                 if strcmp('32bitButton', source.SelectedObject.Tag)
-                    bitValue = 32;
+                    bitValue = SaveFormat.Int32;
                 else
                     if strcmp('16bitButton', source.SelectedObject.Tag)
                         bitValue = 16;
@@ -328,9 +346,10 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         disp('Problem with bit depth selection');
                     end
                 end
+                %}
                 
                 try
-                    updateBitVariables(this.recordObj, bitValue);
+                    updateBitVariables(this.recordObj, bitFormat);
                 catch
                     disp('Bit variable updates failed');
                 end

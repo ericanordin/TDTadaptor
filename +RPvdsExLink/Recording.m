@@ -28,16 +28,21 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
         end
         
         function updateBitVariables(recordObj, bitValue)
+            import Enums.SaveFormat
             try
             switch bitValue
-                case 32
+                case SaveFormat.Int32
                     recordObj.bitDepth = 32;
-                    recordObj.binaryFormat = 'F32';
-                    recordObj.valuePrecision = 'float32';
-                case 16
+                    recordObj.binaryFormat = 'I32';
+                    recordObj.valuePrecision = 'int32';
+                case SaveFormat.Float24
+                    recordObj.bitDepth = 24;
+                    recordObj.binaryFormat = 'F24';
+                    recordObj.valuePrecision = 'float24';
+                case SaveFormat.Float16
                     recordObj.bitDepth = 16;
-                    recordObj.binaryFormat = 'I16';
-                    recordObj.valuePrecision = 'int16';
+                    recordObj.binaryFormat = 'F16';
+                    recordObj.valuePrecision = 'float16';
                 otherwise
                     errorStruct.identifier = 'Recording:invalidBitDepth';
                     error(errorStruct);
