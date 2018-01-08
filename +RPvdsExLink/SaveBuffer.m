@@ -41,7 +41,9 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
             %Throw error
         end
     end
-    fwrite(fnoise, noise, recordObj.valuePrecision);
+    %fwrite(fnoise, noise, recordObj.valuePrecision);
+    Recording.scaleAndSave(fnoise, noise, recordObj);
+    
     buffObj.builtBuffer(1, (1 + chunkRep*buffObj.bufpts):(buffObj.bufpts + buffObj.bufpts*chunkRep)) = noise(1:buffObj.bufpts);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
     %pdf pg 66: SendSrcFile. May be necessary for .wav
@@ -67,7 +69,8 @@ while chunkRep < buffObj.buffLength*buffObj.bufsPerSec
     %    recordObj.readFormat, recordObj.readFormat, 1);
     noise = RP.ReadTagVEX('dataout', buffObj.bufpts, buffObj.bufpts, ...
         recordObj.readFormat, recordObj.readFormat, 1);
-    fwrite(fnoise, noise, recordObj.valuePrecision);
+    %fwrite(fnoise, noise, recordObj.valuePrecision);
+    Recording.scaleAndSave(fnoise, noise, recordObj);
     buffObj.builtBuffer(1, (1 + chunkRep*buffObj.bufpts):(buffObj.bufpts + buffObj.bufpts*chunkRep)) = noise(1:buffObj.bufpts);
     %disp(['Wrote ' num2str(fwrite(fnoise,noise,'float32')) ' points to file']);
     
