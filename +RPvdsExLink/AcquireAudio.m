@@ -53,8 +53,10 @@ switch dataType
 end
 %}
 
-binaryFilePath = recordObj.wavName(1:end-3);
-binaryFilePath = [binaryFilePath recordObj.binaryFormat];
+[directory, local, ~] = fileparts(recordObj.wavName);
+binaryFilePath = [directory '\' local];
+%binaryFilePath = recordObj.wavName(1:end-3);
+binaryFilePath = [binaryFilePath '.' recordObj.binaryFormat];
 
 fnoise = fopen(binaryFilePath, 'w');
 
@@ -103,6 +105,27 @@ binaryFile = fopen(binaryFilePath, 'r');
 totalSound = fread(binaryFile, ['*' recordObj.valuePrecision]);
 addToStatus('Saving...', screen);
 pause(0.01);
+if strcmp(recordObj.IorF, 'I')
+    %Save as int. Convert to relevant range.
+    try
+    switch recordObj.bitDepth
+        case 16
+        %Ranges -32768 to +32767
+        totalSound = int16(32767*totalSound);
+        case 32
+        %Ranges -2^31 to 2^32-1
+        totalSound = int32(2^31*totalSound);
+        
+        otherwise
+            addToStatus('Invalid .wav format. Conversion cancelled; .F32 file saved.');
+            errorStruct.identifier = 'Recording:invalidWavFormat';
+            error(errorStruct);
+    end
+    catch ME
+        rethrow ME;
+    end
+end
+    
 audiowrite(recordObj.wavName, totalSound, floor(fs), 'BitsPerSample', ...
     recordObj.bitDepth);
 
