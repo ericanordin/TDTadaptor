@@ -13,6 +13,9 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
         bitDepth; %32 or 16 bit recording
         binaryFormat; %Storage format
         valuePrecision; %Specifies data type for MATLAB functions
+        reductionFactor; %What number to divide the values by to get them within +/-1 
+        readFormat; %Format that data is read from the buffer
+        %readPrecision; %Precision that data is read from the buffer
         
     end
     
@@ -23,8 +26,11 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
             this.recordTime = 12*60;
             this.continuous = 0;
             this.bitDepth = 32;
-            this.binaryFormat = 'F32';
-            this.valuePrecision = 'float32';
+            this.binaryFormat = 'I32';
+            this.valuePrecision = 'int32';
+            this.reductionFactor = 10; %Values range +/-10 during entry
+            this.readFormat = 'F32';
+            %this.readPrecision = 'float32';
         end
         
         function updateBitVariables(recordObj, bitValue)
@@ -51,6 +57,22 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
                 rethrow ME;
             end
             
+        end
+        
+        function scaleAndSave(fnoise, noise, recordObj)
+           scaledNoise = noise./recordObj.reductionFactor;
+           switch recordObj.valuePrecision
+               case 'int32'
+                   scaledNoise = int32(2^31*scaledNoise);
+               case 'float24'
+                   %Do nothing
+                   %scaledNoise = 
+               case 'float16'
+                   %Do nothing
+               otherwise
+                   %Throw error
+           end
+            fwrite(fnoise, scaledNoise, recordObj.valuePrecision);
         end
     end
     
