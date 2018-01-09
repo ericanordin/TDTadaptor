@@ -32,7 +32,7 @@ classdef Recording < handle & matlab.mixin.SetGetExactNames
             this.reductionFactor = 10; %Values range +/-10 during entry
             this.readFormat = 'F32';
             %this.readPrecision = 'float32';
-            this.IorF = 'F';
+            this.IorF = 'I';
         end
         
         function updateBitVariables(recordObj, bitValue)
