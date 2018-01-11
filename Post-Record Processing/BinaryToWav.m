@@ -29,9 +29,6 @@ if willOverwrite == 1
     return;
 end
 
-Wavfile = erase(fullPath, ext);
-Wavfile = strcat(Wavfile, '.wav');
-
 
 guiObj = BinaryToWavGUI();
 
@@ -49,6 +46,12 @@ if guiObj.bitDepth == 0
     msgbox('Bit depth error. Conversion cancelled.');
     return;
 end
+
+Wavfile = erase(fullPath, ext);
+Wavfile = strcat(Wavfile, '_');
+Wavfile = strcat(Wavfile, num2str(guiObj.bitDepth));
+Wavfile = strcat(Wavfile, 'bit');
+Wavfile = strcat(Wavfile, '.wav');
 
 binaryFile = fopen(fullPath, 'r');
 totalSound = fread(binaryFile, precision);
