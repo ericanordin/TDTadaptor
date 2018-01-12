@@ -55,6 +55,12 @@ Wavfile = strcat(Wavfile, '.wav');
 
 binaryFile = fopen(fullPath, 'r');
 totalSound = fread(binaryFile, precision);
+
+if guiObj.bitDepth == 32
+    %Adjust range for int instead of float
+    %Ranges -2^31 to 2^32-1
+    totalSound = int32(2^31*totalSound);
+end
 audiowrite(Wavfile, totalSound, 195312, 'BitsPerSample', guiObj.bitDepth);
 %195312 is the frequency for the TDT
 
