@@ -32,31 +32,8 @@ end
 
 fs = RP.GetSFreq(); %Returns sampling frequency
 
-%dataType = Data buffer
-%{
-dataType = RP.GetTagType('dataout');
-
-switch dataType
-    case 68
-        addToStatus('Data Type: Data Buffer', screen);
-    case 73
-        addToStatus('Data Type: Integer', screen);
-    case 78
-        addToStatus('Data Type: Logical', screen);
-    case 83
-        addToStatus('Data Type: Float(Single)', screen);
-    case 80
-        addToStatus('Data Type: Coefficient Buffer', screen);
-    case 65
-        addToStatus('Data Type Undefined', screen);
-    otherwise
-        addToStatus('Problem reading data type', screen);
-end
-%}
-
 [directory, local, ~] = fileparts(recordObj.wavName);
 binaryFilePath = [directory '\' local];
-%binaryFilePath = recordObj.wavName(1:end-3);
 binaryFilePath = [binaryFilePath '.' recordObj.binaryFormat];
 
 fnoise = fopen(binaryFilePath, 'w');
@@ -108,7 +85,7 @@ addToStatus('Saving...', screen);
 pause(0.01);
 
 try
-    totalSound = Enums.SaveFormat.scaleForFormat(guiObj.bitDepth, totalSound);
+    totalSound = Enums.SaveFormat.scaleForFormat(recordObj.bitDepth, totalSound);
 catch ME
     addToStatus('Invalid .wav format. Conversion cancelled; .F32 file saved.');
     rethrow ME;

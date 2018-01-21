@@ -10,11 +10,11 @@ classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
     methods(Static)
         function sound = scaleForFormat(bitDepth, sound)
             switch bitDepth
-                case bitDepth == 16
+                case 16
                     %Float; do nothing
-                case bitDepth == 24
+                case 24
                     %Float; do nothing
-                case bitDepth == 32
+                case 32
                     %Adjust range for int instead of float
                     %Ranges -2^31 to 2^32-1
                     sound = int32(2^31*sound);
