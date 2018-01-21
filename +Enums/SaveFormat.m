@@ -1,4 +1,4 @@
-classdef SaveFormat
+classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
     %SAVEFORMAT Defines enumeration for the different enabled WAV save formats.
     enumeration
         Int32, Float24, Float16
@@ -7,7 +7,23 @@ classdef SaveFormat
     properties
     end
     
-    methods
+    methods(Static)
+        function sound = scaleForFormat(bitDepth, sound)
+            switch bitDepth
+                case bitDepth == 16
+                    %Float; do nothing
+                case bitDepth == 24
+                    %Float; do nothing
+                case bitDepth == 32
+                    %Adjust range for int instead of float
+                    %Ranges -2^31 to 2^32-1
+                    sound = int32(2^31*sound);
+                otherwise
+                    errorStruct.identifier = 'Recording:invalidWavFormat';
+                    error(errorStruct);
+            end
+            
+        end
     end
     
 end

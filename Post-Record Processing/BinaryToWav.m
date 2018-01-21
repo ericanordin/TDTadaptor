@@ -4,6 +4,11 @@ function BinaryToWav()
 %Does not delete binary file to prevent data loss; deletion must be done by
 %user
 
+%import TDTadaptor.Enums.SaveFormat
+%L = import
+import Enums.SaveFormat
+%Enums.SaveFormat.test(3);
+
 [fileName, filePath, ~] = uigetfile('*.f32', ...
     'Select binary file');
 
@@ -56,11 +61,23 @@ Wavfile = strcat(Wavfile, '.wav');
 binaryFile = fopen(fullPath, 'r');
 totalSound = fread(binaryFile, precision);
 
+%{
 if guiObj.bitDepth == 32
     %Adjust range for int instead of float
     %Ranges -2^31 to 2^32-1
     totalSound = int32(2^31*totalSound);
 end
+%}
+
+try
+    totalSound = Enums.SaveFormat.scaleForFormat(guiObj.bitDepth, totalSound);
+catch ME
+    msgbox('Scaling error. Conversion cancelled.');
+    return;
+end
+
+
+
 audiowrite(Wavfile, totalSound, 195312, 'BitsPerSample', guiObj.bitDepth);
 %195312 is the frequency for the TDT
 
