@@ -30,10 +30,12 @@ waitfor(guiObj, 'bitDepth');
 
 switch guiObj.bitDepth
     case -1
-        msgbox('Bit depth selected ended prematurely. Conversion cancelled.');
+        msgbox('Bit depth selection ended prematurely. Conversion cancelled.');
+        delete(guiObj);
         return;
     case 0
         msgbox('Bit depth error. Conversion cancelled.');
+        delete(guiObj);
         return;
     otherwise
         set(guiObj.gui, 'Visible', 'off');
@@ -50,6 +52,7 @@ willOverwrite = StandardFunctions.checkForWAV(Wavfile);
 
 if willOverwrite == 1
     msgbox('A .wav file with this name already exists. Please move or rename the existing file to prevent overwrite. Conversion cancelled.');
+    delete(guiObj);
     return;
 end
 
@@ -60,6 +63,8 @@ try
     totalSound = Enums.SaveFormat.scaleForFormat(guiObj.bitDepth, totalSound);
 catch
     msgbox('Scaling error. Conversion cancelled.');
+    fclose(binaryFile);
+    delete(guiObj);
     return;
 end
 

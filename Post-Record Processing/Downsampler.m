@@ -17,24 +17,30 @@ fullPath = strcat(filePath, fileName);
 
 fileInfo = audioinfo(fullPath);
 
-%guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
-
-%waitfor(guiObj, 'bitDepthNew');
-
-%{
-if guiObj.bitDepth == -1
-    msgbox('Bit depth selected ended prematurely. Conversion cancelled.');
-    return;
-else
-    set(guiObj.gui, 'Visible', 'off');
-end
-
-
-if guiObj.bitDepth == 0
-    msgbox('Bit depth error. Conversion cancelled.');
+try
+guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
+catch
+    msgbox('Input bit depth not recognized. Conversion cancelled.');
     return;
 end
-%}
+
+waitfor(guiObj, 'bitDepthNew');
+
+switch guiObj.bitDepthNew
+    case 16
+        delete(guiObj);
+        return;
+    case -1
+        msgbox('Bit depth selection ended prematurely. Conversion cancelled.');
+        delete(guiObj);
+        return;
+    case 0
+        msgbox('Bit depth error. Conversion cancelled.');
+        delete(guiObj);
+        return;
+    otherwise
+        set(guiObj.gui, 'Visible', 'off');
+end
 
 newWav = erase(fullPath, ext);
 newWav = strcat(newWav, '_');
