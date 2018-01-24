@@ -28,16 +28,15 @@ guiObj = BinaryToWavGUI();
 
 waitfor(guiObj, 'bitDepth');
 
-if guiObj.bitDepth == -1
-    msgbox('Bit depth selected ended prematurely. Conversion cancelled.');
-    return;
-else
-    set(guiObj.gui, 'Visible', 'off');
-end
-
-if guiObj.bitDepth == 0
-    msgbox('Bit depth error. Conversion cancelled.');
-    return;
+switch guiObj.bitDepth
+    case -1
+        msgbox('Bit depth selected ended prematurely. Conversion cancelled.');
+        return;
+    case 0
+        msgbox('Bit depth error. Conversion cancelled.');
+        return;
+    otherwise
+        set(guiObj.gui, 'Visible', 'off');
 end
 
 Wavfile = erase(fullPath, ext);

@@ -24,6 +24,8 @@ classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
             end
             
         end
+        
+        %function sound = scaleForDownsample(
     end
     
 end

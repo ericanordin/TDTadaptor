@@ -17,10 +17,9 @@ fullPath = strcat(filePath, fileName);
 
 fileInfo = audioinfo(fullPath);
 
-%guiObj = BinaryToWavGUI();
-%Pass BitsPerSample
+%guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
 
-%waitfor(guiObj, 'bitDepth');
+%waitfor(guiObj, 'bitDepthNew');
 
 %{
 if guiObj.bitDepth == -1
