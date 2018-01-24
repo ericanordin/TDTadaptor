@@ -24,13 +24,6 @@ else
     return;
 end
 
-willOverwrite = StandardFunctions.checkForWAV(fullPath);
-
-if willOverwrite == 1
-    msgbox('A .wav file with this name already exists. Please move or rename the existing file to prevent overwrite. Conversion cancelled.');
-    return;
-end
-
 guiObj = BinaryToWavGUI();
 
 waitfor(guiObj, 'bitDepth');
@@ -52,6 +45,14 @@ Wavfile = strcat(Wavfile, '_');
 Wavfile = strcat(Wavfile, num2str(guiObj.bitDepth));
 Wavfile = strcat(Wavfile, 'bit');
 Wavfile = strcat(Wavfile, '.wav');
+
+
+willOverwrite = StandardFunctions.checkForWAV(Wavfile);
+
+if willOverwrite == 1
+    msgbox('A .wav file with this name already exists. Please move or rename the existing file to prevent overwrite. Conversion cancelled.');
+    return;
+end
 
 binaryFile = fopen(fullPath, 'r');
 totalSound = fread(binaryFile, precision);
