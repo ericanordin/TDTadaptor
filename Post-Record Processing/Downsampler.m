@@ -17,17 +17,25 @@ fullPath = strcat(filePath, fileName);
 
 fileInfo = audioinfo(fullPath);
 
-try
+%disp(fileInfo.BitsPerSample);
+%guiObj = 0;
+%try
+%    disp('tried');
 guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
-catch
-    msgbox('Input bit depth not recognized. Conversion cancelled.');
-    return;
-end
+%catch
+  %  msgbox('Input bit depth not recognized. Conversion cancelled.');
+   % delete(guiObj);
+ %   return;
+%end
 
 waitfor(guiObj, 'bitDepthNew');
 
 switch guiObj.bitDepthNew
     case 16
+        delete(guiObj);
+        return;
+    case -2
+        msgbox('Input bit depth not recognized. Conversion cancelled.');
         delete(guiObj);
         return;
     case -1
@@ -44,7 +52,7 @@ end
 
 newWav = erase(fullPath, ext);
 newWav = strcat(newWav, '_');
-newWav = strcat(newWav, num2str(guiObj.bitDepth));
+newWav = strcat(newWav, num2str(guiObj.bitDepthNew));
 newWav = strcat(newWav, 'bit');
 newWav = strcat(newWav, '.wav');
 
@@ -53,17 +61,18 @@ willOverwrite = StandardFunctions.checkForWAV(newWav);
 
 if willOverwrite == 1
     msgbox('A .wav file with this name already exists. Please move or rename the existing file to prevent overwrite. Conversion cancelled.');
+    delete(guiObj);
     return;
 end
 
 [data, sampleRate] = audioread(fullPath, 'native');
 
-%Convert data
-%totalSound = ...
+%Convert data to appropriate int/float format
+totalSound = scaleForDownsample(fileInfo.BitsPerSample, data);
 
-audiowrite(Wavfile, totalSound, sampleRate, 'BitsPerSample', guiObj.bitDepth);
+audiowrite(Wavfile, totalSound, sampleRate, 'BitsPerSample', guiObj.bitDepthNew);
 
-%delete(guiObj);
+delete(guiObj);
 msgbox({'Conversion complete.' '.wav file saved.'});
 
 
