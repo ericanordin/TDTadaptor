@@ -17,7 +17,7 @@ end
 fullPath = strcat(filePath, fileName);
 [~, ~, ext] = fileparts(fullPath);
 
-if strcmp(ext, '.F32')
+if strcmp(ext, '.F32') %Confirms binary file
     precision = '*float32';
 else
     msgbox('Error reading file. Conversion not completed.');
@@ -39,14 +39,15 @@ switch guiObj.bitDepth
         return;
     otherwise
         set(guiObj.gui, 'Visible', 'off');
+        %Proceed with conversion
 end
 
+% Name new audio file
 Wavfile = erase(fullPath, ext);
 Wavfile = strcat(Wavfile, '_');
 Wavfile = strcat(Wavfile, num2str(guiObj.bitDepth));
 Wavfile = strcat(Wavfile, 'bit');
 Wavfile = strcat(Wavfile, '.wav');
-
 
 willOverwrite = StandardFunctions.checkForWAV(Wavfile);
 
@@ -56,10 +57,11 @@ if willOverwrite == 1
     return;
 end
 
+%Load data:
 binaryFile = fopen(fullPath, 'r');
 totalSound = fread(binaryFile, precision);
 
-try
+try %Scale for float/int
     totalSound = Enums.SaveFormat.scaleForFormat(guiObj.bitDepth, totalSound);
 catch
     msgbox('Scaling error. Conversion cancelled.');
@@ -73,7 +75,6 @@ audiowrite(Wavfile, totalSound, 195312, 'BitsPerSample', guiObj.bitDepth);
 
 fclose(binaryFile);
 delete(guiObj);
-%delete(fullPath); %Deletes binary file
 msgbox({'Conversion complete.' '.wav file saved.'});
 
 end

@@ -2,8 +2,6 @@ function Downsampler()
 %Downsampler copies a .wav file to a lower bit depth.
 %   Does not delete original file for data conservation.
 
-import Enums.SaveFormat
-
 [fileName, filePath, ~] = uigetfile('*.wav', ...
     'Select file to downsample');
 
@@ -17,21 +15,13 @@ fullPath = strcat(filePath, fileName);
 
 fileInfo = audioinfo(fullPath);
 
-%disp(fileInfo.BitsPerSample);
-%guiObj = 0;
-%try
-%    disp('tried');
 guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
-%catch
-  %  msgbox('Input bit depth not recognized. Conversion cancelled.');
-   % delete(guiObj);
- %   return;
-%end
 
-waitfor(guiObj, 'bitDepthNew');
+waitfor(guiObj, 'guiComplete', 1);
 
 switch guiObj.bitDepthNew
-    case 16
+    case -3
+        msgbox('The file is already at the lowest bit depth (16 bit) and cannot be converted.');
         delete(guiObj);
         return;
     case -2
@@ -48,14 +38,15 @@ switch guiObj.bitDepthNew
         return;
     otherwise
         set(guiObj.gui, 'Visible', 'off');
+        %Continue with conversion
 end
 
+%Create new file name
 newWav = erase(fullPath, ext);
 newWav = strcat(newWav, '_');
 newWav = strcat(newWav, num2str(guiObj.bitDepthNew));
 newWav = strcat(newWav, 'bit');
 newWav = strcat(newWav, '.wav');
-
 
 willOverwrite = StandardFunctions.checkForWAV(newWav);
 
@@ -68,9 +59,9 @@ end
 [data, sampleRate] = audioread(fullPath, 'native');
 
 %Convert data to appropriate int/float format
-totalSound = scaleForDownsample(fileInfo.BitsPerSample, data);
+totalSound = Enums.SaveFormat.scaleForDownsample(fileInfo.BitsPerSample, data);
 
-audiowrite(Wavfile, totalSound, sampleRate, 'BitsPerSample', guiObj.bitDepthNew);
+audiowrite(newWav, totalSound, sampleRate, 'BitsPerSample', guiObj.bitDepthNew);
 
 delete(guiObj);
 msgbox({'Conversion complete.' '.wav file saved.'});

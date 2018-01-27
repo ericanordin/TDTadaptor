@@ -8,6 +8,12 @@ classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
     end
     
     methods(Static)
+        %% Function Descriptions:
+        %scaleForFormat: Used in AcquireAudio for float/int
+        %scaleForDownSample: Used in Downsampler for float/int
+        
+        %% Function Code:
+        
         function sound = scaleForFormat(bitDepth, sound)
             %Adjusts between float and int for approprate save format for
             %conversion from binary file to WAV.
@@ -33,8 +39,10 @@ classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
             switch bitDepthLoaded
                 case 16
                     %Float; do nothing
+                    soundReduced = sound;
                 case 24
                     %Float; do nothing
+                    soundReduced = sound;
                 case 32
                     %Convert int (-2^31 to 2^32-1) to float (-1 to +1)
                     sound = double(sound);

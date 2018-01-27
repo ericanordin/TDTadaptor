@@ -3,8 +3,8 @@ classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
     %program
     
     properties
-        bitDepth;
-        gui;
+        bitDepth; %Desired bit depth for .wav file being produced
+        gui; %Figure
     end
     
     methods
@@ -26,7 +26,7 @@ classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
             
             function close(src, ~)
                 set(src, 'Visible', 'off');
-                this.bitDepth = -1;
+                this.bitDepth = -1; %Causes program to exit
             end
         end
     end

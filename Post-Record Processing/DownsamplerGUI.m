@@ -1,17 +1,22 @@
 classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
     %DownsamplerGUI allows selection of appropriate bit depth.
-    %   Detailed explanation goes here
+    %   Assumes the bit depths available are 16, 24, and 32
     
     properties
-        bitDepthOriginal;
-        bitDepthNew;
+        %% Figures:
         gui;
+        
+        %% Variables:
+        bitDepthOriginal; %Bit depth of file opened for conversion
+        bitDepthNew; %Desired bit depth of new file
+        guiComplete; %Binary; indicates whether the selection process has been completed
     end
     
     methods
         function this = DownsamplerGUI(openedBit)
             this.bitDepthOriginal = openedBit;
             this.bitDepthNew = 0;
+            this.guiComplete = 0;
             
             this.gui = figure('Name', 'Choose Bit Depth', 'NumberTitle', 'off', ...
                 'Position', [500 500 320 180], 'Toolbar', 'none', 'Menubar', ...
@@ -33,30 +38,33 @@ classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
                     set(this.gui, 'Visible', 'on');
                     
                 case 24
-                    uicontrol('Style', 'text', 'Position', [50 150 200 100],...
+                    uicontrol('Style', 'text', 'Position', [50 140 220 30],...
                         'String', ...
                         'You have imported a 24 bit float file. Would you like to convert to a 16 bit float?');
                         
                     uicontrol('Style', 'pushbutton', 'Position',...
                         [40 30 100 100], 'String', 'Yes', ...
                         'Callback', {@Selection, 16});
-                    uicontrol('Style', 'Style', 'pushbutton', 'Position', ...
+                    uicontrol('Style', 'pushbutton', 'Position', ...
                         [180 30 100 100], 'String', 'No', ...
                         'Callback', {@Selection, -1});
                     set(this.gui, 'Visible', 'on');
                 case 16
-                    msgbox('The file is already at the lowest bit depth (16 bit) and cannot be converted.');
+                    Selection(0,0,-3); 
+                    %Cannot be scaled down, causes program to exit
                 otherwise
-                    this.bitDepthNew = -2;
+                    Selection(0,0,-2); %Causes program to exit
             end
             
             function Selection (~, ~, choice)
                 this.bitDepthNew = choice;
+                this.guiComplete = 1;
             end
             
             function close(src, ~)
                 set(src, 'Visible', 'off');
-                this.bitDepthNew = -1;
+                this.bitDepthNew = -1; %Causes program to exit
+                this.guiComplete = 1;
             end
         end
     end
