@@ -1,6 +1,8 @@
 function BinaryToWav()
-%BinaryToWave converts .f32 files to .wav in the case of program crash before
+%BinaryToWav converts .f32 files to .wav in the case of program crash before
 %the conversion has occurred in AcquireAudio.
+%Users are offered the choice for the bit depth of the WAVE file identical
+%to the choices offered in the primary recording program
 %Does not delete binary file to prevent data loss; deletion must be done by
 %user
 
@@ -9,7 +11,7 @@ import Enums.SaveFormat
 [fileName, filePath, ~] = uigetfile('*.f32', ...
     'Select binary file');
 
-if fileName == 0
+if fileName == 0 %Binary file select window closed
     msgbox('Error reading file. Conversion not completed.');
     return;
 end
@@ -29,11 +31,11 @@ guiObj = BinaryToWavGUI();
 waitfor(guiObj, 'bitDepth');
 
 switch guiObj.bitDepth
-    case -1
+    case -1 %Figure  closed before selection
         msgbox('Bit depth selection ended prematurely. Conversion cancelled.');
         delete(guiObj);
         return;
-    case 0
+    case 0 %Program didn't wait for bitDepth to change
         msgbox('Bit depth error. Conversion cancelled.');
         delete(guiObj);
         return;
@@ -42,7 +44,9 @@ switch guiObj.bitDepth
         %Proceed with conversion
 end
 
-% Name new audio file
+% Name new audio file. Appends bit depth to the end of the file.
+% Eg if file.F32 is selected for saving as 16-bit, the new file will be
+% named file_16bit.wav
 Wavfile = erase(fullPath, ext);
 Wavfile = strcat(Wavfile, '_');
 Wavfile = strcat(Wavfile, num2str(guiObj.bitDepth));
