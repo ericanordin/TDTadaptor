@@ -66,7 +66,7 @@ binaryFile = fopen(fullPath, 'r');
 totalSound = fread(binaryFile, precision);
 
 try %Scale for float/int
-    totalSound = Enums.SaveFormat.scaleForFormat(guiObj.bitDepth, totalSound);
+    totalSound = Enums.SaveFormat.scaleForFormat(guiObj.enum, totalSound);
 catch
     msgbox('Scaling error. Conversion cancelled.');
     fclose(binaryFile);
