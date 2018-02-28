@@ -1,4 +1,4 @@
-classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
+ classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
     %DownsamplerGUI allows selection of appropriate bit depth.
     %   Assumes the bit depths available are 16, 24, and 32
     
@@ -9,13 +9,16 @@ classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
         %% Variables:
         bitDepthOriginal; %Bit depth of file opened for conversion
         bitDepthNew; %Desired bit depth of new file
+        enumNew; %SaveFormat enum for new file
         guiComplete; %Binary; indicates whether the selection process has been completed
     end
     
     methods
         function this = DownsamplerGUI(openedBit)
+            import Enums.SaveFormat
             this.bitDepthOriginal = openedBit;
             this.bitDepthNew = 0;
+            this.enumNew = 0;
             this.guiComplete = 0;
             
             this.gui = figure('Name', 'Choose Bit Depth', 'NumberTitle', 'off', ...
@@ -27,24 +30,24 @@ classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
                 case 32
                     uicontrol('Style', 'text', 'Position', [50 140 220 30],...
                         'String', ...
-                        'You have imported a 32 bit int file. What format would you like to convert to?');
+                        'You have imported a 32 bit file. What format would you like to convert to?');
                         
                     uicontrol('Style', 'pushbutton', 'Position',...
                         [40 30 100 100], 'String', '24 bit float', ...
-                        'Callback', {@Selection, 24});
+                        'Callback', {@Selection, SaveFormat.Float24});
                     uicontrol('Style', 'pushbutton', 'Position', ...
                         [180 30 100 100], 'String', '16 bit float', ...
-                        'Callback', {@Selection, 16});
+                        'Callback', {@Selection, SaveFormat.Float16});
                     set(this.gui, 'Visible', 'on');
                     
                 case 24
                     uicontrol('Style', 'text', 'Position', [50 140 220 30],...
                         'String', ...
-                        'You have imported a 24 bit float file. Would you like to convert to a 16 bit float?');
+                        'You have imported a 24 bit file. Would you like to convert to a 16 bit float?');
                         
                     uicontrol('Style', 'pushbutton', 'Position',...
                         [40 30 100 100], 'String', 'Yes', ...
-                        'Callback', {@Selection, 16});
+                        'Callback', {@Selection, SaveFormat.Float16});
                     uicontrol('Style', 'pushbutton', 'Position', ...
                         [180 30 100 100], 'String', 'No', ...
                         'Callback', {@Selection, -1});
@@ -57,7 +60,12 @@ classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
             end
             
             function Selection (~, ~, choice)
-                this.bitDepthNew = choice;
+                import Enums.SaveFormat
+                this.enumNew = choice;
+                if ~isnumeric(this.enumNew)
+                    this.bitDepthNew = SaveFormat.retrieveBitDepth(this.enumNew);
+                end
+                set(this.gui, 'Visible', 'off');
                 this.guiComplete = 1;
             end
             

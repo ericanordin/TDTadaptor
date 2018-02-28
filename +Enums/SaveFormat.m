@@ -34,26 +34,26 @@ classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
             end
             
         end
-        
-        function soundReduced = scaleForDownsample(bitDepthLoaded, sound)
+        %{
+        function sound = scaleForDownsample(newFormat, sound)
             %Adjusts between float and int for approprate save format for
             %downsampling to a lower bit depth WAV.
-            switch bitDepthLoaded
-                case 16
+            %Assumes sound is double and ranges +/-1
+            import Enums.SaveFormat
+            switch newFormat
+                case SaveFormat.Float16
                     %Float; do nothing
-                    soundReduced = sound;
-                case 24
+                case SaveFormat.Float24
                     %Float; do nothing
-                    soundReduced = sound;
-                case 32
+                case SaveFormat.Int32
                     %Convert int (-2^31 to 2^32-1) to float (-1 to +1)
-                    sound = double(sound);
                     soundReduced = sound./2^31;
                 otherwise
                     errorStruct.identifier = 'SaveFormat:invalidBitDepthForDownsampling';
                     error(errorStruct);
             end
         end
+        %}
         
         function numBit = retrieveBitDepth(enum)
             %Returns a numerical bit depth from an enum bit depth

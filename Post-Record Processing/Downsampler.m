@@ -1,6 +1,8 @@
 function Downsampler()
 %Downsampler copies a .wav file to a lower bit depth.
-%   Does not delete original file for data conservation.
+%   For data conservation, does not delete original file.
+
+import Enums.SaveFormat
 
 [fileName, filePath, ~] = uigetfile('*.wav', ...
     'Select file to downsample');
@@ -21,7 +23,7 @@ guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
 
 waitfor(guiObj, 'guiComplete', 1);
 
-switch guiObj.bitDepthNew
+switch guiObj.enumNew
     case -3
         msgbox('The file is already at the lowest bit depth (16 bit) and cannot be converted.');
         delete(guiObj);
@@ -38,8 +40,7 @@ switch guiObj.bitDepthNew
         msgbox('Bit depth error. Conversion cancelled.');
         delete(guiObj);
         return;
-    otherwise
-        set(guiObj.gui, 'Visible', 'off');
+    %otherwise
         %Continue with conversion
 end
 
@@ -58,17 +59,14 @@ if willOverwrite == 1
     return;
 end
 
-%Use 'native' for ints and 'double' for floats. 
-%'native' automatically
-%makes 24 bit float files int32 and 16 bit float files int16. 'native' only
-%properly works for 32 bit int files. Loading a 32 bit int file with
-%'double' converts the data to a float range (+/-1). 
-%Best practice is probably to load everything with 'double' and convert to
-%int if necessary via function in SaveFormat.
-[data, sampleRate] = audioread(fullPath, 'native');
+%'native' automatically loads 24 bit float files as int32 values and 16 bit 
+% float files as int16. 'native' only properly works for 32 bit int files. 
+% Loading a 32 bit int file with 'double' converts the data to a float 
+% range (+/-1). My solution was to load everything with 'double'.
+[data, sampleRate] = audioread(fullPath, 'double');
 
-%Convert data to appropriate int/float format
-totalSound = Enums.SaveFormat.scaleForDownsample(fileInfo.BitsPerSample, data);
+%Convert data to appropriate int/float format for output
+totalSound = SaveFormat.scaleForFormat(guiObj.enumNew, data);
 
 audiowrite(newWav, totalSound, sampleRate, 'BitsPerSample', guiObj.bitDepthNew);
 

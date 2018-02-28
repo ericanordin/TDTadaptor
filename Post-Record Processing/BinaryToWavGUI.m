@@ -4,7 +4,7 @@ classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
     
     properties
         bitDepth; %Desired bit depth for .wav file being produced. 
-        enum%Bit depth based on enumeration in SaveFormat.
+        enum %Bit depth based on enumeration in SaveFormat.
         gui; %Figure
     end
     
