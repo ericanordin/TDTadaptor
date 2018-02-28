@@ -14,6 +14,8 @@ fullPath = strcat(filePath, fileName);
 [~, ~, ext] = fileparts(fullPath);
 
 fileInfo = audioinfo(fullPath);
+%audioinfo does not detect whether the data is int or float. If the
+%conversion depends on this, the data must be loaded before the gui.
 
 guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
 
@@ -56,6 +58,13 @@ if willOverwrite == 1
     return;
 end
 
+%Use 'native' for ints and 'double' for floats. 
+%'native' automatically
+%makes 24 bit float files int32 and 16 bit float files int16. 'native' only
+%properly works for 32 bit int files. Loading a 32 bit int file with
+%'double' converts the data to a float range (+/-1). 
+%Best practice is probably to load everything with 'double' and convert to
+%int if necessary via function in SaveFormat.
 [data, sampleRate] = audioread(fullPath, 'native');
 
 %Convert data to appropriate int/float format
