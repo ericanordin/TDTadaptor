@@ -16,6 +16,11 @@
     end
     
     methods
+        %% Function Descriptions:
+        %DownsamplerGUI: constructor
+        %Selection: Assigns appropriate SaveFormat enumeration to enumNew
+        %close: Closes window before selection is made
+        
         function this = DownsamplerGUI(openedBit)
             %Input: bit depth of opened WAVE file
             
@@ -24,6 +29,8 @@
             this.bitDepthNew = 0;
             this.enumNew = 0;
             this.guiComplete = 0;
+            
+            %% GUI Set Up
             
             this.gui = figure('Name', 'Choose Bit Depth', 'NumberTitle', 'off', ...
                 'Position', [500 500 320 180], 'Toolbar', 'none', 'Menubar', ...
@@ -63,6 +70,8 @@
                 otherwise
                     Selection(0,0,-2); %Causes program to exit
             end
+            
+            %% Sub-constructor Functions
             
             function Selection (~, ~, choice)
                 %Derive values from button press

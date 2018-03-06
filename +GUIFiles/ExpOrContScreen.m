@@ -1,7 +1,7 @@
 classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
     %EXPORCONTSCREEN Opens a GUI to specify whether that rat is part of the
     %experimental or control group.
-    %   This function is only relevant for the Metz lab.
+    %   This function is presently only relevant for the Metz lab.
     
     properties
         %% Figures:
@@ -21,9 +21,10 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
         %% Function Descriptions:
         %ExpOrContScreen: constructor
         %Shortcuts: Enables keyboard shortcuts
-        %Selection: Assigns appropriate string to choice
+        %Selection: Assigns appropriate string based on selection
         %ExitWindow: Closes window before selection is made
-        %getExpOrCont: Returns subfolderName
+        %getExpOrCont: Interfaces between outside function and 
+        %   ExpOrContScreen object to return subfolderName
         
         %% Function Code:
         function this = ExpOrContScreen()
@@ -51,7 +52,7 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
             
             %% Sub-constructor Functions
             function Shortcuts(src, eventdata)
-                %Key press shortcuts go straight to Selection function
+                %Key press shortcuts (eventdata.Key) go straight to Selection function
                 Selection(src, eventdata, eventdata.Key);
             end
             
@@ -71,7 +72,18 @@ classdef ExpOrContScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function subfolder = getExpOrCont(obj)
-            originalSubfolder = obj.subfolderName;
+            %Called by makeLabDirectory function to specify experimental or
+            %control subfolder
+            
+            %Input:
+            %obj = ExpOrContScreen object
+            
+            %Output:
+            %subfolder = name of subfolder ('Experimental' or 'Control')
+            
+            originalSubfolder = obj.subfolderName; 
+            %Saved so that it can be reset if window is closed
+            
             try
                 waitfor(obj, 'subfolderName');
                 delete(obj.guiF);

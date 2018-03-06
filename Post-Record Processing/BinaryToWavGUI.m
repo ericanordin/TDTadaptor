@@ -14,12 +14,18 @@ classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
     end
     
     methods
+        %% Function Descriptions:
+        %BinaryToWavGUI: constructor
+        %Selection: Assigns appropriate SaveFormat enumeration to enumNew
+        %close: Closes window before selection is made
+        
         function this = BinaryToWavGUI()
             import Enums.SaveFormat
             this.bitDepth = 0;
             this.enum = 0;
             
-            %GUI portion:
+            %% GUI Set Up
+            
             this.gui = figure('Name', 'Choose Bit Depth', 'NumberTitle', 'off', ...
                 'Position', [500 500 460 180], 'Toolbar', 'none', 'Menubar', ...
                 'none', 'Resize', 'off', 'CloseRequestFcn', @close);
@@ -29,6 +35,8 @@ classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
                 'String', '24 bit float', 'Callback', {@Selection, SaveFormat.Float24});
             uicontrol('Style', 'pushbutton', 'Position', [320 40 100 100], ...
                 'String', '16 bit float', 'Callback', {@Selection, SaveFormat.Float16});
+            
+            %% Sub-constructor Functions
             
             function Selection (~, ~, choice)
                 %Derive values from button press

@@ -10,14 +10,21 @@ classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
     methods(Static)
         %% Function Descriptions:
         %scaleForFormat: Used in AcquireAudio for float/int
-        %scaleForDownSample: Used in Downsampler for float/int
         %retrieveBitDepth: Convert SaveFormat enum to numerical bit depth
         
         %% Function Code:
         
         function sound = scaleForFormat(bitDepth, sound)
-            %Adjusts between float and int for approprate save format for
-            %conversion from binary file to WAV.
+            %Converts float sound vector to int for approprate save format 
+            %to convert from binary file to WAV.
+            
+            %Input:
+            %bitDepth = enumeration format of sound
+            %sound = vector of audio data
+            
+            %Output:
+            %sound = modified audio data vector
+            
             import Enums.SaveFormat
             switch bitDepth
                 case SaveFormat.Float16
@@ -34,29 +41,16 @@ classdef SaveFormat < handle & matlab.mixin.SetGetExactNames
             end
             
         end
-        %{
-        function sound = scaleForDownsample(newFormat, sound)
-            %Adjusts between float and int for approprate save format for
-            %downsampling to a lower bit depth WAV.
-            %Assumes sound is double and ranges +/-1
-            import Enums.SaveFormat
-            switch newFormat
-                case SaveFormat.Float16
-                    %Float; do nothing
-                case SaveFormat.Float24
-                    %Float; do nothing
-                case SaveFormat.Int32
-                    %Convert int (-2^31 to 2^32-1) to float (-1 to +1)
-                    soundReduced = sound./2^31;
-                otherwise
-                    errorStruct.identifier = 'SaveFormat:invalidBitDepthForDownsampling';
-                    error(errorStruct);
-            end
-        end
-        %}
         
         function numBit = retrieveBitDepth(enum)
             %Returns a numerical bit depth from an enum bit depth
+            
+            %Input:
+            %enum = enumeration format of sound
+            
+            %Output:
+            %numBit = numerical equivalent of enum
+            
             import Enums.SaveFormat
             switch enum
                 case SaveFormat.Int32
