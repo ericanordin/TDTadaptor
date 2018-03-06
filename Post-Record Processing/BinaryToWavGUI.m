@@ -1,11 +1,16 @@
 classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
     %BinaryToWavGUI forms the bit depth choice element of the BinaryToWav
     %program
+    %GUI options are based off of SaveFormat enumeration options. Changes
+    %to SaveFormat must be reflected here.
     
     properties
-        bitDepth; %Desired bit depth for .wav file being produced. 
-        enum %Bit depth based on enumeration in SaveFormat.
+        %% Figures:
         gui; %Figure
+        
+        %% Variables:
+        bitDepth; %Desired bit depth for .wav file being produced. 
+        enum %Bit depth based on enumeration in SaveFormat.        
     end
     
     methods
@@ -13,6 +18,8 @@ classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
             import Enums.SaveFormat
             this.bitDepth = 0;
             this.enum = 0;
+            
+            %GUI portion:
             this.gui = figure('Name', 'Choose Bit Depth', 'NumberTitle', 'off', ...
                 'Position', [500 500 460 180], 'Toolbar', 'none', 'Menubar', ...
                 'none', 'Resize', 'off', 'CloseRequestFcn', @close);
@@ -24,12 +31,14 @@ classdef BinaryToWavGUI < handle & matlab.mixin.SetGetExactNames
                 'String', '16 bit float', 'Callback', {@Selection, SaveFormat.Float16});
             
             function Selection (~, ~, choice)
+                %Derive values from button press
                 import Enums.SaveFormat
                 this.enum = choice;
                 this.bitDepth = SaveFormat.retrieveBitDepth(this.enum);
             end
             
             function close(src, ~)
+                %Close GUI instead of selecting bit depth
                 set(src, 'Visible', 'off');
                 this.bitDepth = -1; %Causes program to exit
             end

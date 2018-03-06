@@ -6,9 +6,10 @@ import GUIFiles.*
 import StandardFunctions.*
 import RPvdsExLink.*
 
-% The same LabScreen, RatScreen, and RecordScreen GUI objects are used 
-% until the program is closed so that the user doesn't have to 
-% constantly redo the procedure from opening the program.
+% The same LabScreen, RatScreen, and RecordScreen GUI objects are reused 
+% until the program is closed so that it can reuse data entered by the 
+% user and the PC isn't forced to repeatedly open GUIs.
+% LabScreen and RatScreen are created inside RecordScreen.
 
 recordScr = RecordScreen();
 
@@ -26,5 +27,7 @@ end
 %Program termination
 delete(recordScr);
 delete(findall(0, 'Type', 'figure'));
+%Due to modifications in the 'close' command for figures, they must be
+%explicitly deleted instead of closed.
 end
 

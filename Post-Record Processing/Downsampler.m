@@ -22,29 +22,31 @@ fileInfo = audioinfo(fullPath);
 guiObj = DownsamplerGUI(fileInfo.BitsPerSample);
 
 waitfor(guiObj, 'guiComplete', 1);
-
-switch guiObj.enumNew
-    case -3
-        msgbox('The file is already at the lowest bit depth (16 bit) and cannot be converted.');
-        delete(guiObj);
-        return;
-    case -2
-        msgbox('Input bit depth not recognized. Conversion cancelled.');
-        delete(guiObj);
-        return;
-    case -1
-        msgbox('Bit depth selection ended prematurely. Conversion cancelled.');
-        delete(guiObj);
-        return;
-    case 0
-        msgbox('Bit depth error. Conversion cancelled.');
-        delete(guiObj);
-        return;
-    %otherwise
-        %Continue with conversion
+if isnumeric(guiObj.enumNew) %Error stimulating premature exit
+    switch guiObj.enumNew
+        case -3
+            msgbox('The file is already at the lowest bit depth (16 bit) and cannot be converted.');
+            delete(guiObj);
+            return;
+        case -2
+            msgbox('Input bit depth not recognized. Conversion cancelled.');
+            delete(guiObj);
+            return;
+        case -1
+            msgbox('Bit depth selection ended prematurely. Conversion cancelled.');
+            delete(guiObj);
+            return;
+        case 0
+            msgbox('Bit depth error. Conversion cancelled.');
+            delete(guiObj);
+            return;
+    end
+    %else Continue with conversion
 end
 
-%Create new file name
+% Name new audio file. Appends bit depth to the end of the file.
+% Eg if file.wav is selected for saving as 16-bit, the new file will be
+% named file_16bit.wav
 newWav = erase(fullPath, ext);
 newWav = strcat(newWav, '_');
 newWav = strcat(newWav, num2str(guiObj.bitDepthNew));
@@ -59,10 +61,11 @@ if willOverwrite == 1
     return;
 end
 
-%'native' automatically loads 24 bit float files as int32 values and 16 bit 
-% float files as int16. 'native' only properly works for 32 bit int files. 
-% Loading a 32 bit int file with 'double' converts the data to a float 
-% range (+/-1). My solution was to load everything with 'double'.
+% 'native' automatically loads 24 bit float files as int32 values and 16 bit
+% float files as int16. 'native' only properly works for 32 bit int files.
+% Loading a 32 bit int file with 'double' converts the data to a float
+% range (+/-1). My solution was to load everything with 'double' and make
+% appropriate output conversions from float to int if necessary.
 [data, sampleRate] = audioread(fullPath, 'double');
 
 %Convert data to appropriate int/float format for output

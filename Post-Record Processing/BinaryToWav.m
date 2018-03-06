@@ -3,8 +3,10 @@ function BinaryToWav()
 %the conversion has occurred in AcquireAudio.
 %Users are offered the choice for the bit depth of the WAVE file identical
 %to the choices offered in the primary recording program
-%Does not delete binary file to prevent data loss; deletion must be done by
-%user
+%Does not delete binary file to prevent data loss; deletion must be 
+%performed by user
+%NOTE: This program assumes sampling frequency of 195312 from RX6 processor. 
+%MATLAB cannot read the sampling frequency from the binary file.
 
 import Enums.SaveFormat
 

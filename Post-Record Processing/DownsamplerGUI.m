@@ -1,6 +1,8 @@
  classdef DownsamplerGUI < handle & matlab.mixin.SetGetExactNames
-    %DownsamplerGUI allows selection of appropriate bit depth.
-    %   Assumes the bit depths available are 16, 24, and 32
+    %DownsamplerGUI forms the bit depth choice element of the Downsampler
+    %program
+    %GUI options are based off of SaveFormat enumeration options. Changes
+    %to SaveFormat must be reflected here.
     
     properties
         %% Figures:
@@ -15,6 +17,8 @@
     
     methods
         function this = DownsamplerGUI(openedBit)
+            %Input: bit depth of opened WAVE file
+            
             import Enums.SaveFormat
             this.bitDepthOriginal = openedBit;
             this.bitDepthNew = 0;
@@ -27,6 +31,7 @@
                 'Visible', 'off');
             
             switch this.bitDepthOriginal
+                %GUI format depends on the input bit depth
                 case 32
                     uicontrol('Style', 'text', 'Position', [50 140 220 30],...
                         'String', ...
@@ -60,9 +65,13 @@
             end
             
             function Selection (~, ~, choice)
+                %Derive values from button press
                 import Enums.SaveFormat
                 this.enumNew = choice;
                 if ~isnumeric(this.enumNew)
+                    %Numeric value for enumNew marks the program for
+                    %premature exit. retrieveBitDepth cannot take a numeric
+                    %input.
                     this.bitDepthNew = SaveFormat.retrieveBitDepth(this.enumNew);
                 end
                 set(this.gui, 'Visible', 'off');
@@ -70,8 +79,9 @@
             end
             
             function close(src, ~)
+                %Close GUI instead of selecting bit depth
                 set(src, 'Visible', 'off');
-                this.bitDepthNew = -1; %Causes program to exit
+                this.enumNew = -1; %Causes program to exit
                 this.guiComplete = 1;
             end
         end
