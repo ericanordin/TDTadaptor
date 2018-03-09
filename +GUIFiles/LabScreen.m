@@ -1,5 +1,6 @@
 classdef LabScreen < handle & matlab.mixin.SetGetExactNames
-    %LABSCREEN Chooses the LabName.
+    %LABSCREEN Chooses the labName from RecordScreen.
+    %   Hidden instead of deleted after use for repeated access.
     
     properties
         %% Figures:
@@ -95,10 +96,11 @@ classdef LabScreen < handle & matlab.mixin.SetGetExactNames
         
         function labName = getLabName(obj)
             originalLab = obj.chosenLab;
+            %Maintains original value in case of premature exit
             try
                 waitfor(obj, 'chosenLab'); %Function waits to elapse until
                 %nameType has been changed.
-                if ischar(obj.chosenLab)
+                if ischar(obj.chosenLab) %Not enum, invalid
                     obj.chosenLab = originalLab;
                     errorStruct.identifier = 'LabScreen:callCanceled';
                     error(errorStruct);

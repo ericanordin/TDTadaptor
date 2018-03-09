@@ -262,7 +262,7 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
                         set(this.ratScr.guiF, 'visible', 'on');
                     end
                     [rat, day, cohort, newLab] = getRatData(this.ratScr);
-                    if ~isempty(newLab)
+                    if ~isempty(newLab) %Lab was changed during RatScreen access
                         this.labName = newLab;
                     end
                     

@@ -1,5 +1,7 @@
 classdef RatScreen < handle & matlab.mixin.SetGetExactNames
-    %RATSCREEN Enter the details of the rat being tested.
+    %RATSCREEN Used to enter the details of the rat being tested.
+    %   Accessed via RecordScreen
+    %   Hidden instead of deleted after use for repeated access.
     
     properties
         %% Figures:
@@ -31,12 +33,11 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         %SetCohortID: Copies cohortEntry into cohortID
         %Shortcuts: Checks information when user presses 'return'
         %CheckIfMissing: Ensures that no data is missing and calls Proceed
-        %Proceed: Compiles chosenLab, ratID, dayID, and cohortID into a
-        %file name and opens RecordScreen
+        %Proceed: Triggers getRatData and hides GUI
         %HideWindow: Makes window invisible
         %SetLabels: Assigns text to the Label UIControl objects based on
         %lab.
-        %getRatData: Returns ratID, dayID, cohortID
+        %getRatData: Returns ratID, dayID, cohortID to RecordScreen
         
         %% Function Code:
         
@@ -116,13 +117,13 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                 %all fields have information.
                 switch eventdata.Key
                     case 'return'
-                        uiwait(gcf); %Prevents if statement from executing until
+                        uiwait(gcf); %Stalls CheckIfMissing until
                         %the setter function has executed for the current
                         %field with uiresume(gcbf).
                         CheckIfMissing(); %No increment
                     case 'insert'
-                        CheckIfMissing(1); %Increment by 1
-                    case 'home'
+                        CheckIfMissing(1); %Increment ratID by 1
+                    case 'home' %Open LabScreen and choose different lab
                         checkExistence = isobject(recordScreen.labScr);
                         if checkExistence == 0
                             recordScreen.labScr = LabScreen();
@@ -142,7 +143,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                         this.ratID = this.ratID + varargin{1}; %Increments ratID
                     end
                     Proceed();
-                else
+                else %One or more entry fields are empty
                     disp('Missing necessary data');
                 end
             end
@@ -154,7 +155,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
             
             function HideWindow(~,~)
                 set(this.guiF, 'visible', 'off');
-                this.cancelCall = 1;
+                this.cancelCall = 1; %Prevents rat data from being set to current values
                 this.dataComplete = 1;
             end
             
@@ -176,6 +177,8 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
         end
         
         function [rat, day, cohort, modifiedLab] = getRatData(obj)
+            %Extracts data from RatScreen object for use in RecordScreen
+            
             try
                 waitfor(obj, 'dataComplete', 1);
                 if obj.cancelCall == 1
@@ -188,7 +191,7 @@ classdef RatScreen < handle & matlab.mixin.SetGetExactNames
                     if ~isempty(obj.newLab)
                         modifiedLab = obj.newLab;
                         obj.newLab = '';
-                    else
+                    else %Reset for next use
                         obj.newLab = '';
                         modifiedLab = '';
                     end
