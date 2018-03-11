@@ -172,6 +172,9 @@ classdef RecordScreen < handle & matlab.mixin.SetGetExactNames
             this.statusWindow = uitable('Position', [170 50 800 250],...
                 'RowName', [], 'ColumnName', [], 'Enable', 'inactive',...
                 'FontSize', 14, 'ColumnWidth', {798}, 'Data', this.statusText);
+            %StandardFunctions.padText relies on the width of statusWindow.
+            %Adjust statusWidth in padText if the width of the window is
+            %changed.
             
             this.waveformAxes = axes('Units', 'pixels', 'Box', 'on', 'Position', ...
                 [350 650 600 200], 'YLim', [-10 10], 'YLimMode', 'manual', 'YTick', [-10 -5 0 5 10]);

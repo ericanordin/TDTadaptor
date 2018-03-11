@@ -10,7 +10,7 @@ localName = '';
 directory = uigetdir(startingPathway);
 
 try
-    if directory == 0
+    if directory == 0 %Premature exit
         errorStruct.identifier = 'setNameManual:callCanceled';
         error(errorStruct);
     else
@@ -29,15 +29,16 @@ try
             fileType);
         
         uicontrol(nameFileField); %Places cursor on nameFileField
+        
         try
             uiwait(gcf); %Pauses program until the local file name has been entered.
-            if strcmp(localName, 'CANCEL')
+            if strcmp(localName, 'CANCEL') %Window closed
                 errorStruct.identifier = 'setNameManual:callCanceled';
                 error(errorStruct);
             else
                 startingPathway = directory; %Maintains pathway for future use.
-                nameWithDesignation = strcat(localName, fileType);
-                filePath = fullfile(startingPathway, nameWithDesignation);
+                nameWithExtension = strcat(localName, fileType);
+                filePath = fullfile(startingPathway, nameWithExtension);
                 close(nameFileWindow); %Closes the window
             end
         catch ME

@@ -1,11 +1,10 @@
-function filePath = setNameAuto( labDirectory, labName, ratID, dayID, cohortID )
+function filePath = setNameAuto(labDirectory, labName, ratID, dayID, cohortID)
 %SETNAMEAUTO Imports information to determine the save location for the recording.
-
+%   See manual for details on naming conventions for different labs
 import Enums.LabName
-%import StandardFunctions.makeLabDirectory;
 
 if strcmp(labName, 'Gibb')
-    %Use Metz naming convention
+    %Use Gibb naming convention
     %Place holder until other information is received
     dateFormat = 'yyyy-mm-dd';
     saveDate = datestr(date, dateFormat);
