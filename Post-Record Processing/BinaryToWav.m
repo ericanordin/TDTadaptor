@@ -77,7 +77,7 @@ catch
 end
 
 audiowrite(Wavfile, totalSound, 195312, 'BitsPerSample', guiObj.bitDepth);
-%195312 is the frequency for the TDT
+%195312 is the frequency for the RX6 processor
 
 fclose(binaryFile);
 delete(guiObj);

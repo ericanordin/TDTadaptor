@@ -11,7 +11,6 @@ directory = uigetdir(startingPathway);
 
 try
     if directory == 0
-        disp('Successfully skipped');
         errorStruct.identifier = 'setNameManual:callCanceled';
         error(errorStruct);
     else
