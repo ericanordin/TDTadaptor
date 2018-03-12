@@ -10,8 +10,8 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
         displaySampleRange; %The currently displayed second range
         totalReps; %The number of times SaveBuffer and PlotBuffer have been run
         builtBuffer; %Array of buffer data
-        wavePlot;
-        specPlot;
+        wavePlot; %Waveform displayed on the main GUI
+        specPlot; %Spectrogram displayed on the main GUI
     end
     
     methods
@@ -24,7 +24,6 @@ classdef BufferObject < handle & matlab.mixin.SetGetExactNames
             
             this.buffLength = 1; %1s buffer
             
-            %Rounds up if not divisible by buffLength
             this.builtBuffer = zeros(1, this.npts*this.buffLength);
             
             % serial buffer will be divided into two buffers A & B (to prevent the risk
