@@ -17,9 +17,3 @@ mcc -e -d 'G:\Fall 2017 Co-op\TDTadaptor\Executables and Key Files\BinaryToWav' 
 %Downsampler
 %At home: 
 mcc -e -d 'G:\Fall 2017 Co-op\TDTadaptor\Executables and Key Files\Downsampler' -o DownsamplerForWAVs Downsampler.m
-
-%convertWav32to24Bit:
-%NOTE this program is obsolete and will not function properly with new
-%recordings
-%At home:
-mcc -e -d 'G:\Fall 2017 Co-op\TDTadaptor\Executables and Key Files\32 to 24 Bit Converter' -o Converter_32_to_24_Bit convertWav32to24Bit.m

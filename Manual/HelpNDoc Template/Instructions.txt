@@ -1,0 +1,2 @@
+Before publishing the HelpNDoc document to a pdf, place the pdf folder into C:\[User]\Documents\HelpNDoc\Templates (or wherever HelpNDoc\Templates is stored on your PC). 
+You should now have "Published Manual" as an export option.
